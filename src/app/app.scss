@@ -1,0 +1,501 @@
+:host {
+  display: block;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.main-container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  border: 2px solid var(--color-border); /* Outer border for terminal effect */
+  background-color: var(--color-background);
+  box-shadow: 5px 5px 0px var(--color-accent); /* Brutalist shadow */
+}
+
+header {
+  position: sticky;
+  top: 0;
+  background-color: var(--color-background);
+  z-index: 100;
+}
+
+.lipgloss-stack {
+    flex: 1;
+  }
+
+.lipgloss-banner {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  .lipgloss-description {
+    flex: 2;
+    padding: var(--spacing-unit);
+  }
+}
+
+
+.content-column {
+  flex: 1;
+  padding: var(--spacing-unit);
+  padding-top: 0;
+  border-right: 1px dashed var(--color-border); /* Separator */
+  overflow-y: auto; /* Scrollable content */
+  display: flex;
+  flex-direction: column;
+  color: var(--color-text);
+  line-height: 1.4;
+  font-size: 0.9em;
+
+  .terminal-output {
+    flex-grow: 1;
+    white-space: pre-wrap;
+    word-break: break-word;
+
+    p {
+      margin: 0 0 4px 0;
+    }
+
+    pre {
+      background-color: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--color-border);
+      padding: var(--spacing-unit);
+      margin: var(--spacing-unit) 0;
+      overflow-x: auto;
+      white-space: pre; /* Preserve whitespace and line breaks */
+    }
+
+    code {
+      font-family: var(--font-dev);
+      color: #9cdcfe; /* VSCode-like code color */
+    }
+
+    /* Example of syntax highlighting for the pre code block */
+    code .package { color: #569cd6; } /* blue */
+    code .import { color: #c586c0; } /* purple */
+    code .string { color: #ce9178; } /* orange */
+  }
+}
+
+.right-column {
+  flex: 0 0 250px; /* Fixed width for the right column */
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--spacing-unit);
+  background-color: #16162a; /* Slightly darker background color */
+  border-left: 1px solid var(--color-border);
+  .panel {
+    align-self: center;
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent overlay */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: var(--color-modal-bg);
+  border: 2px solid var(--color-accent);
+  box-shadow: 8px 8px 0px var(--color-primary); /* Modal brutalist shadow */
+  padding: calc(var(--spacing-unit) * 2);
+  width: 80%;
+  max-width: 600px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-unit);
+
+  .oblique-bar-modal-top, .oblique-bar-modal-bottom {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: repeating-linear-gradient(
+      -45deg,
+      #9b59b6, /* A distinct color for modal oblique bars */
+      #9b59b6 4px,
+      transparent 4px,
+      transparent 8px
+    );
+  }
+
+  .oblique-bar-modal-top {
+    top: 0;
+  }
+
+  .oblique-bar-modal-bottom {
+    bottom: 0;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--spacing-unit);
+    margin-bottom: var(--spacing-unit);
+
+    h3 {
+      margin: 0;
+      color: var(--color-accent);
+    }
+
+    button {
+      background-color: var(--color-accent);
+      color: var(--color-text);
+      border: 1px solid var(--color-text);
+      box-shadow: 1px 1px 0px var(--color-text);
+      &:hover {
+        background-color: #eb7a8d; /* Slightly lighter accent color */
+      }
+    }
+  }
+
+  .modal-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    color: var(--color-text);
+    font-size: 0.9em;
+
+    p {
+      margin-bottom: var(--spacing-unit);
+    }
+
+    .code-diff {
+      background-color: #0d1117; /* GitHub dark theme background for diff */
+      border: 1px solid #30363d;
+      padding: var(--spacing-unit);
+      overflow-x: auto;
+      margin: var(--spacing-unit) 0;
+
+      pre {
+        margin: 0;
+        font-family: var(--font-dev);
+        font-size: 0.8em;
+      }
+
+      code {
+        color: #c9d1d9; /* Default text color */
+      }
+
+      /* Diff specific styling */
+      .diff-line {
+        display: block;
+        padding-left: 10px;
+      }
+
+      /* Emulating diff colors */
+      .search-marker { color: #f9c74f; } /* Yellow for search marker */
+      .replace-marker { color: #4d8ce7; } /* Blue for replace marker */
+
+      /* This part is tricky to get right with just CSS for pre/code */
+      /* Ideally, each line would be a span with a specific class for precise diff styling */
+    }
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-unit);
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--spacing-unit);
+    margin-top: var(--spacing-unit);
+
+    button {
+      min-width: 100px;
+    }
+
+    button:nth-child(2) { /* "Allow for Session" button */
+      background-color: #9b59b6; /* Purple accent */
+      box-shadow: 2px 2px 0px #c042d3;
+      border: 1px solid #c042d3;
+      &:hover {
+        background-color: #b07cd0; /* Slightly lighter purple accent */
+      }
+    }
+
+    button:last-child { /* "Deny" button */
+      background-color: #e74c3c;
+      box-shadow: 2px 2px 0px #c0392b;
+      border: 1px solid #c0392b;
+      &:hover {
+        background-color: #eb695e; /* Slightly lighter red accent */
+      }
+    }
+  }
+}
+/* New Styles */
+.header-path {
+  color: var(--color-info);
+  margin-bottom: var(--spacing-unit);
+}
+
+.tabs-container {
+  display: flex;
+  gap: var(--spacing-unit);
+  margin-bottom: var(--spacing-unit);
+}
+
+.tab-button {
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  padding: calc(var(--spacing-unit) / 2) var(--spacing-unit);
+  cursor: pointer;
+
+  &.active {
+    background-color: var(--color-primary);
+    border-color: var(--color-accent);
+  }
+}
+
+.lipgloss-stack {
+
+  display: flex;
+  flex-direction: column;
+  margin: var(--spacing-unit) 0;
+
+  .lipgloss-item {
+    padding: 2px 8px;
+    margin-bottom: 2px;
+    display: block;
+    color: #fff;
+
+    &.gradient-1 { background: linear-gradient(to right, #ff3366, #ff9966); margin-left: 0em; }
+    &.gradient-2 { background: linear-gradient(to right, #ff5e62, #ff9966); margin-left: 1em; }
+    &.gradient-3 { background: linear-gradient(to right, #ff8c61, #ff9966); margin-left: 3em; }
+    &.gradient-4 { background: linear-gradient(to right, #ffb961, #ff9966); margin-left: 4em; }
+    &.gradient-5 { background: linear-gradient(to right, #ffe661, #ff9966); margin-left: 7em; }
+  }
+}
+
+.lipgloss-description {
+  margin-bottom: var(--spacing-unit);
+
+  a {
+    color: var(--color-info);
+    text-decoration: none;
+  }
+}
+
+.cat-pattern {
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 10"><text x="0" y="10" font-family="monospace" font-size="8" fill="rgba(77,77,94,1)">虚脳</text></svg>');
+  background-repeat: repeat;
+  background-size: 26px 14px;
+  pointer-events: none;
+}
+
+.internal-dialog-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: calc(var(--spacing-unit) * 4) 0;
+}
+
+.gradient-title {
+  background: linear-gradient(to right,#B04CBC, #5F47F5);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 1px #535353);
+}
+
+.sunburst {
+  background: linear-gradient(to right, #ff6600, #ffcc00);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 1px #535353);
+}
+
+.internal-dialog-content {
+  background-color: var(--color-modal-bg);
+  border: 2px solid var(--color-accent);
+  padding: var(--spacing-unit);
+  text-align: center;
+  box-shadow: 8px 8px 0px var(--color-primary);
+  padding: calc(var(--spacing-unit) * 2);
+
+
+  .dialog-actions {
+    margin-top: var(--spacing-unit);
+  }
+
+  .dialog-button {
+    &.yes { background-color: var(--color-secondary); }
+    &.maybe { background-color: var(--color-tertiary); }
+  }
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--spacing-unit);
+  margin: var(--spacing-unit) 0;
+}
+
+.content-block {
+  border: 1px solid var(--color-border);
+  padding: var(--spacing-unit);
+
+  .block-title {
+    font-weight: bold;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: calc(var(--spacing-unit) / 2);
+    margin-bottom: var(--spacing-unit);
+  }
+}
+
+.list-block ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    margin-bottom: calc(var(--spacing-unit) / 2);
+    a {
+      color: var(--color-info)
+    }
+  }
+
+  .icon-check {
+    color: var(--color-success);
+    margin-right: calc(var(--spacing-unit) / 2);
+  }
+}
+
+.color-palette-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.color-row {
+  display: flex;
+  gap: 2px;
+}
+
+.color-swatch {
+  width: 100%;
+  height: 16px;
+}
+
+.content-three-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--spacing-unit);
+  margin: var(--spacing-unit) 0;
+}
+
+.text-block {
+  padding: var(--spacing-unit);
+  background-color: var(--color-primary);
+  border: 1px solid var(--color-border);
+}
+
+.terminal-prompt {
+  margin-top: auto;
+  color: var(--color-info);
+}
+
+.status-bar {
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--color-tertiary);
+  border-top: 1px solid var(--color-border);
+}
+
+.status-item, .status-item > * {
+  color: var(--color-text);
+  padding: calc(var(--spacing-unit) / 2);
+}
+.status-text {
+  background-color: var(--color-success);
+}
+.status-encoding {
+  background-color: var(--color-accent);
+}
+.panel {
+  display: flex;
+  justify-content: space-between;
+  .page-button {
+    &.yes { background-color: var(--color-secondary); }
+    &.maybe { background-color: var(--color-tertiary); }
+  }
+}
+
+/* Terminal Colors */
+.green-text {
+  color: #00ff00;
+  text-shadow: 0 0 8px currentColor;
+}
+
+.yellow-text {
+  color: #ffff00;
+  text-shadow: 0 0 8px currentColor;
+}
+
+.red-text {
+  color: #ff4444;
+  text-shadow: 0 0 8px currentColor;
+}
+
+.blue-text {
+  color: #00aaff;
+  text-shadow: 0 0 8px currentColor;
+}
+
+.orange-text {
+  color: #ff6600;
+  text-shadow: 0 0 8px currentColor;
+}
+
+.magenta-text {
+  color: #ff00ff;
+  text-shadow: 0 0 8px currentColor;
+}
+
+.status-line {
+  margin-bottom: 4px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.command-line {
+  margin-top: 12px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.user { display: block;}
+
+.cursor {
+  color: var(--color-info);
+  animation: blink 1s infinite;
+  font-weight: bold;
+  text-shadow: 0 0 8px currentColor;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}

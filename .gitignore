@@ -1,8 +1,34 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# Specifies intentionally untracked files to ignore when using Git
+# http://git-scm.com/docs/gitignore
+
+*~
+*.sw[mnpcod]
+.tmp
+*.tmp
+*.tmp.*
+UserInterfaceState.xcuserstate
+$RECYCLE.BIN/
+
+*.log
+log.txt
+
+
+/.sourcemaps
+/.versions
+/coverage
+
+# Ionic
+/.ionic
+/www
+/1more
+/platforms
+/plugins
 
 # Compiled output
 /dist
+/docs
 /tmp
+/docs
 /out-tsc
 /bazel-out
 
@@ -18,6 +44,7 @@ yarn-error.log
 .c9/
 *.launch
 .settings/
+*.sublime-project
 *.sublime-workspace
 
 # Visual Studio Code
@@ -28,16 +55,22 @@ yarn-error.log
 !.vscode/extensions.json
 .history/*
 
+
 # Miscellaneous
+/.angular
 /.angular/cache
 .sass-cache/
+/.nx
+/.nx/cache
 /connect.lock
 /coverage
 /libpeerconnection.log
 testem.log
 /typings
-__screenshots__/
 
 # System files
 .DS_Store
 Thumbs.db
+# package-lock.json
+.vscode/settings.json
+.env
