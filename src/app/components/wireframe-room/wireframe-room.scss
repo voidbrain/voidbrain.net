@@ -1,0 +1,33 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.three-room-host {
+  position: relative;
+  width: 100%;
+  height: 100vh; // fill viewport for demo; adjust as needed
+  overflow: hidden;
+  background: linear-gradient(180deg, #0b0020 0%, #140019 60%, #0b0018 100%);
+}
+
+.three-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* subtle UI hint */
+.hint {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  font-family: Inter, Roboto, Arial, sans-serif;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+}
