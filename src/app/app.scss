@@ -250,7 +250,7 @@ header {
 }
 /* New Styles */
 .header-path {
-  color: var(--color-info);
+  color: var(--color-text);
   margin-bottom: var(--spacing-unit);
 }
 
@@ -441,7 +441,11 @@ ul.list { margin-top: 2em; }
 
   .icon-check {
     margin-right: calc(var(--spacing-unit) / 2);
-    color: #b04cbccc;
+    // color: #b04cbccc;
+    background: linear-gradient(to right, #e1d11dcc, #71bc4ccc );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 }
 
