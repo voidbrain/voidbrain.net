@@ -382,7 +382,29 @@ header {
 
 .stripes {
   display: block;
+  margin-top: 1em;
   margin-bottom: 2em;
+}
+
+ul.list { margin-top: 2em; }
+
+.block-title-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: calc(var(--spacing-unit) / 2);
+  margin-bottom: var(--spacing-unit);
+}
+
+.emoji {
+  //background: linear-gradient(to right, #b04cbccc, #5f47f5cc  );
+  background: linear-gradient(to right, #e1d11dcc, #71bc4ccc );
+  // background: linear-gradient(to right, #ff6600cc, #ffcc00cc  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
 }
 
 .content-grid {
@@ -401,9 +423,7 @@ header {
 
   .block-title {
     font-weight: bold;
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: calc(var(--spacing-unit) / 2);
-    margin-bottom: var(--spacing-unit);
+
   }
 }
 
@@ -420,8 +440,8 @@ header {
   }
 
   .icon-check {
-    color: var(--color-success);
     margin-right: calc(var(--spacing-unit) / 2);
+    color: #b04cbccc;
   }
 }
 
