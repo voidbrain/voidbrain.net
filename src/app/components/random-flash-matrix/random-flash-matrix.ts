@@ -95,6 +95,10 @@ export class RandomFlashMatrix implements OnInit, OnDestroy {
 
     const now = performance.now();
 
+    // Set stroke style for borders
+    ctx.strokeStyle = '#28283d';
+    ctx.lineWidth = 2;
+
     for (let sq of this.squares) {
       // Decide if we should start a flash
       if (!sq.flashColor && Math.random() < 0.001) { // ~0.1% chance per frame
@@ -108,8 +112,12 @@ export class RandomFlashMatrix implements OnInit, OnDestroy {
         sq.flashEndTime = undefined;
       }
 
+      // Draw filled square
       ctx.fillStyle = sq.flashColor || sq.baseColor;
       ctx.fillRect(sq.x, sq.y, this.squareSize, this.squareSize);
+
+      // Draw white border (stroke) around the square
+      ctx.strokeRect(sq.x, sq.y, this.squareSize, this.squareSize);
     }
 
     this.animationId = requestAnimationFrame(this.animate);
