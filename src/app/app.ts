@@ -1,4 +1,4 @@
-import { Component, inject, signal, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, inject, signal, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Added CommonModule
 import { AppLogoComponent } from './components/app-logo/app-logo'; // Import AppLogoComponent
 import { WireframeSphere } from './components/wireframe-sphere/wireframe-sphere';
@@ -23,8 +23,9 @@ import { SinusoidGraph } from './components/sinusoid-graph/sinusoid-graph';
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App {
+export class App implements AfterViewInit {
   @ViewChild('terminal', { static: true }) terminalEl!: ElementRef;
+  @ViewChild('contentColumn', { static: true }) contentColumnEl!: ElementRef;
   protected readonly title = signal('voidbrain.net');
   isModalOpen = false; // Set to false by default, triggered by action if needed
   isInternalDialogVisible = true; // Set to true for initial display as per image
@@ -33,12 +34,15 @@ export class App {
   protected selectedTheme = signal(this.themeService.currentThemeValue);
   protected showTop = signal(false);
 
-  @HostListener('window:scroll')
-  onWindowScroll() {
-    console.log("scroll")
-    const scrollY = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-    // Show "top" button when scrolled down more than 200px
-    this.showTop.set(scrollY > 200);
+  ngAfterViewInit() {
+    // Add scroll listener to content-column instead of window
+    const contentColumn = this.contentColumnEl.nativeElement;
+    contentColumn.addEventListener('scroll', () => {
+      const scrollY = contentColumn.scrollTop;
+      console.log("content column scroll:", scrollY);
+      // Show "top" button when scrolled down more than 200px
+      this.showTop.set(scrollY > 200);
+    });
   }
 
   openModal() {
@@ -66,10 +70,18 @@ export class App {
 
   goTo(dest: string) {
     const element = document.getElementById(dest);
+    console.log(element)
     if (element) {
       element.scrollIntoView({
         behavior: 'smooth',
         block: 'start'
+      });
+    } else {
+      // If element not found, scroll to top of content column
+      const contentColumn = this.contentColumnEl.nativeElement;
+      contentColumn.scrollTo({
+        top: 0,
+        behavior: 'smooth'
       });
     }
   }

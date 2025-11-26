@@ -1,11 +1,12 @@
 <div class="main-container">
-  <div class="content-column">
-    <header>
+  <div class="content-column" #contentColumn>
+    <header id="Top">
       <div class="header-path">
         <p>> ./voidbrain-net</p>
       </div>
 
       <div class="tabs-container">
+        !{{ showTop() }}!
         @if(showTop()){
           <button (click)="goTo('Top')" class="tab-button active">Top</button>
         }
@@ -23,37 +24,35 @@
 
       <div class="internal-dialog-content">
         <p class="sunburst">We will be restoring normality as soon as we are sure what is normal anyway.</p>
-
         <p>Douglas N. Adams</p>
         <p>The Hitchhiker's Guide to the Galaxy</p>
         </div>
     </div>
   </div>
 
-
     <div class="content-grid">
       <div class="content-block list-block">
           <div class="block-title-row">
-            <p class="block-title gradient-title">Plugins</p>
+            <p id="Plugins" class="block-title gradient-title">Plugins</p>
             <p class="emoji">&lt;/&gt;</p>
           </div>
           <ul>
-            <li><span class="icon-check">✓</span> Web / PWA / Apps</li>
-            <li><span class="icon-check">✓</span> Node.js /  .NET /  SQL</li>
-            <li><span class="icon-check">✓</span> Git /  Docker /  Devops</li>
+            <li><span class="icon-check">#</span> Web / PWA / Apps</li>
+            <li><span class="icon-check">#</span> Node.js / .NET / SQL</li>
+            <li><span class="icon-check">#</span> Git / Docker / Devops</li>
             <li></li>
           </ul>
       </div>
 
       <div class="content-block list-block">
         <div class="block-title-row">
-          <p class="block-title gradient-title">Modules</p>
+          <p id="Modules" class="block-title gradient-title">Modules</p>
           <p class="emoji">🧩</p>
         </div>
         <ul>
-          <li><span class="icon-check">✓</span> Fullstack Developer</li>
-          <li><span class="icon-check">✓</span> Business Intelligence</li>
-          <li><span class="icon-check">✓</span> Automation</li>
+          <li><span class="icon-check">#</span> Fullstack Developer</li>
+          <li><span class="icon-check">#</span> Business Intelligence</li>
+          <li><span class="icon-check">#</span> Automation</li>
         </ul>
       </div>
 
@@ -96,14 +95,14 @@
       <div class="content-block list-block">
         <div>
           <div class="block-title-row">
-            <p class="block-title gradient-title">Misc</p>
+            <p id="Misc" class="block-title gradient-title">Misc</p>
             <p class="emoji">🍓</p>
           </div>
 
           <ul class="list">
-            <li><span class="icon-check">✓</span> Rpi /  Maker /  IoT</li>
-            <li><span class="icon-check">✓</span> 3D Print</li>
-            <li><span class="icon-check">✓</span> ML / LLM</li>
+            <li><span class="icon-check">#</span> Rpi /  Maker /  IoT</li>
+            <li><span class="icon-check">#</span> 3D Print</li>
+            <li><span class="icon-check">#</span> ML / LLM</li>
           </ul>
           <span class="gradient-title text-center stripes">
             ///////////
@@ -122,11 +121,11 @@
           </div>
 
           <ul class="list">
-            <li><span class="icon-check">✓</span> <span data-command="explain" data-term="FPV" class="terminal-trigger">UAV FPV Freestyle</span></li>
-            <li><span class="icon-check">✓</span> Photography</li>
-            <li><span class="icon-check">✓</span> Astrophotography</li>
-            <li><span class="icon-check">✓</span> <span data-command="explain" data-term="Ultimate" class="terminal-trigger">Ultimate Frisbee</span></li>
-            <li><span class="icon-check">✓</span> Hiking</li>
+            <li><span class="icon-check">#</span> <span data-command="explain" data-term="FPV" class="terminal-trigger">UAV FPV Freestyle</span></li>
+            <li><span class="icon-check">#</span> Photography</li>
+            <li><span class="icon-check">#</span> Astrophotography</li>
+            <li><span class="icon-check">#</span> <span data-command="explain" data-term="Ultimate" class="terminal-trigger">Ultimate Frisbee</span></li>
+            <li><span class="icon-check">#</span> Hiking</li>
           </ul>
           <span class="gradient-title text-center stripes">
             ///////////
@@ -143,9 +142,9 @@
           <p class="emoji">🔗</p>
         </div>
           <ul>
-            <li><span class="icon-check">✓</span> <a href="#">Github</a></li>
-            <li><span class="icon-check">✓</span> <a href="#">LinkedIn</a></li>
-            <li><span class="icon-check">✓</span> <a href="#">Instagram</a></li>
+            <li><span class="icon-check">#</span> <a href="#">Github</a></li>
+            <li><span class="icon-check">#</span> <a href="#">LinkedIn</a></li>
+            <li><span class="icon-check">#</span> <a href="#">Instagram</a></li>
           </ul>
           <span class="gradient-title text-center stripes">
             ///////////
