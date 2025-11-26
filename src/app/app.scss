@@ -584,8 +584,35 @@ ul.list { margin-top: 2em; }
   }
 }
 
+@keyframes goto-pulse {
+  0% {
+    background: linear-gradient(to right, #e1d11dcc, #71bc4ccc );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  50% {
+    background: linear-gradient(to right, #71bc4ccc, #e1d11dcc );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  100% {
+    background: initial;
+  }
+}
+
+.goto-highlight {
+  animation: goto-pulse 1.2s ease-in-out;
+}
+
 /* Responsive Design Breakpoints */
 @media (max-width: 768px) {
+  app-logo {margin:auto}
+  header {
+    position: relative;
+    top:inherit
+  }
   .main-container {
     flex-direction: column; /* Stack columns vertically on mobile */
   }
