@@ -18,8 +18,9 @@ import { isPlatformBrowser } from '@angular/common';
       canvas {
         display: block;
         width: 100%;
-        height: 100;
+        height: 100%;
         image-rendering: pixelated; /* CRT/analog effect */
+        aspect-ratio: 16/9;
       }
     `,
   ],

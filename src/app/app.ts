@@ -1,4 +1,4 @@
-import { Component, inject, signal, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, inject, signal, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Added CommonModule
 import { AppLogoComponent } from './components/app-logo/app-logo'; // Import AppLogoComponent
 import { WireframeSphere } from './components/wireframe-sphere/wireframe-sphere';
@@ -23,7 +23,7 @@ import { SinusoidGraph } from './components/sinusoid-graph/sinusoid-graph';
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App implements AfterViewInit {
+export class App {
   @ViewChild('terminal', { static: true }) terminalEl!: ElementRef;
   @ViewChild('contentColumn', { static: true }) contentColumnEl!: ElementRef;
   protected readonly title = signal('voidbrain.net');
@@ -32,18 +32,6 @@ export class App implements AfterViewInit {
   private themeService = inject(Theme);
 
   protected selectedTheme = signal(this.themeService.currentThemeValue);
-  protected showTop = signal(false);
-
-  ngAfterViewInit() {
-    // Add scroll listener to content-column instead of window
-    const contentColumn = this.contentColumnEl.nativeElement;
-    contentColumn.addEventListener('scroll', () => {
-      const scrollY = contentColumn.scrollTop;
-      console.log("content column scroll:", scrollY);
-      // Show "top" button when scrolled down more than 200px
-      this.showTop.set(scrollY > 200);
-    });
-  }
 
   openModal() {
     this.isModalOpen = true;
@@ -66,6 +54,20 @@ export class App implements AfterViewInit {
   denyAction() {
     console.log('Deny action triggered');
     this.closeModal();
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey() {
+    if (this.isModalOpen) {
+      this.closeModal();
+    }
+  }
+
+  onBackdropClick(event: MouseEvent) {
+    // Only close if clicking the backdrop itself, not the modal content
+    if (this.isModalOpen && event.target === event.currentTarget) {
+      this.closeModal();
+    }
   }
 
   goTo(dest: string) {
