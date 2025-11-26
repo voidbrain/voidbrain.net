@@ -6,6 +6,7 @@ import { MlGraphComponent } from './components/wireframe-fpv-plane/wireframe-fpv
 import { Theme } from './services/ui/theme';
 import { TerminalComponent } from './components/terminal/terminal';
 import { RandomFlashMatrix } from './components/random-flash-matrix/random-flash-matrix';
+import { FxImageComponent } from './components/fx-image/fx-image';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ import { RandomFlashMatrix } from './components/random-flash-matrix/random-flash
     MlGraphComponent,
     RandomFlashMatrix,
     TerminalComponent,
+    FxImageComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',

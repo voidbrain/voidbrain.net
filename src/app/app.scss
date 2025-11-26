@@ -271,6 +271,15 @@ header {
     background-color: var(--color-primary);
     border-color: var(--color-accent);
   }
+
+  &:hover {
+      background-color: var(--color-secondary);
+  }
+}
+.panel-button {
+  &:hover {
+      background-color: var(--color-secondary);
+    }
 }
 
 .lipgloss-stack {
@@ -472,6 +481,7 @@ header {
       background-color: var(--color-tertiary);
     }
   }
+  button { color: var(--color-accent) }
 }
 
 /* Terminal Colors */
