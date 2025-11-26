@@ -2,11 +2,11 @@ import { Component, inject, signal, ViewChild, ElementRef } from '@angular/core'
 import { CommonModule } from '@angular/common'; // Added CommonModule
 import { AppLogoComponent } from './components/app-logo/app-logo'; // Import AppLogoComponent
 import { WireframeSphere } from './components/wireframe-sphere/wireframe-sphere';
-import { MlGraphComponent } from './components/wireframe-fpv-plane/wireframe-fpv-plane';
 import { Theme } from './services/ui/theme';
 import { TerminalComponent } from './components/terminal/terminal';
 import { RandomFlashMatrix } from './components/random-flash-matrix/random-flash-matrix';
 import { FxImageComponent } from './components/fx-image/fx-image';
+import { SinusoidGraph } from './components/sinusoid-graph/sinusoid-graph';
 
 @Component({
   selector: 'app-root',
@@ -15,10 +15,10 @@ import { FxImageComponent } from './components/fx-image/fx-image';
     CommonModule, // Added CommonModule
     AppLogoComponent, // Added AppLogoComponent
     WireframeSphere,
-    MlGraphComponent,
     RandomFlashMatrix,
     TerminalComponent,
     FxImageComponent,
+    SinusoidGraph
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
