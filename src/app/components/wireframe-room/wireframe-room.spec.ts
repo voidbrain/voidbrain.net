@@ -8,9 +8,8 @@ describe('WireframeRoom', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [WireframeRoom]
-    })
-    .compileComponents();
+      imports: [WireframeRoom],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(WireframeRoom);
     component = fixture.componentInstance;

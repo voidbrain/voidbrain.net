@@ -8,9 +8,8 @@ describe('WireframeSphere', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [WireframeSphere]
-    })
-    .compileComponents();
+      imports: [WireframeSphere],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(WireframeSphere);
     component = fixture.componentInstance;

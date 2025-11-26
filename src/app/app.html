@@ -92,21 +92,27 @@
           <li><span class="icon-check">✓</span> Rpi / Maker / IoT</li>
           <li><span class="icon-check">✓</span> Yuzu</li>
           <li><span class="icon-check">✓</span> ML / LLM</li>
-          <li><span class="icon-check">✓</span> Kumquat</li>
-          <li><span class="icon-check">✓</span> Pomelo</li>
         </ul>
+        <span class="gradient-title text-center">
+          ///////////
+
+        </span>
         <app-ml-graph></app-ml-graph>
       </div>
 
       <div class="content-block list-block">
         <p class="block-title gradient-title">Outdoor</p>
         <ul>
-          <li><span class="icon-check">✓</span> UAV Pilot / <span data-command="explain" data-term="FPV" class="terminal-trigger">FPV</span> Freestyle</li>
+          <li><span class="icon-check">✓</span> UAV <span data-command="explain" data-term="FPV" class="terminal-trigger">FPV</span> Freestyle</li>
           <li><span class="icon-check">✓</span> Photography</li>
           <li><span class="icon-check">✓</span> Astrophotography</li>
           <li><span class="icon-check">✓</span> Ultimate Frisbee</li>
           <li><span class="icon-check">✓</span> Hiking</li>
         </ul>
+        <span class="gradient-title text-center">
+          ///////////
+
+        </span>
         <app-wireframe-sphere></app-wireframe-sphere>
       </div>
 
@@ -117,10 +123,9 @@
           <li><span class="icon-check">✓</span> <a href="#">LinkedIn</a></li>
           <li><span class="icon-check">✓</span> <a href="#">Instagram</a></li>
         </ul>
-        <span class="">
-          <br />
-          ////
-          <br /><br />
+        <span class="gradient-title text-center">
+          ///////////
+
         </span>
 
         <app-random-flash-matrix></app-random-flash-matrix>
@@ -180,25 +185,27 @@
   </div>
 
   <!-- Original Modal retained for now, will be refined if necessary -->
-  <div *ngIf="isModalOpen" class="modal-overlay">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="gradient-title">Permission Required</h3>
-        <button (click)="closeModal()">X</button>
-      </div>
-      <div class="modal-body">
-        <p>Tool multiedit</p>
-        <p>Path ~/src</p>
-        <p>File ~/src/crush/internal/tui/components/chat/sidebar/sidebar.go</p>
-        <div class="code-diff">
-          <pre><code [innerHTML]="codeDiffContent"></code></pre>
+  @if(isModalOpen) {
+    <div class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="gradient-title">Permission Required</h3>
+          <button (click)="closeModal()">X</button>
+        </div>
+        <div class="modal-body">
+          <p>Tool multiedit</p>
+          <p>Path ~/src</p>
+          <p>File ~/src/crush/internal/tui/components/chat/sidebar/sidebar.go</p>
+          <div class="code-diff">
+            <pre><code [innerHTML]="codeDiffContent"></code></pre>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button (click)="allowAction()">Allow</button>
+          <button (click)="allowForSession()">Allow for Session</button>
+          <button (click)="denyAction()">Deny</button>
         </div>
       </div>
-      <div class="modal-footer">
-        <button (click)="allowAction()">Allow</button>
-        <button (click)="allowForSession()">Allow for Session</button>
-        <button (click)="denyAction()">Deny</button>
-      </div>
     </div>
-  </div>
+  }
 </div>

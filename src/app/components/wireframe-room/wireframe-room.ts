@@ -4,8 +4,8 @@ import {
   OnInit,
   OnDestroy,
   ViewChild,
-  Inject,
   PLATFORM_ID,
+  inject,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
@@ -29,11 +29,16 @@ export class WireframeCube implements OnInit, OnDestroy {
   private isBrowser = false;
 
   private THREE!: typeof import('three');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private OrbitControls!: any;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private scene: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private camera: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private renderer: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private controls: any;
 
   private animationId = 0;
@@ -43,17 +48,19 @@ export class WireframeCube implements OnInit, OnDestroy {
   private H = 40; // height (floor-ceiling)
   private D = 80; // depth  (front-back)
 
-  constructor(@Inject(PLATFORM_ID) platformId: Object) {
-    this.isBrowser = isPlatformBrowser(platformId);
+  private platformId = inject(PLATFORM_ID);
+
+  constructor() {
+    this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
   async ngOnInit() {
     if (!this.isBrowser) return;
 
     this.THREE = await import('three');
-    this.OrbitControls =
-      (await import('three/examples/jsm/controls/OrbitControls.js'))
-        .OrbitControls;
+    this.OrbitControls = (
+      await import('three/examples/jsm/controls/OrbitControls.js')
+    ).OrbitControls;
 
     this.initScene();
     this.createRoom();
@@ -85,10 +92,7 @@ export class WireframeCube implements OnInit, OnDestroy {
     this.renderer.setSize(w, h);
     this.container.nativeElement.appendChild(this.renderer.domElement);
 
-    this.controls = new this.OrbitControls(
-      this.camera,
-      this.renderer.domElement
-    );
+    this.controls = new this.OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.07;
     this.controls.enablePan = false;
@@ -98,19 +102,26 @@ export class WireframeCube implements OnInit, OnDestroy {
   // ---------------------------------------------------------
   // REAL GRID WALL (no diagonals)
   // ---------------------------------------------------------
-  private makeGrid(width: number, height: number, step: number, axis: "xy"|"xz"|"yz", pos: any) {
+  private makeGrid(
+    width: number,
+    height: number,
+    step: number,
+    axis: 'xy' | 'xz' | 'yz',
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    pos: any,
+  ) {
     const THREE = this.THREE;
     const geometry = new THREE.BufferGeometry();
     const vertices: number[] = [];
 
     // vertical lines
-    for (let x = -width/2; x <= width/2; x += step) {
-      vertices.push(x, -height/2, 0,   x, height/2, 0);
+    for (let x = -width / 2; x <= width / 2; x += step) {
+      vertices.push(x, -height / 2, 0, x, height / 2, 0);
     }
 
     // horizontal lines
-    for (let y = -height/2; y <= height/2; y += step) {
-      vertices.push(-width/2, y, 0,   width/2, y, 0);
+    for (let y = -height / 2; y <= height / 2; y += step) {
+      vertices.push(-width / 2, y, 0, width / 2, y, 0);
     }
 
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
@@ -121,7 +132,7 @@ export class WireframeCube implements OnInit, OnDestroy {
 
     const colors: number[] = [];
     for (let i = 0; i < vertices.length / 3; i++) {
-      const t = i / (vertices.length/3);
+      const t = i / (vertices.length / 3);
       const c = colorA.clone().lerp(colorB, t);
       colors.push(c.r, c.g, c.b);
     }
@@ -131,8 +142,8 @@ export class WireframeCube implements OnInit, OnDestroy {
 
     const grid = new THREE.LineSegments(geometry, material);
 
-    if (axis === "xz") grid.rotation.x = -Math.PI/2;
-    if (axis === "yz") grid.rotation.y = Math.PI/2;
+    if (axis === 'xz') grid.rotation.x = -Math.PI / 2;
+    if (axis === 'yz') grid.rotation.y = Math.PI / 2;
 
     grid.position.set(pos.x, pos.y, pos.z);
 
@@ -149,34 +160,22 @@ export class WireframeCube implements OnInit, OnDestroy {
     const step = 2;
 
     // FRONT (xy)
-    this.scene.add(
-      this.makeGrid(W, H, step, "xy", { x: 0, y: 0, z: -D/2 })
-    );
+    this.scene.add(this.makeGrid(W, H, step, 'xy', { x: 0, y: 0, z: -D / 2 }));
 
     // BACK (xy)
-    this.scene.add(
-      this.makeGrid(W, H, step, "xy", { x: 0, y: 0, z: +D/2 })
-    );
+    this.scene.add(this.makeGrid(W, H, step, 'xy', { x: 0, y: 0, z: +D / 2 }));
 
     // LEFT (yz)
-    this.scene.add(
-      this.makeGrid(D, H, step, "yz", { x: -W/2, y: 0, z: 0 })
-    );
+    this.scene.add(this.makeGrid(D, H, step, 'yz', { x: -W / 2, y: 0, z: 0 }));
 
     // RIGHT (yz)
-    this.scene.add(
-      this.makeGrid(D, H, step, "yz", { x: +W/2, y: 0, z: 0 })
-    );
+    this.scene.add(this.makeGrid(D, H, step, 'yz', { x: +W / 2, y: 0, z: 0 }));
 
     // FLOOR (xz)
-    this.scene.add(
-      this.makeGrid(W, D, step, "xz", { x: 0, y: -H/2, z: 0 })
-    );
+    this.scene.add(this.makeGrid(W, D, step, 'xz', { x: 0, y: -H / 2, z: 0 }));
 
     // CEILING (xz)
-    this.scene.add(
-      this.makeGrid(W, D, step, "xz", { x: 0, y: +H/2, z: 0 })
-    );
+    this.scene.add(this.makeGrid(W, D, step, 'xz', { x: 0, y: +H / 2, z: 0 }));
   }
 
   private animate = () => {

@@ -8,9 +8,8 @@ describe('WireframeFpvPlane', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [WireframeFpvPlane]
-    })
-    .compileComponents();
+      imports: [WireframeFpvPlane],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(WireframeFpvPlane);
     component = fixture.componentInstance;

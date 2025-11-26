@@ -11,6 +11,7 @@ export class Theme {
   private document = inject(DOCUMENT);
   private platformId = inject(PLATFORM_ID);
   private renderer = inject(RendererFactory2).createRenderer(null, null);
+  private isBrowser = false;
 
   private readonly THEME_KEY = 'angular-theme';
   private readonly STYLE_KEY = 'angular-style-theme';
@@ -23,10 +24,11 @@ export class Theme {
 
   constructor() {
     this.initializeTheme();
+    this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
   private initializeTheme(): void {
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.isBrowser) {
       // Check for saved theme preference
       const savedTheme = localStorage.getItem(this.THEME_KEY) as ThemeType;
 
@@ -59,7 +61,7 @@ export class Theme {
     this.currentTheme.set(theme);
 
     // Update document class
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.isBrowser) {
       if (theme === 'dark') {
         this.renderer.addClass(this.document.documentElement, this.DARK_CLASS);
       } else {
@@ -68,7 +70,7 @@ export class Theme {
     }
 
     // Save preference
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.isBrowser) {
       localStorage.setItem(this.THEME_KEY, theme);
     }
   }

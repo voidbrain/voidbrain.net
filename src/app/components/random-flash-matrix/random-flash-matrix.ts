@@ -4,18 +4,25 @@ import {
   OnInit,
   OnDestroy,
   ViewChild,
-  Inject,
   PLATFORM_ID,
+  inject,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-random-flash-matrix',
-  template: `<canvas #canvasMatrix width="400" height="200" style="width:100%; height:200px; display:block;  border: 1px solid var(--color-border);"></canvas>`,
+  template: `<canvas
+    #canvasMatrix
+    width="400"
+    height="200"
+    style="width:100%; height:200px; display:block;  border: 1px solid var(--color-border);"
+  ></canvas>`,
   styles: [``],
 })
 export class RandomFlashMatrix implements OnInit, OnDestroy {
   @ViewChild('canvasMatrix', { static: true }) canvasRef!: ElementRef<HTMLCanvasElement>;
+
+  private platformId = inject(PLATFORM_ID);
 
   private ctx!: CanvasRenderingContext2D;
   private animationId = 0;
@@ -23,7 +30,7 @@ export class RandomFlashMatrix implements OnInit, OnDestroy {
 
   private rows = 8;
   private cols = 16;
-  private squareSize = Math.ceil(400/this.cols);
+  private squareSize = Math.ceil(400 / this.cols);
 
   private baseColorStart = '#B04CBC';
   private baseColorEnd = '#5F47F5';
@@ -38,8 +45,8 @@ export class RandomFlashMatrix implements OnInit, OnDestroy {
     flashEndTime?: number;
   }[] = [];
 
-  constructor(@Inject(PLATFORM_ID) platformId: Object) {
-    this.isBrowser = isPlatformBrowser(platformId);
+  constructor() {
+    this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
   ngOnInit() {
@@ -60,7 +67,7 @@ export class RandomFlashMatrix implements OnInit, OnDestroy {
     this.squares = [];
     for (let row = 0; row < this.rows; row++) {
       for (let col = 0; col < this.cols; col++) {
-        const t = ((row / (this.rows - 1)) + (col / (this.cols - 1))) / 2;
+        const t = (row / (this.rows - 1) + col / (this.cols - 1)) / 2;
         const baseColor = this.lerpColor(this.baseColorStart, this.baseColorEnd, t);
         this.squares.push({
           x: col * this.squareSize,
@@ -99,9 +106,10 @@ export class RandomFlashMatrix implements OnInit, OnDestroy {
     ctx.strokeStyle = '#28283d';
     ctx.lineWidth = 2;
 
-    for (let sq of this.squares) {
+    for (const sq of this.squares) {
       // Decide if we should start a flash
-      if (!sq.flashColor && Math.random() < 0.001) { // ~0.1% chance per frame
+      if (!sq.flashColor && Math.random() < 0.001) {
+        // ~0.1% chance per frame
         sq.flashColor = this.flashColors[Math.floor(Math.random() * this.flashColors.length)];
         sq.flashEndTime = now + this.flashDuration;
       }

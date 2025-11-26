@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
-@import "xterm/css/xterm.css";
+@import 'xterm/css/xterm.css';
 
 :root {
   --color-background: #1e1e2e; /* Darker background */
@@ -18,7 +18,8 @@
   --spacing-unit: 8px;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   font-family: var(--font-dev);
@@ -27,12 +28,17 @@ html, body {
   overflow: hidden; /* Hide scrollbars for the brutalist terminal feel */
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 /* Basic brutalist terminal styling */
-button, input, select, textarea {
+button,
+input,
+select,
+textarea {
   font-family: var(--font-dev);
   background-color: var(--color-primary);
   color: var(--color-text);
@@ -60,8 +66,8 @@ button, input, select, textarea {
   background: repeating-linear-gradient(
     -45deg,
     var(--color-accent),
-    var(--color-accent) 2px, /* Smaller segments */
-    transparent 2px,
+    var(--color-accent) 2px,
+    /* Smaller segments */ transparent 2px,
     transparent 4px
   );
   margin: var(--spacing-unit) 0;

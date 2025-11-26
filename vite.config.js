@@ -3,9 +3,9 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   ssr: {
     noExternal: ['xterm'],
-    external: []
+    external: [],
   },
   optimizeDeps: {
-    exclude: ['xterm']
-  }
+    exclude: ['xterm'],
+  },
 });
