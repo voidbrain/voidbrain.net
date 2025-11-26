@@ -88,7 +88,7 @@ export class FxImageComponent implements AfterViewInit {
       data[i + 2] *= 1.0; // Blue (boost blue for purple)
 
       // Analog static noise
-      const noise = (Math.random() - 0.7) * 200; // +/-25
+      const noise = (Math.random() - 0.6) * 200; // +/-25
       data[i] += noise;
       data[i + 1] += noise;
       data[i + 2] += noise;

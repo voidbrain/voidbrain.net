@@ -39,9 +39,9 @@ export class SinusoidGraph implements AfterViewInit {
           {
             label: 'Sinusoid',
             data: this.data,
-            borderColor: 'rgba(255, 99, 132, 1)',
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            borderWidth: 2,
+            borderColor: '#b04cbc',
+            backgroundColor: '#5f47f5',
+            borderWidth: 1,
             fill: false,
           },
         ],
@@ -59,8 +59,7 @@ export class SinusoidGraph implements AfterViewInit {
             display: false,
           },
           y: {
-            min: -2,
-            max: 2,
+            display: false,
           },
         },
         animation: {
