@@ -12,7 +12,7 @@ import { isPlatformBrowser } from '@angular/common';
 @Component({
   selector: 'app-terminal',
   standalone: true,
-  template: `<div class="cli-host" #container></div>`,
+  template: ` <div class="cli-host" #container></div>`,
   styles: [
     `
       .cli-host {
@@ -87,7 +87,11 @@ export class TerminalComponent implements OnInit, OnDestroy {
     });
 
     this.term.open(this.container.nativeElement);
-    this.term.focus();
+
+    // Focus terminal after a short delay to ensure it's ready
+    setTimeout(() => {
+      this.term.focus();
+    }, 1000);
 
     // Listen to clicks on elements with class "terminal-trigger"
     document.querySelectorAll('.terminal-trigger').forEach((el) => {

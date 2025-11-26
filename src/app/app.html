@@ -32,11 +32,11 @@
       <div class="content-block list-block">
         <p class="block-title gradient-title">Fullstack Developer</p>
         <ul>
-          <li><span class="icon-check">✓</span> Web &mdash; Apps</li>
-          <li><span class="icon-check">✓</span> Node.js / .NET / SQL</li>
-          <li><span class="icon-check">✓</span>Git / Docker / Devops</li>
-          <li><span class="icon-check">✓</span></li>
-          <li><span class="icon-check">✓</span></li>
+          <li> 🕸 Web &mdash; 💻 Apps</li>
+          <li>👾 Node.js / 📚 .NET / 🗄️ SQL</li>
+          <li>🔀 Git / 🐳 Docker / ♾️ Devops</li>
+          <li></li>
+          <li></li>
         </ul>
       </div>
 
@@ -52,8 +52,7 @@
       </div>
 
       <div class="content-block">
-
-        <img src="assets/images/avatar.png" alt="Avatar" width="100%" />
+        <app-fx-image></app-fx-image>
       </div>
     </div>
 
@@ -89,9 +88,9 @@
       <div class="content-block list-block">
         <p class="block-title gradient-title">Indoor</p>
         <ul>
-          <li><span class="icon-check">✓</span> Rpi / Maker / IoT</li>
-          <li><span class="icon-check">✓</span> Yuzu</li>
-          <li><span class="icon-check">✓</span> ML / LLM</li>
+          <li>🍓 Rpi / 🏠 Maker / 📡 IoT</li>
+          <li>🖨️ 3D Print</li>
+          <li>🤖 ML / LLM</li>
         </ul>
         <span class="gradient-title text-center">
           ///////////
@@ -148,10 +147,10 @@
     <app-logo></app-logo>
 
     <div class="panel">
-    <button (click)="openModal()" class="page-button">Lang</button>
-    <button (click)="openModal()" class="page-button">Theme</button>
-    <button (click)="openModal()" class="page-button">Style</button>
-    <button (click)="openModal()" class="page-button">Color</button>
+    <button class="panel-button" (click)="openModal()">◰</button>
+    <button  class="panel-button"(click)="openModal()">◪</button>
+    <button class="panel-button" (click)="openModal()">▧</button>
+    <button class="panel-button" (click)="openModal()">▣</button>
     </div>
 
     <div class="terminal-prompt">
@@ -166,9 +165,6 @@
         <span class="">System Status:</span> <span class="green-text">ONLINE</span>
       </div>
       <div class="status-line">
-        <span class="">AI Module:</span> <span class="red-text">DIGIT RECOGNITION ACTIVE</span>
-      </div>
-      <div class="status-line">
         <span class="">UI Framework:</span> <span class="blue-text">ANGULAR 21</span>
       </div>
       <div class="status-line">
@@ -178,7 +174,7 @@
         <span class="">Type</span> <span data-command="help" class="terminal-trigger magenta-text">help</span> to get started
       </div>
       <div class="command-line">
-        <span class="user">[user@voidbrain.net ~/]$</span>
+        <span class="user">[user@voidbrain.net ~/]</span>
       </div>
       <app-terminal></app-terminal>
     </div>
