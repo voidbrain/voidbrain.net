@@ -1,5 +1,6 @@
-import { Component, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, ViewChild, inject, PLATFORM_ID } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
+import { isPlatformBrowser } from '@angular/common';
 
 Chart.register(...registerables);
 
@@ -18,7 +19,15 @@ export class SinusoidGraph implements AfterViewInit {
   private maxPoints = 200;
   private time = 0;
 
+  private isBrowser = false;
+  private platformId = inject(PLATFORM_ID);
+
+  constructor() {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+  }
+
   ngAfterViewInit() {
+    if (!this.isBrowser) return;
     this.initChart();
     this.startAnimation();
   }
