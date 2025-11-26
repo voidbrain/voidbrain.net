@@ -583,3 +583,37 @@ ul.list { margin-top: 2em; }
     opacity: 0;
   }
 }
+
+/* Responsive Design Breakpoints */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column; /* Stack columns vertically on mobile */
+  }
+
+  .right-column {
+    order: 1; /* Right column first on mobile */
+
+    border-left: none; /* Remove left border */
+    border-bottom: 1px solid var(--color-border); /* Add bottom border */
+    margin-bottom: var(--spacing-unit); /* Add gap */
+  }
+
+  .content-column {
+    order: 2; /* Content column second on mobile */
+
+    border-right: none; /* Remove right border */
+    padding-top: var(--spacing-unit); /* Add top padding */
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .right-column {
+    max-height: 150px; /* Smaller height on very small screens */
+    padding: calc(var(--spacing-unit) / 2); /* Smaller padding */
+  }
+
+  .content-column {
+    font-size: 0.8em; /* Slightly smaller font on mobile */
+  }
+}
