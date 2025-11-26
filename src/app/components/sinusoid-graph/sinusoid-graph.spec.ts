@@ -8,9 +8,8 @@ describe('SinusoidGraph', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SinusoidGraph]
-    })
-    .compileComponents();
+      imports: [SinusoidGraph],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SinusoidGraph);
     component = fixture.componentInstance;

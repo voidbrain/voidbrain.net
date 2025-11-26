@@ -4,14 +4,19 @@ import {
   OnInit,
   OnDestroy,
   ViewChild,
-  Inject,
   PLATFORM_ID,
+  inject,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-ml-graph',
-  template: `<canvas #canvasFpv width="300" height="200" style="width:100%; height:200px; background:#111;"></canvas>`,
+  template: `<canvas
+    #canvasFpv
+    width="300"
+    height="200"
+    style="width:100%; height:200px; background:#111;"
+  ></canvas>`,
   styles: [``],
 })
 export class MlGraphComponent implements OnInit, OnDestroy {
@@ -32,8 +37,10 @@ export class MlGraphComponent implements OnInit, OnDestroy {
   private highlightColor = '#2ecc71'; // green
   private lineColor = '#888'; // grey
 
-  constructor(@Inject(PLATFORM_ID) platformId: Object) {
-    this.isBrowser = isPlatformBrowser(platformId);
+  private platformId = inject(PLATFORM_ID);
+
+  constructor() {
+    this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
   ngOnInit() {
@@ -97,8 +104,8 @@ export class MlGraphComponent implements OnInit, OnDestroy {
     for (let i = 0; i < this.positions.length - 1; i++) {
       const layer = this.positions[i];
       const nextLayer = this.positions[i + 1];
-      for (let n1 of layer) {
-        for (let n2 of nextLayer) {
+      for (const n1 of layer) {
+        for (const n2 of nextLayer) {
           this.drawLine(n1.x, n1.y, n2.x, n2.y);
         }
       }

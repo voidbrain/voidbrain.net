@@ -4,8 +4,8 @@ import {
   OnInit,
   OnDestroy,
   ViewChild,
-  Inject,
   PLATFORM_ID,
+  inject,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
@@ -13,15 +13,23 @@ import { isPlatformBrowser } from '@angular/common';
   selector: 'app-terminal',
   standalone: true,
   template: `<div class="cli-host" #container></div>`,
-  styles: [`
-    .cli-host { width:100%; height:100%; background:#000; }
-  `]
+  styles: [
+    `
+      .cli-host {
+        width: 100%;
+        height: 100%;
+        background: #000;
+      }
+    `,
+  ],
 })
 export class TerminalComponent implements OnInit, OnDestroy {
   @ViewChild('container', { static: true }) container!: ElementRef<HTMLDivElement>;
 
   private isBrowser = false;
-  private Terminal!: any;     // dynamic import
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private Terminal!: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private term: any;
   private disposers: (() => void)[] = [];
 
@@ -41,20 +49,22 @@ export class TerminalComponent implements OnInit, OnDestroy {
 
   private fakeFS = {
     '/': {
-      'projects': {
+      projects: {
         'fpv.txt': null,
         'frisbee.txt': null,
       },
-      'docs': {
+      docs: {
         'readme.md': null,
         'changelog.md': null,
       },
       'data.csv': null,
-    }
+    },
   };
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
-    this.isBrowser = isPlatformBrowser(platformId);
+  private platformId = inject(PLATFORM_ID);
+
+  constructor() {
+    this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
   async ngOnInit() {
@@ -71,6 +81,8 @@ export class TerminalComponent implements OnInit, OnDestroy {
       theme: {
         background: '#16162a',
         foreground: '#6699ff',
+        cursor: '#6699ff',
+        selectionBackground: '#ff33b870',
       },
     });
 
@@ -78,19 +90,19 @@ export class TerminalComponent implements OnInit, OnDestroy {
     this.term.focus();
 
     // Listen to clicks on elements with class "terminal-trigger"
-  document.querySelectorAll('.terminal-trigger').forEach(el => {
-  el.addEventListener('click', () => {
-    const command = el.getAttribute('data-command') || '';
-    const termArg = el.getAttribute('data-term') || '';
+    document.querySelectorAll('.terminal-trigger').forEach((el) => {
+      el.addEventListener('click', () => {
+        const command = el.getAttribute('data-command') || '';
+        const termArg = el.getAttribute('data-term') || '';
 
-    const fullCommand = termArg ? `${command} ${termArg}` : command;
+        const fullCommand = termArg ? `${command} ${termArg}` : command;
 
-    this.runCommandFromClick(fullCommand);
-  });
-});
+        this.runCommandFromClick(fullCommand);
+      });
+    });
 
     this.printPrompt();
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const keyListener = this.term.onKey((ev: any) => {
       const key = ev.key;
       const domEvent: KeyboardEvent = ev.domEvent;
@@ -100,25 +112,25 @@ export class TerminalComponent implements OnInit, OnDestroy {
   }
 
   private runCommandFromClick(cmdText: string) {
-  // Print the command in terminal
-  this.term.writeln(`${cmdText}`);
+    // Print the command in terminal
+    this.term.writeln(`${cmdText}`);
 
-  // Parse command + args
-  const parts = cmdText.trim().split(' ').filter(Boolean);
-  const cmd = parts[0].toLowerCase();
-  const args = parts.slice(1);
+    // Parse command + args
+    const parts = cmdText.trim().split(' ').filter(Boolean);
+    const cmd = parts[0].toLowerCase();
+    const args = parts.slice(1);
 
-  // Run the command (normal or multi-step)
-  this.runCommand(cmd, args);
-
-  // Keep terminal focused
-  this.term.focus();
-}
+    // Run the command (normal or multi-step)
+    this.runCommand(cmd, args);
+  }
 
   ngOnDestroy() {
-    this.disposers.forEach(d => d());
+    this.disposers.forEach((d) => d());
     if (this.term) {
-      try { this.term.dispose(); } catch {}
+      try {
+        this.term.dispose();
+        // eslint-disable-next-line no-empty
+      } catch {}
     }
   }
 
@@ -158,11 +170,13 @@ export class TerminalComponent implements OnInit, OnDestroy {
     }
 
     if (code === 'ArrowUp') {
-      this.navigateHistory(-1); return;
+      this.navigateHistory(-1);
+      return;
     }
 
     if (code === 'ArrowDown') {
-      this.navigateHistory(1); return;
+      this.navigateHistory(1);
+      return;
     }
 
     if (code === 'Tab') {
@@ -248,9 +262,9 @@ export class TerminalComponent implements OnInit, OnDestroy {
         this.conversationMode = true;
         this.pendingCommand = 'explain';
         this.pendingPrompt = 'explain what?';
-        this.writeln("Available Catalogue: FPV, Ultimate Frisbee, ML");
+        this.writeln('Available Catalogue: FPV, Ultimate Frisbee, ML');
         this.printPrompt();
-        if(args.length){
+        if (args.length) {
           const response = this.runSubCommand(cmd, args[0]);
           if (response) this.writeln(response);
 
@@ -263,7 +277,9 @@ export class TerminalComponent implements OnInit, OnDestroy {
         }
         break;
       case 'ls':
+        // eslint-disable-next-line no-case-declarations
         const path = args[0] || '/';
+        // eslint-disable-next-line no-case-declarations
         const treeOutput = this.listTreeAscii(path, this.fakeFS);
         this.writeln(treeOutput);
         this.printPrompt();
@@ -281,12 +297,12 @@ export class TerminalComponent implements OnInit, OnDestroy {
     if (parent === 'explain') {
       switch (input.toLowerCase()) {
         case 'fpv':
-          console.log('fpv')
-          return "FPV = First Person View drone piloting with goggles.";
+          console.log('fpv');
+          return 'FPV = First Person View drone piloting with goggles.';
         case 'ultimate frisbee':
-          return "Ultimate Frisbee = a fast-paced team disc sport.";
+          return 'Ultimate Frisbee = a fast-paced team disc sport.';
         case 'ml':
-          return "ML = Machine Learning — algorithms that learn from data.";
+          return 'ML = Machine Learning — algorithms that learn from data.';
         default:
           return `Invalid option: ${input}`;
       }
@@ -315,43 +331,45 @@ export class TerminalComponent implements OnInit, OnDestroy {
     this.term.write(entry);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private listTreeAscii(path: string, fs: any, prefix = ''): string {
-  const node = this.resolvePath(path, fs);
-  if (!node) return `Path not found: ${path}`;
+    const node = this.resolvePath(path, fs);
+    if (!node) return `Path not found: ${path}`;
 
-  const keys = Object.keys(node);
-  let output = '';
+    const keys = Object.keys(node);
+    let output = '';
 
-  keys.forEach((key, index) => {
-    const isLast = index === keys.length - 1;
-    const connector = isLast ? '└─ ' : '├─ ';
-    output += prefix + connector + key + (node[key] && typeof node[key] === 'object' ? '/' : '') + '\r\n';
+    keys.forEach((key, index) => {
+      const isLast = index === keys.length - 1;
+      const connector = isLast ? '└─ ' : '├─ ';
+      output +=
+        prefix + connector + key + (node[key] && typeof node[key] === 'object' ? '/' : '') + '\r\n';
 
-    if (node[key] && typeof node[key] === 'object') {
-      const newPrefix = prefix + (isLast ? '   ' : '│  ');
-      output += this.listTreeAscii(path + key + '/', fs, newPrefix);
-    }
-  });
+      if (node[key] && typeof node[key] === 'object') {
+        const newPrefix = prefix + (isLast ? '   ' : '│  ');
+        output += this.listTreeAscii(path + key + '/', fs, newPrefix);
+      }
+    });
 
-  return output;
-}
-
-
-// Helper to resolve path
-private resolvePath(path: string, fs: any): any {
-  const parts = path.split('/').filter(Boolean);
-  let node = fs['/'];
-  for (const part of parts) {
-    if (!node[part]) return null;
-    node = node[part];
+    return output;
   }
-  return node;
-}
+
+  // Helper to resolve path
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private resolvePath(path: string, fs: any): any {
+    const parts = path.split('/').filter(Boolean);
+    let node = fs['/'];
+    for (const part of parts) {
+      if (!node[part]) return null;
+      node = node[part];
+    }
+    return node;
+  }
 
   // ---------- Tab completion ----------
   private handleTabComplete() {
     const prefix = this.buffer;
-    const matches = this.commands.filter(c => c.startsWith(prefix));
+    const matches = this.commands.filter((c) => c.startsWith(prefix));
 
     if (matches.length === 1) {
       const completion = matches[0].slice(prefix.length);

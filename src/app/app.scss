@@ -22,8 +22,8 @@ header {
 }
 
 .lipgloss-stack {
-    flex: 1;
-  }
+  flex: 1;
+}
 
 .lipgloss-banner {
   display: flex;
@@ -34,7 +34,6 @@ header {
     padding: var(--spacing-unit);
   }
 }
-
 
 .content-column {
   flex: 1;
@@ -72,9 +71,15 @@ header {
     }
 
     /* Example of syntax highlighting for the pre code block */
-    code .package { color: #569cd6; } /* blue */
-    code .import { color: #c586c0; } /* purple */
-    code .string { color: #ce9178; } /* orange */
+    code .package {
+      color: #569cd6;
+    } /* blue */
+    code .import {
+      color: #c586c0;
+    } /* purple */
+    code .string {
+      color: #ce9178;
+    } /* orange */
   }
 }
 
@@ -117,15 +122,16 @@ header {
   flex-direction: column;
   gap: var(--spacing-unit);
 
-  .oblique-bar-modal-top, .oblique-bar-modal-bottom {
+  .oblique-bar-modal-top,
+  .oblique-bar-modal-bottom {
     position: absolute;
     left: 0;
     width: 100%;
     height: 2px;
     background: repeating-linear-gradient(
       -45deg,
-      #9b59b6, /* A distinct color for modal oblique bars */
-      #9b59b6 4px,
+      #9b59b6,
+      /* A distinct color for modal oblique bars */ #9b59b6 4px,
       transparent 4px,
       transparent 8px
     );
@@ -197,8 +203,12 @@ header {
       }
 
       /* Emulating diff colors */
-      .search-marker { color: #f9c74f; } /* Yellow for search marker */
-      .replace-marker { color: #4d8ce7; } /* Blue for replace marker */
+      .search-marker {
+        color: #f9c74f;
+      } /* Yellow for search marker */
+      .replace-marker {
+        color: #4d8ce7;
+      } /* Blue for replace marker */
 
       /* This part is tricky to get right with just CSS for pre/code */
       /* Ideally, each line would be a span with a specific class for precise diff styling */
@@ -217,7 +227,8 @@ header {
       min-width: 100px;
     }
 
-    button:nth-child(2) { /* "Allow for Session" button */
+    button:nth-child(2) {
+      /* "Allow for Session" button */
       background-color: #9b59b6; /* Purple accent */
       box-shadow: 2px 2px 0px #c042d3;
       border: 1px solid #c042d3;
@@ -226,7 +237,8 @@ header {
       }
     }
 
-    button:last-child { /* "Deny" button */
+    button:last-child {
+      /* "Deny" button */
       background-color: #e74c3c;
       box-shadow: 2px 2px 0px #c0392b;
       border: 1px solid #c0392b;
@@ -262,7 +274,6 @@ header {
 }
 
 .lipgloss-stack {
-
   display: flex;
   flex-direction: column;
   margin: var(--spacing-unit) 0;
@@ -273,11 +284,26 @@ header {
     display: block;
     color: #fff;
 
-    &.gradient-1 { background: linear-gradient(to right, #ff3366, #ff9966); margin-left: 0em; }
-    &.gradient-2 { background: linear-gradient(to right, #ff5e62, #ff9966); margin-left: 1em; }
-    &.gradient-3 { background: linear-gradient(to right, #ff8c61, #ff9966); margin-left: 3em; }
-    &.gradient-4 { background: linear-gradient(to right, #ffb961, #ff9966); margin-left: 4em; }
-    &.gradient-5 { background: linear-gradient(to right, #ffe661, #ff9966); margin-left: 7em; }
+    &.gradient-1 {
+      background: linear-gradient(to right, #ff3366, #ff9966);
+      margin-left: 0em;
+    }
+    &.gradient-2 {
+      background: linear-gradient(to right, #ff5e62, #ff9966);
+      margin-left: 1em;
+    }
+    &.gradient-3 {
+      background: linear-gradient(to right, #ff8c61, #ff9966);
+      margin-left: 3em;
+    }
+    &.gradient-4 {
+      background: linear-gradient(to right, #ffb961, #ff9966);
+      margin-left: 4em;
+    }
+    &.gradient-5 {
+      background: linear-gradient(to right, #ffe661, #ff9966);
+      margin-left: 7em;
+    }
   }
 }
 
@@ -308,7 +334,7 @@ header {
 }
 
 .gradient-title {
-  background: linear-gradient(to right,#B04CBC, #5F47F5);
+  background: linear-gradient(to right, #b04cbc, #5f47f5);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -331,14 +357,17 @@ header {
   box-shadow: 8px 8px 0px var(--color-primary);
   padding: calc(var(--spacing-unit) * 2);
 
-
   .dialog-actions {
     margin-top: var(--spacing-unit);
   }
 
   .dialog-button {
-    &.yes { background-color: var(--color-secondary); }
-    &.maybe { background-color: var(--color-tertiary); }
+    &.yes {
+      background-color: var(--color-secondary);
+    }
+    &.maybe {
+      background-color: var(--color-tertiary);
+    }
   }
 }
 
@@ -352,6 +381,7 @@ header {
 .content-block {
   border: 1px solid var(--color-border);
   padding: var(--spacing-unit);
+  justify-content: space-between;
 
   .block-title {
     font-weight: bold;
@@ -369,7 +399,7 @@ header {
   li {
     margin-bottom: calc(var(--spacing-unit) / 2);
     a {
-      color: var(--color-info)
+      color: var(--color-info);
     }
   }
 
@@ -420,7 +450,8 @@ header {
   border-top: 1px solid var(--color-border);
 }
 
-.status-item, .status-item > * {
+.status-item,
+.status-item > * {
   color: var(--color-text);
   padding: calc(var(--spacing-unit) / 2);
 }
@@ -434,8 +465,12 @@ header {
   display: flex;
   justify-content: space-between;
   .page-button {
-    &.yes { background-color: var(--color-secondary); }
-    &.maybe { background-color: var(--color-tertiary); }
+    &.yes {
+      background-color: var(--color-secondary);
+    }
+    &.maybe {
+      background-color: var(--color-tertiary);
+    }
   }
 }
 
@@ -485,7 +520,9 @@ header {
   gap: 4px;
 }
 
-.user { display: block;}
+.user {
+  display: block;
+}
 
 .cursor {
   color: var(--color-info);
@@ -496,6 +533,12 @@ header {
 }
 
 @keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
 }

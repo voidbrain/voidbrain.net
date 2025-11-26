@@ -1,12 +1,11 @@
-import { Component, inject, signal, OnInit, AfterViewInit, Inject, PLATFORM_ID, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, signal, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Added CommonModule
-import { isPlatformBrowser } from '@angular/common';
 import { AppLogoComponent } from './components/app-logo/app-logo'; // Import AppLogoComponent
 import { WireframeSphere } from './components/wireframe-sphere/wireframe-sphere';
 import { MlGraphComponent } from './components/wireframe-fpv-plane/wireframe-fpv-plane';
-import { Theme } from './services/ui/theme'
-import { TerminalComponent } from "./components/terminal/terminal";
-import { RandomFlashMatrix } from "./components/random-flash-matrix/random-flash-matrix";
+import { Theme } from './services/ui/theme';
+import { TerminalComponent } from './components/terminal/terminal';
+import { RandomFlashMatrix } from './components/random-flash-matrix/random-flash-matrix';
 
 @Component({
   selector: 'app-root',
@@ -17,10 +16,10 @@ import { RandomFlashMatrix } from "./components/random-flash-matrix/random-flash
     WireframeSphere,
     MlGraphComponent,
     RandomFlashMatrix,
-    TerminalComponent
-],
+    TerminalComponent,
+  ],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
 })
 export class App {
   @ViewChild('terminal', { static: true }) terminalEl!: ElementRef;
@@ -28,15 +27,6 @@ export class App {
   isModalOpen = false; // Set to false by default, triggered by action if needed
   isInternalDialogVisible = true; // Set to true for initial display as per image
   private themeService = inject(Theme);
-
-  private isBrowser = false;
-  private Terminal!: any;
-  private term: any;
-
-
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
-    this.isBrowser = isPlatformBrowser(platformId);
-  }
 
   protected selectedTheme = signal(this.themeService.currentThemeValue);
 

@@ -26,17 +26,8 @@
             "prefix": "app",
             "style": "kebab-case"
           }
-        ],
-        "eslint-comments/no-unused-disable": "off"
-      },
-      "overrides": [
-        {
-          "files": ["src/app/services/sqlite.ts"],
-          "rules": {
-            "@typescript-eslint/no-explicit-any": "off"
-          }
-        }
-      ]
+        ]
+      }
     },
     {
       "files": ["*.html"],
