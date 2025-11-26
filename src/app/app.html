@@ -6,10 +6,13 @@
       </div>
 
       <div class="tabs-container">
-        <button class="tab-button active">Home</button>
-        <button class="tab-button">Labs</button>
-        <button class="tab-button">About</button>
-        <button class="tab-button">Contacts</button>
+        @if(showTop()){
+          <button (click)="goTo('Top')" class="tab-button active">Top</button>
+        }
+        <button (click)="goTo('Plugins')" class="tab-button">Plugins</button>
+        <button (click)="goTo('Modules')" class="tab-button">Modules</button>
+        <button (click)="goTo('Misc')" class="tab-button">Misc</button>
+        <button (click)="goTo('Extra')" class="tab-button">Extra</button>
       </div>
 
     </header>
@@ -93,7 +96,7 @@
       <div class="content-block list-block">
         <div>
           <div class="block-title-row">
-            <p class="block-title gradient-title">Indoor</p>
+            <p class="block-title gradient-title">Misc</p>
             <p class="emoji">🍓</p>
           </div>
 
@@ -114,15 +117,15 @@
       <div class="content-block list-block">
         <div>
           <div class="block-title-row">
-            <p class="block-title gradient-title">Outdoor</p>
+            <p id="extra" class="block-title gradient-title">Extra</p>
             <p class="emoji">🚁</p>
           </div>
 
           <ul class="list">
-            <li><span class="icon-check">✓</span> UAV <span data-command="explain" data-term="FPV" class="terminal-trigger">FPV</span> Freestyle</li>
+            <li><span class="icon-check">✓</span> <span data-command="explain" data-term="FPV" class="terminal-trigger">UAV FPV Freestyle</span></li>
             <li><span class="icon-check">✓</span> Photography</li>
             <li><span class="icon-check">✓</span> Astrophotography</li>
-            <li><span class="icon-check">✓</span> Ultimate Frisbee</li>
+            <li><span class="icon-check">✓</span> <span data-command="explain" data-term="Ultimate" class="terminal-trigger">Ultimate Frisbee</span></li>
             <li><span class="icon-check">✓</span> Hiking</li>
           </ul>
           <span class="gradient-title text-center stripes">

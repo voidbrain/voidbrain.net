@@ -1,4 +1,4 @@
-import { Component, inject, signal, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, signal, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Added CommonModule
 import { AppLogoComponent } from './components/app-logo/app-logo'; // Import AppLogoComponent
 import { WireframeSphere } from './components/wireframe-sphere/wireframe-sphere';
@@ -31,6 +31,15 @@ export class App {
   private themeService = inject(Theme);
 
   protected selectedTheme = signal(this.themeService.currentThemeValue);
+  protected showTop = signal(false);
+
+  @HostListener('window:scroll')
+  onWindowScroll() {
+    console.log("scroll")
+    const scrollY = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+    // Show "top" button when scrolled down more than 200px
+    this.showTop.set(scrollY > 200);
+  }
 
   openModal() {
     this.isModalOpen = true;
@@ -53,6 +62,16 @@ export class App {
   denyAction() {
     console.log('Deny action triggered');
     this.closeModal();
+  }
+
+  goTo(dest: string) {
+    const element = document.getElementById(dest);
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
   }
 
   codeDiffContent: string = `

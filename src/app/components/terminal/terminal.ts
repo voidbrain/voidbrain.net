@@ -301,12 +301,11 @@ export class TerminalComponent implements OnInit, OnDestroy {
     if (parent === 'explain') {
       switch (input.toLowerCase()) {
         case 'fpv':
-          console.log('fpv');
-          return 'FPV = First Person View drone piloting with goggles.';
+          return '🚁 FPV = First Person View drone piloting with goggles.';
         case 'ultimate frisbee':
-          return 'Ultimate Frisbee = a fast-paced team disc sport.';
+          return '🥏 Ultimate Frisbee = a fast-paced team disc sport.';
         case 'ml':
-          return 'ML = Machine Learning — algorithms that learn from data.';
+          return '🤖 ML = Machine Learning — algorithms that learn from data.';
         default:
           return `Invalid option: ${input}`;
       }
