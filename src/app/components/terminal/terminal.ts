@@ -13,15 +13,7 @@ import { isPlatformBrowser } from '@angular/common';
   selector: 'app-terminal',
   standalone: true,
   template: ` <div class="cli-host" #container></div>`,
-  styles: [
-    `
-      .cli-host {
-        width: 100%;
-        height: 100%;
-        background: #000;
-      }
-    `,
-  ],
+  styles: [``,],
 })
 export class TerminalComponent implements OnInit, OnDestroy {
   @ViewChild('container', { static: true }) container!: ElementRef<HTMLDivElement>;
@@ -40,7 +32,7 @@ export class TerminalComponent implements OnInit, OnDestroy {
   private historyIndex = -1;
 
   // Your commands + new conversational command "explain"
-  private commands = ['help', 'clear', 'echo', 'date', 'version', 'explain'];
+  private commands = ['help', 'explain', 'ls', 'version', 'clear'];
 
   // -------- Conversation (multi-step) state --------
   private pendingCommand: string | null = null;
@@ -49,15 +41,23 @@ export class TerminalComponent implements OnInit, OnDestroy {
 
   private fakeFS = {
     '/': {
-      projects: {
+      "Plugins": {
+        'Angular/': null,
+        'HTML/': null,
+        'iOS/': null,
+      },
+      "Modules": {
+        '~web-development': null,
+      },
+      "Extras": {
         'fpv.txt': null,
         'frisbee.txt': null,
       },
-      docs: {
+      "Add-On": {
         'readme.md': null,
         'changelog.md': null,
       },
-      'data.csv': null,
+      'Links.html': null,
     },
   };
 
@@ -81,8 +81,10 @@ export class TerminalComponent implements OnInit, OnDestroy {
       theme: {
         background: '#16162a',
         foreground: '#6699ff',
-        cursor: '#6699ff',
-        selectionBackground: '#ff33b870',
+        cursor: '#71bc4c',
+        selectionBackground: '#581c9dff',
+        selectionForeground: '#1e1e2e',
+
       },
     });
 

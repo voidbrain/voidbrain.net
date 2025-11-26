@@ -38,4 +38,9 @@
     );
     margin: calc(var(--spacing-unit) / 2) 0;
   }
+  @media (max-width: 480px) {
+    .ascii-logo {
+      font-size: 0.6em;
+    }
+  }
 }

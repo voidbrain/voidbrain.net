@@ -35,6 +35,7 @@ export class RandomFlashMatrix implements OnInit, OnDestroy {
   private baseColorStart = '#B04CBC';
   private baseColorEnd = '#5F47F5';
   private flashColors = ['#B04CBC', '#5F47F5'];
+  private flashAccentColors = ['#71bc4c'];
   private flashDuration = 1000; // ms
 
   private squares: {
@@ -111,6 +112,11 @@ export class RandomFlashMatrix implements OnInit, OnDestroy {
       if (!sq.flashColor && Math.random() < 0.001) {
         // ~0.1% chance per frame
         sq.flashColor = this.flashColors[Math.floor(Math.random() * this.flashColors.length)];
+        sq.flashEndTime = now + this.flashDuration;
+      }
+      if (!sq.flashColor && Math.random() < 0.0001) {
+        // ~0.01% chance per frame
+        sq.flashColor = this.flashAccentColors[Math.floor(Math.random() * this.flashAccentColors.length)];
         sq.flashEndTime = now + this.flashDuration;
       }
 

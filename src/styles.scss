@@ -34,6 +34,66 @@ body {
   box-sizing: border-box;
 }
 
+/* Text Selection Styling */
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-background);
+}
+
+::-moz-selection {
+  background-color: var(--color-accent);
+  color: var(--color-background);
+}
+
+/* Tooltip Styling */
+.tooltip {
+  position: relative;
+  cursor: help;
+}
+
+.tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color-primary);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  padding: calc(var(--spacing-unit) / 2);
+  border-radius: 2px;
+  font-size: 0.8em;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+  z-index: 1000;
+  box-shadow: 2px 2px 0px var(--color-border);
+}
+
+.tooltip:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+.tooltip::before {
+  content: '';
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--color-primary);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+
+.tooltip:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
 /* Basic brutalist terminal styling */
 button,
 input,
