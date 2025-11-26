@@ -69,16 +69,36 @@ export class App implements AfterViewInit {
   }
 
   goTo(dest: string) {
+    const contentColumn = this.contentColumnEl.nativeElement;
     const element = document.getElementById(dest);
-    console.log(element)
+
     if (element) {
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
+      // Get sticky header height to account for it
+      const header = document.querySelector('header');
+      const headerHeight = header ? header.offsetHeight : 0;
+
+      // Calculate position relative to contentColumn and adjust for sticky header
+      const elementRect = element.getBoundingClientRect();
+      const contentRect = contentColumn.getBoundingClientRect();
+      let relativeTop = elementRect.top - contentRect.top + contentColumn.scrollTop - headerHeight - 10; // +10 for margin
+
+      // Ensure we don't scroll above the content
+      relativeTop = Math.max(0, relativeTop);
+
+      // Add highlight class for visual feedback
+      element.classList.add('goto-highlight');
+
+      // Remove highlight class after animation completes
+      setTimeout(() => {
+        element.classList.remove('goto-highlight');
+      }, 1200); // Match animation duration
+
+      contentColumn.scrollTo({
+        top: relativeTop,
+        behavior: 'smooth'
       });
     } else {
       // If element not found, scroll to top of content column
-      const contentColumn = this.contentColumnEl.nativeElement;
       contentColumn.scrollTo({
         top: 0,
         behavior: 'smooth'
