@@ -28,7 +28,19 @@ export class SinusoidGraph implements AfterViewInit {
 
     for (let i = 0; i < this.maxPoints; i++) {
       this.labels.push('');
-      this.data.push(Math.sin(i * 0.1) * Math.cos(i * 0.05));
+      // More randomized initial data generation
+      const phase1 = i * (0.08 + Math.random() * 0.04); // Random phase shift
+      const phase2 = i * (0.03 + Math.random() * 0.04); // Different random phase
+      const amplitude1 = 0.7 + Math.random() * 0.6; // Random amplitude
+      const amplitude2 = 0.3 + Math.random() * 0.4; // Second wave amplitude
+      const noise = (Math.random() - 0.5) * 0.3; // Random noise
+
+      const value = Math.sin(phase1) * amplitude1 +
+                   Math.cos(phase2) * amplitude2 +
+                   Math.sin(i * (0.15 + Math.random() * 0.1)) * 0.2 + // Extra random wave
+                   noise;
+
+      this.data.push(value);
     }
 
     this.chart = new Chart(ctx, {
@@ -102,11 +114,23 @@ export class SinusoidGraph implements AfterViewInit {
 
       // Shift data to simulate scrolling
       this.data.shift();
-      this.data.push(
-        Math.sin((this.maxPoints + this.time) * 0.1) *
-          Math.cos((this.maxPoints + this.time) * 0.05) +
-          Math.sin(this.time * 2) * 0.5,
-      );
+
+      // More randomized real-time data generation
+      const baseIndex = this.maxPoints + this.time;
+      const phase1 = baseIndex * (0.08 + Math.random() * 0.04); // Random phase shifts
+      const phase2 = baseIndex * (0.03 + Math.random() * 0.04);
+      const amplitude1 = 0.7 + Math.random() * 0.6; // Random amplitudes
+      const amplitude2 = 0.3 + Math.random() * 0.4;
+      const timeNoise = Math.sin(this.time * (1.5 + Math.random() * 2)) * (0.3 + Math.random() * 0.4);
+      const randomNoise = (Math.random() - 0.5) * 0.4; // Additional noise
+
+      const value = Math.sin(phase1) * amplitude1 +
+                   Math.cos(phase2) * amplitude2 +
+                   Math.sin(baseIndex * (0.15 + Math.random() * 0.1)) * 0.2 +
+                   timeNoise +
+                   randomNoise;
+
+      this.data.push(value);
 
       this.chart.update();
 

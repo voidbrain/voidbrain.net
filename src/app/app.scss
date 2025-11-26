@@ -380,6 +380,11 @@ header {
   }
 }
 
+.stripes {
+  display: block;
+  margin-bottom: 2em;
+}
+
 .content-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -391,6 +396,8 @@ header {
   border: 1px solid var(--color-border);
   padding: var(--spacing-unit);
   justify-content: space-between;
+  flex-direction: column;
+  display: flex;
 
   .block-title {
     font-weight: bold;
