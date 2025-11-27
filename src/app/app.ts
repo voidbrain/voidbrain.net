@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common'; // Added CommonModule
 import { AppLogoComponent } from './components/app-logo/app-logo'; // Import AppLogoComponent
 import { WireframeSphere } from './components/wireframe-sphere/wireframe-sphere';
 import { Theme as ThemeService } from './services/ui/theme';
+import { Color as ColorService } from './services/ui/color';
 import { Settings } from './services/settings';
 import { TerminalComponent } from './components/terminal/terminal';
 import { RandomFlashMatrix } from './components/random-flash-matrix/random-flash-matrix';
@@ -47,6 +48,7 @@ export class App {
   isSettingsModalOpen = false; // Settings dialog state
   private settings = inject(Settings);
   private themeService = inject(ThemeService);
+  private colorService = inject(ColorService);
 
   // Save feedback signals
   saveFeedbackMessage = signal('');
@@ -159,6 +161,11 @@ export class App {
   }
 
   saveColorSettings() {
+    // Get current color setting and apply it
+    const currentSettings = this.settings.getSettings();
+    this.colorService.setColor(currentSettings.color);
+
+    // Save the general settings
     this.saveSettings();
   }
 

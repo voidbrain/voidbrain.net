@@ -31,17 +31,19 @@ export class ThemeDialog {
   private loadCurrentSettings(): void {
     // Load current settings and set checked states
     const current = this.settings.getSettings();
-    console.log(current)
     this.themes.forEach((mode) => (mode.checked = mode.value === current.theme));
   }
 
   onThemeChange(theme: Theme): void {
     this.themes.forEach((f) => (f.checked = f.value === theme));
-    // Update the settings service with the new theme
-    this.settings.updateSettings({ theme });
   }
 
   doSaveSettings(): void {
+    // Get the selected theme and update settings
+    const selectedTheme = this.themes.find(t => t.checked)?.value;
+    if (selectedTheme) {
+      this.settings.updateSettings({ theme: selectedTheme });
+    }
     // Emit save event to parent (settings logic moved to parent)
     this.saveSettings.emit();
   }
