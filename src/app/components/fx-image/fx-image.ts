@@ -350,7 +350,7 @@ export class FxImageComponent implements AfterViewInit {
 
     // ------------------- ANAGLYPH -------------------
     const baseParallax = Math.max(2,Math.floor(cssW/200));
-    const parallaxOffset = baseParallax*this.anaglyphParallax()*2;
+    const parallaxOffset = baseParallax*this.anaglyphParallax()*3;
 
     this.leftCtx.clearRect(0,0,cssW,cssH);
     this.rightCtx.clearRect(0,0,cssW,cssH);
