@@ -89,6 +89,20 @@ export class FxImageComponent implements AfterViewInit {
       this.themeService.currentThemeSignal();
       this.colorService.currentColorSignal();
     });
+
+    // Make preset 2 invert effect reactive to theme changes
+    effect(() => {
+      const theme = this.themeService.currentThemeValue;
+      if (this.preset2Active() && theme === 'light') {
+        this.applyInvert.set(false);
+      } else if (this.preset2Active() && theme !== 'light') {
+        this.applyInvert.set(true);
+      }
+      // Trigger redraw when theme changes
+      if (this.preset2Active()) {
+        this.redraw();
+      }
+    });
   }
 
   async ngAfterViewInit() {
@@ -152,7 +166,7 @@ export class FxImageComponent implements AfterViewInit {
 
   private getColorMultipliers(): {red:number,green:number,blue:number} {
     switch(`${this.theme()}-${this.color()}`){
-      case 'dark-purple': return {red:0.9, green:0.1, blue:0.8}; // rgba(85, 11, 148, 1);
+      case 'dark-purple': return {red: 0.69, green: 0.3, blue: 1.0}; // rgba(85, 11, 148, 1);
       case 'dark-orange': return {red:1, green:0.6, blue:0.3};
       case 'dark-green': return {red:0.4, green:1, blue:0.5};
       case 'light-purple': return {red:0.85, green:0.75, blue:0.9}; // #D9BFE6
@@ -402,7 +416,7 @@ export class FxImageComponent implements AfterViewInit {
       if(this.applySolarize()){ r=r>128?255-r:r; g=g>128?255-g:g; b=b>128?255-b:b; }
       if(this.applyNoise()){ const n=(Math.random()-0.5)*40+frameNoise; r=Math.min(255,Math.max(0,r+n)); g=Math.min(255,Math.max(0,g+n)); b=Math.min(255,Math.max(0,b+n)); }
       if(this.applyColorMultiplier()){
-        r=Math.min(255,r*multipliers.red); g*Math.min(255,g*multipliers.green); b=Math.min(255,b*multipliers.blue);
+        r=Math.min(255,r*multipliers.red); g=Math.min(255,g*multipliers.green); b=Math.min(255,b*multipliers.blue);
       }
       out[i]=Math.round(r); out[i+1]=Math.round(g); out[i+2]=Math.round(b); out[i+3]=255;
     }
@@ -498,6 +512,7 @@ export class FxImageComponent implements AfterViewInit {
       this.anaglyphColorPair.set(0); // Red-cyan
       this.wiggle.set(true);
       if(this.theme()!=='light'){
+        console.log("apply")
         this.applyInvert.set(true);
       }
       this.chroma.set(true);
