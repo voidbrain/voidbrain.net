@@ -267,7 +267,7 @@ export class TerminalComponent implements OnInit, OnDestroy {
         this.conversationMode = true;
         this.pendingCommand = 'explain';
         this.pendingPrompt = 'explain what?';
-        this.writeln('Available Catalogue: FPV, Ultimate Frisbee, ML');
+        this.writeln('Available Catalogue: FPV, Ultimate Frisbee, Astrophotography, Hiking, ML');
         this.printPrompt();
         if (args.length) {
           const response = this.runSubCommand(cmd, args[0]);
@@ -302,11 +302,15 @@ export class TerminalComponent implements OnInit, OnDestroy {
     if (parent === 'explain') {
       switch (input.toLowerCase()) {
         case 'fpv':
-          return '🚁  FPV = First Person View drone piloting with goggles.';
+          return '🚁  FPV:\nGo Send It!';
         case 'ultimate frisbee':
-          return '🥏  Ultimate Frisbee = a fast-paced team disc sport.';
+          return '🥏  Ultimate Frisbee:\nPlease don\'t ask me where is the dog.';
         case 'ml':
-          return '🤖  ML = Machine Learning — algorithms that learn from data.';
+          return '🤖  Machine Learning:\nHAL? Is that you?';
+        case 'astrophotography':
+          return '🔭  Astrophotography:\nActually yes, we landed to the moon.'
+        case 'hiking':
+          return '🏔️  Hiking:\nGood news is I can see the top…\nBad news is I can see the top.'
         default:
           return `Invalid option: ${input}`;
       }

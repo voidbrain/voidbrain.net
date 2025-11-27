@@ -60,32 +60,26 @@
 
     <div class="content-three-column">
       <div class="text-block purple-bg">
-        <p>I am a Software Engineer. I create Mobile, Desktop and Web apps.</p>
+        <p>I am a Software Developer who leverages modern technologies to build reliable, high-performance solutions with a focus on usability and maintainability.</p>
       </div>
       <div class="text-block purple-bg">
-        <p>I build Industrial Automation solutions, . </p>
+        <p>I create full-stack, industrial-grade systems featuring smart dashboards, real-time data and intuitive interfaces for effective control and monitoring.</p>
       </div>
       <div class="text-block purple-bg">
-        <p>My Name is <strong>Daniele</strong> and i live in Venice, Italy.</p>
+        <p>My name is Daniele and I live in Venice, Italy.<br />I am passionate about the Web, Computer Science, Technology and Innovation.</p>
       </div>
     </div>
 
-
       <div class="lipgloss-banner">
         <div class="lipgloss-description">
-          <p>Style Definitions for Nice Terminal Layouts</p>
-          <p>From Charm · <a href="https://github.com/charmbracelet/lipgloss" target="_blank">https://github.com/charmbracelet/lipgloss</a></p>
-        </div>
-      </div>
-      <div class="panel">
-        <button (click)="openLangModal()" (keydown.enter)="openLangModal()" type="button" class="page-button yes">Open</button>
-        <button (click)="openLangModal()" (keydown.enter)="openLangModal()" type="button" class="page-button No">Open</button>
-      </div>
-
-      <div class="lipgloss-banner">
-        <div class="lipgloss-description">
-          <p>Style Definitions for Nice Terminal Layouts</p>
-          <p>From Charm · <a href="https://github.com/charmbracelet/lipgloss" target="_blank">https://github.com/charmbracelet/lipgloss</a></p>
+          <p>
+            <span class="gradient2-title">#</span> 
+            <span class="purple-text"> Humans.txt </span> 
+            <span class="gradient-title">/</span> 
+            Driven by constant learning and improvement, I am an  
+            analytical thinker with a structured, solution-oriented approach.
+            Strong teamwork and communication skills, with the ability to identify opportunities and solve problems effectively.
+          </p>
         </div>
       </div>
 
@@ -100,7 +94,8 @@
           <ul class="list">
             <li><span class="icon-check">#</span> Rpi <span class="gradient-title">/</span>  Maker <span class="gradient-title">/</span>  IoT</li>
             <li><span class="icon-check">#</span> 3D Printing</li>
-            <li><span class="icon-check">#</span> ML <span class="gradient-title">/</span> AI <span class="gradient-title">/</span> AR</li>
+            <li><span class="icon-check"># </span> <span data-command="explain" data-tooltip="Explain" data-term="ML" class="tooltip terminal-trigger" type="button" role="button" tabindex="0">ML </span> <span class="gradient-title">/</span> AI <span class="gradient-title">/</span> AR</li>
+            <li><span class="icon-check">#</span> Mesh <span class="gradient-title">/</span> Edge Computing</li>
           </ul>
           <span class="gradient-title text-center stripes">
             ///////////
@@ -119,10 +114,10 @@
           </div>
 
           <ul class="list">
-            <li><span class="icon-check"># </span> <button data-command="explain" data-term="FPV" class="terminal-trigger" type="button" role="button" tabindex="0">FPV Freestyle</button></li>
-            <li><span class="icon-check">#</span> Astrophotography</li>
-            <li><span class="icon-check"># </span> <button data-command="explain" data-term="Ultimate" class="terminal-trigger" type="button" role="button" tabindex="0">Ultimate Frisbee</button></li>
-            <li><span class="icon-check">#</span> Hiking</li>
+            <li><span class="icon-check"># </span> <span data-command="explain" data-tooltip="Explain" data-term="FPV" class="tooltip terminal-trigger" type="button" role="button" tabindex="0">FPV Freestyle</span></li>
+            <li><span class="icon-check"># </span> <span data-command="explain" data-tooltip="Explain" data-term="Astrophotography" class="tooltip terminal-trigger" type="button" role="button" tabindex="0">Astrophotography</span></li>
+            <li><span class="icon-check"># </span> <span data-command="explain" data-tooltip="Explain" data-term="Ultimate" class="tooltip terminal-trigger" type="button" role="button" tabindex="0">Ultimate Frisbee</span></li>
+            <li><span class="icon-check"># </span> <span data-command="explain" data-tooltip="Explain" data-term="Hiking" class="tooltip terminal-trigger" type="button" role="button" tabindex="0">Hiking</span></li>
           </ul>
           <span class="gradient-title text-center stripes">
             ///////////
@@ -139,9 +134,10 @@
           <p class="emoji">🔗</p>
         </div>
           <ul>
-            <li><span class="icon-check">#</span> <a href="#">Github</a></li>
-            <li><span class="icon-check">#</span> <a href="#">LinkedIn</a></li>
-            <li><span class="icon-check">#</span> <a href="#">Instagram</a></li>
+            <li><span class="icon-check">#</span> <a href="https://github.com/voidbrain" target="_blank">Github</a></li>
+            <li><span class="icon-check">#</span> <a href="https://www.linkedin.com/in/voidbrain/">LinkedIn</a></li>
+            <li><span class="icon-check">#</span> <a href="https://www.instagram.com/il_bire/" target="_blank">Instagram</a></li>
+            <li><span class="icon-check">#</span> <a href="malto:web@voidbrain.net">Mail</a></li>
           </ul>
           <span class="gradient-title stripes">
             ///////////
@@ -186,7 +182,7 @@
       </div>
 
       <div class="status-line">
-        <span class="">Type</span> <button data-command="help" class="terminal-trigger magenta-text" type="button" role="button" tabindex="0">help</button> to get started
+        <span class="">Type</span> <a data-command="help" class="terminal-trigger magenta-text" type="button" role="button" tabindex="0">help</a> to get started
       </div>
       <div class="command-line">{{isLangModalOpen()}}
         <span class="user">[user@voidbrain.net ~/]</span>
