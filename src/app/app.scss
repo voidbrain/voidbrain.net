@@ -134,11 +134,12 @@ header {
     background-color: var(--color-secondary);
   }
   font-weight: bold;
-  font-size: 1.4em;
+  font-size: 1.2em;
+  line-height: 0.8em;
   padding-top: 0px;
-  padding-bottom: 3px;
-  padding-left: 9px;
-  padding-right: 9px;
+  padding-bottom: 4px;
+  padding-left: 3px;
+  padding-right: 3px;
 
 }
 
@@ -217,6 +218,13 @@ header {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 1px #535353);
+}
+
+.gradient2-title {
+background: linear-gradient(to right, #e1d11dcc, #71bc4ccc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .sunburst {
@@ -385,6 +393,11 @@ ul.list {
   text-shadow: 0 0 8px currentColor;
 }
 
+.purple-text {
+  color: #c586c0;
+  text-shadow: 0 0 8px currentColor;
+}
+
 .orange-text {
   color: #ff6600;
   text-shadow: 0 0 8px currentColor;
@@ -392,6 +405,11 @@ ul.list {
 
 .magenta-text {
   color: #ff00ff;
+  text-shadow: 0 0 8px currentColor;
+}
+
+.grey-text {
+  color: #bbb;
   text-shadow: 0 0 8px currentColor;
 }
 
@@ -457,6 +475,7 @@ ul.list {
 
 /* Responsive Design Breakpoints */
 @media (max-width: 768px) {
+  
   app-logo {
     margin: auto;
   }
@@ -496,6 +515,9 @@ ul.list {
 @media (max-width: 480px) {
   .right-column {
     padding: calc(var(--spacing-unit) / 2); /* Smaller padding */
+  }
+  .content-three-column {
+    grid-template-columns: 1fr;
   }
 
   .content-column {
