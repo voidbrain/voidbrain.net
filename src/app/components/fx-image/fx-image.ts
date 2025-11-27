@@ -8,100 +8,31 @@ import {
   inject,
   effect,
   signal,
+  computed,
 } from '@angular/core';
-import { isPlatformBrowser, DecimalPipe } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { Theme as ThemeService } from '../../services/ui/theme';
 import { Color as ColorService } from '../../services/ui/color';
 
 @Component({
   selector: 'app-fx-image',
-  imports: [DecimalPipe],
   standalone: true,
   template: `
     <div class="fx-container">
       <canvas #fxcanvas class="fx-canvas"></canvas>
 
-      <div class="fx-controls">
-        <!-- Rendering Mode -->
-        <div class="control-group">
-          <span class="control-label">Render:</span>
-          <button (click)="setImageRendering('pixelated')" [class.active]="imageRenderingMode() === 'pixelated'" class="fx-btn">🟦 Pixelated</button>
-          <button (click)="setImageRendering('crisp-edges')" [class.active]="imageRenderingMode() === 'crisp-edges'" class="fx-btn">🔷 Crisp</button>
-          <button (click)="setImageRendering('smooth')" [class.active]="imageRenderingMode() === 'smooth'" class="fx-btn">🔲 Smooth</button>
-          <button (click)="setImageRendering('auto')" [class.active]="imageRenderingMode() === 'auto'" class="fx-btn">🎯 Auto</button>
-        </div>
-
-        <!-- Anaglyph Toggle -->
-        <div class="control-group">
-          <span class="control-label">3D:</span>
-          <button (click)="toggleAnaglyphMode()" [class.active]="anaglyphMode()" class="fx-btn fx-3d-btn">🥽 {{ anaglyphMode() ? 'ON' : 'OFF' }}</button>
-        </div>
-
-        <!-- Anaglyph Color Pair -->
-        <div class="control-group">
-          <span class="control-label">3D Colors:</span>
-          <button (click)="setAnaglyphColorPair(0)" [class.active]="anaglyphColorPair() === 0" class="fx-btn">🔴🟦 Red-Cyan</button>
-          <button (click)="setAnaglyphColorPair(1)" [class.active]="anaglyphColorPair() === 1" class="fx-btn">🔵🟡 Blue-Yellow</button>
-          <button (click)="setAnaglyphColorPair(2)" [class.active]="anaglyphColorPair() === 2" class="fx-btn">🟢🟣 Green-Magenta</button>
-          <button (click)="setAnaglyphColorPair(3)" [class.active]="anaglyphColorPair() === 3" class="fx-btn">🟦🔴 Cyan-Red</button>
-          <button (click)="setAnaglyphColorPair(4)" [class.active]="anaglyphColorPair() === 4" class="fx-btn">🟢🔴 Green-Red</button>
-          <button (click)="setAnaglyphColorPair(5)" [class.active]="anaglyphColorPair() === 5" class="fx-btn">🔵🟣 Blue-Magenta</button>
-        </div>
-
-        <!-- Parallax -->
-        <div class="control-group">
-          <span class="control-label">Parallax:</span>
-          <button (click)="setParallax(0)" [class.active]="anaglyphParallax() === 0" class="fx-btn">🏠 NONE</button>
-          <button (click)="setParallax(0.5)" [class.active]="anaglyphParallax() === 0.5" class="fx-btn">🪶 Low</button>
-          <button (click)="setParallax(1)" [class.active]="anaglyphParallax() === 1" class="fx-btn">🎯 Norm</button>
-          <button (click)="setParallax(2)" [class.active]="anaglyphParallax() === 2" class="fx-btn">🎨 High</button>
-        </div>
-
-        <!-- Base Effects -->
-        <div class="control-group">
-          <span class="control-label">Base:</span>
-          <button (click)="toggleInvert()" [class.active]="applyInvert()" class="fx-btn">↔️ {{ applyInvert() ? 'INVERT ON' : 'INVERT OFF' }}</button>
-          <button (click)="toggleSolarize()" [class.active]="applySolarize()" class="fx-btn">☀️ {{ applySolarize() ? 'SOLAR ON' : 'SOLAR OFF' }}</button>
-        </div>
-
-        <!-- Extra Effects -->
-        <div class="control-group">
-          <span class="control-label">Extra:</span>
-          <button (click)="toggleColorMultiplier()" [class.active]="applyColorMultiplier()" class="fx-btn">🎨 {{ applyColorMultiplier() ? 'MULTI ON' : 'MULTI OFF' }}</button>
-          <button (click)="toggleNoise()" [class.active]="applyNoise()" class="fx-btn">📺 {{ applyNoise() ? 'NOISE ON' : 'NOISE OFF' }}</button>
-        </div>
-
-        <!-- Visual FX -->
-        <div class="control-group">
-          <span class="control-label">FX:</span>
-          <button (click)="toggleWiggle()" [class.active]="wiggle()" class="fx-btn">🔁 Wiggle</button>
-          <button (click)="toggleCRT()" [class.active]="crt()" class="fx-btn">📺 CRT</button>
-          <button (click)="toggleVHS()" [class.active]="vhs()" class="fx-btn">📼 VHS</button>
-          <button (click)="toggleChroma()" [class.active]="chroma()" class="fx-btn">🌈 Chroma</button>
-        </div>
-
-        <div class="control-group">
-          <span class="control-label">Wiggle Speed</span>
-          <input type="range" min="0" max="3" step="0.05" [value]="wiggleSpeed()" (input)="setWiggleSpeed($any($event.target).value)">
-          <span class="control-value">{{ wiggleSpeed() | number:'1.2-2' }}</span>
-        </div>
-
-        <div class="control-group">
-          <span class="control-label">Chroma Intensity</span>
-          <input type="range" min="0" max="30" step="0.5" [value]="chromaIntensity()" (input)="setChromaIntensity($any($event.target).value)">
-          <span class="control-value">{{ chromaIntensity() | number:'1.1-1' }}</span>
-        </div>
+      <div class="fx-preset-buttons">
+        <button (click)="togglePreset1()" class="fx-preset-btn" [class.active]="preset1Active()">Ⅰ</button>
+        <button (click)="togglePreset2()" class="fx-preset-btn" [class.active]="preset2Active()">Ⅱ</button>
       </div>
     </div>
   `,
   styles: [`
-    .fx-controls { position:relative; z-index:1000; color:var(--color-text); border:1px solid var(--color-border); background:var(--color-primary); padding:12px; border-radius:4px; pointer-events:auto; box-shadow:0 4px 12px rgba(0,0,0,0.3); margin-top:16px; width:fit-content; align-self:center; }
-    .fx-btn { background:var(--color-primary); color:var(--color-text); border:1px solid var(--color-border); padding:6px 12px; font-family:var(--font-dev); font-size:12px; cursor:pointer; border-radius:2px; box-shadow:2px 2px 0px var(--color-border); transition:all 0.1s ease; margin: 2px; }
-    .fx-btn:hover{ transform:translate(-1px,-1px); box-shadow:3px 3px 0px var(--color-border); }
-    .fx-btn:active{ transform:translate(1px,1px); box-shadow:1px 1px 0px var(--color-border); }
-    .fx-btn.active{ background:var(--color-secondary); border-color:var(--color-accent); color:var(--color-background); }
-    .fx-3d-btn.active{ background:var(--color-accent); border-color:var(--color-secondary); color:var(--color-background); animation:pulse 2s infinite; }
-    .fx-color-picker { margin: 2px 4px; width: 50px; height: 30px; border: none; border-radius: 4px; cursor: pointer; }
+    .fx-container { position:relative; }
+    .fx-preset-buttons { position:absolute; bottom:10px; right:10px; z-index:1000; display:flex; gap:2px; }
+    .fx-preset-btn { width: 17px; height:18px; background:var(--color-primary); color:var(--color-secondary); border:1px solid var(--color-border); padding:0 3px 1px; font-size:12px; cursor:pointer; box-shadow:2px 2px 0px var(--color-border); }
+    .fx-preset-btn:hover, .fx-preset-btn.active:hover{ color: var(--color-text) }
+    .fx-preset-btn.active{ background:var(--color-secondary); border-color:var(--color-accent); color:var(--color-background); }
     @keyframes pulse { 0%,100%{ opacity:1 } 50%{ opacity:0.7 } }
   `]
 })
@@ -119,6 +50,9 @@ export class FxImageComponent implements AfterViewInit {
   applySolarize = signal(false);
   applyColorMultiplier = signal(false);
   applyNoise = signal(false);
+
+  theme = computed(() => this.themeService.currentThemeValue);
+  color = computed(() => this.colorService.currentColorValue);
 
   // visual fx
   wiggle = signal(false);
@@ -143,6 +77,10 @@ export class FxImageComponent implements AfterViewInit {
   private themeService = inject(ThemeService);
   private colorService = inject(ColorService);
   private platformId = inject(PLATFORM_ID);
+
+  // --- Preset State ---
+  preset1Active = signal(false);
+  preset2Active = signal(false);
 
   constructor() {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -177,6 +115,9 @@ export class FxImageComponent implements AfterViewInit {
       this.ctx.textAlign = 'center';
       this.ctx.fillText('Image failed to load', this.canvas.width / 2, this.canvas.height / 2);
     };
+
+    // Apply preset 1 by default after canvas setup
+    this.togglePreset1();
   }
 
   private createOffscreenCanvases() {
@@ -210,15 +151,13 @@ export class FxImageComponent implements AfterViewInit {
   }
 
   private getColorMultipliers(): {red:number,green:number,blue:number} {
-    const theme = this.themeService.currentThemeValue;
-    const color = this.colorService.currentColorValue;
-    switch(`${theme}-${color}`){
-      case 'dark-purple': return {red:0.69, green:0.3, blue:1};
+    switch(`${this.theme()}-${this.color()}`){
+      case 'dark-purple': return {red:0.9, green:0.1, blue:0.8}; // rgba(85, 11, 148, 1);
       case 'dark-orange': return {red:1, green:0.6, blue:0.3};
       case 'dark-green': return {red:0.4, green:1, blue:0.5};
-      case 'light-purple': return {red:0.85, green:0.75, blue:0.9};
-      case 'light-orange': return {red:0.95, green:0.85, blue:0.75};
-      case 'light-green': return {red:0.8, green:0.95, blue:0.85};
+      case 'light-purple': return {red:0.85, green:0.75, blue:0.9}; // #D9BFE6
+      case 'light-orange': return {red:0.95, green:0.85, blue:0.75}; // #F2D9BF
+      case 'light-green': return {red:0.8, green:0.95, blue:0.85}; // #CCF2D9
       default: return {red:0.69, green:0.3, blue:1};
     }
   }
@@ -228,26 +167,6 @@ export class FxImageComponent implements AfterViewInit {
       { // 0: Red / Cyan (default)
         left:  { name: 'cyan',  rgb: [0, 255, 255] },
         right: { name: 'red',   rgb: [255, 0, 0] }
-      },
-      { // 1: Blue / Yellow
-        left:  { name: 'blue',  rgb: [0, 0, 255] },
-        right: { name: 'yellow',rgb: [255, 255, 0] }
-      },
-      { // 2: Green / Magenta
-        left:  { name: 'green', rgb: [0, 255, 0] },
-        right: { name: 'magenta',rgb: [255, 0, 255] }
-      },
-      { // 3: Cyan / Red
-        left:  { name: 'cyan',  rgb: [0, 255, 255] },
-        right: { name: 'red',   rgb: [255, 0, 0] }
-      },
-      { // 4: Green / Red
-        left:  { name: 'green', rgb: [0, 255, 0] },
-        right: { name: 'red',   rgb: [255, 0, 0] }
-      },
-      { // 5: Blue / Magenta
-        left:  { name: 'blue',  rgb: [0, 0, 255] },
-        right: { name: 'magenta',rgb: [255, 0, 255] }
       }
     ];
     return colorPairs[this.anaglyphColorPair()] || colorPairs[0]; // Default to red/cyan
@@ -290,6 +209,8 @@ export class FxImageComponent implements AfterViewInit {
     const bufferW = this.canvas.width;
     const bufferH = this.canvas.height;
     const multipliers = this.getColorMultipliers();
+
+
 
     if(!this.anaglyphMode()){
       // Draw image centered with proper aspect ratio
@@ -451,7 +372,7 @@ export class FxImageComponent implements AfterViewInit {
           px=Math.max(0,Math.min(bufferW-1,px));
           py=Math.max(0,Math.min(bufferH-1,py));
           const sidx=(Math.floor(py)*bufferW+Math.floor(px))*4;
-          return [imgData.data[sidx],imgData.data[sidx+1],imgData.data[sidx+2],imgData.data[sidx+3]];
+              return [imgData.data[sidx],imgData.data[sidx+1],imgData.data[sidx+2],imgData.data[sidx+3]];
         };
         let r=sample(rightData,x,y,rShift)[0];
         let g=sample(leftData,x,y,gShift)[1];
@@ -459,8 +380,8 @@ export class FxImageComponent implements AfterViewInit {
 
         if(this.applyInvert()){ r=255-r; g=255-g; b=255-b; }
         if(this.applySolarize()){ r=r>128?255-r:r; g=g>128?255-g:g; b=b>128?255-b:b; }
-        if(this.applyNoise()){ const n=(Math.random()-0.5)*40; r=Math.min(255,Math.max(0,r+n)); g=Math.min(255,Math.max(0,g+n)); b*Math.min(255,b*multipliers.blue); }
-        if(this.applyColorMultiplier()){ r=Math.min(255,r*multipliers.red); g*Math.min(255,g*multipliers.green); b=Math.min(255,b*multipliers.blue); }
+        if(this.applyNoise()){ const n=(Math.random()-0.5)*40; r=Math.min(255,Math.max(0,r+n)); g=Math.min(255,Math.max(0,g+n)); b=Math.min(255,Math.max(0,b+n)); }
+        if(this.applyColorMultiplier()){ r=Math.min(255,r*multipliers.red); g=Math.min(255,g*multipliers.green); b=Math.min(255,b*multipliers.blue); }
 
         out.data[idx]=Math.round(r);
         out.data[idx+1]=Math.round(g);
@@ -480,7 +401,9 @@ export class FxImageComponent implements AfterViewInit {
       if(this.applyInvert()){ r=255-r; g=255-g; b=255-b; }
       if(this.applySolarize()){ r=r>128?255-r:r; g=g>128?255-g:g; b=b>128?255-b:b; }
       if(this.applyNoise()){ const n=(Math.random()-0.5)*40+frameNoise; r=Math.min(255,Math.max(0,r+n)); g=Math.min(255,Math.max(0,g+n)); b=Math.min(255,Math.max(0,b+n)); }
-      if(this.applyColorMultiplier()){ r=Math.min(255,r*multipliers.red); g=Math.min(255,g*multipliers.green); b=Math.min(255,b*multipliers.blue); }
+      if(this.applyColorMultiplier()){
+        r=Math.min(255,r*multipliers.red); g*Math.min(255,g*multipliers.green); b=Math.min(255,b*multipliers.blue);
+      }
       out[i]=Math.round(r); out[i+1]=Math.round(g); out[i+2]=Math.round(b); out[i+3]=255;
     }
     return out;
@@ -529,4 +452,69 @@ export class FxImageComponent implements AfterViewInit {
   toggleChroma(){ this.chroma.set(!this.chroma()); this.redraw(); }
   setWiggleSpeed(v:number|string){ this.wiggleSpeed.set(Number(v)); this.redraw(); }
   setChromaIntensity(v:number|string){ this.chromaIntensity.set(Number(v)); this.redraw(); }
+
+  togglePreset1(){
+    if(this.preset1Active()){
+      // If preset 1 is active, toggle it off
+      this.preset1Active.set(false);
+      this.resetAllEffects();
+    } else {
+      // Apply preset 1 and deactivate preset 2
+      this.preset2Active.set(false);
+      this.preset1Active.set(true);
+
+      // Reset all effects first
+      this.resetAllEffects();
+
+      // Preset 1: multi on, solar on, wiggle, crt, noise
+      this.applyColorMultiplier.set(true);
+      this.applyInvert.set(true);
+      this.applySolarize.set(true);
+      this.wiggle.set(true);
+      this.crt.set(true);
+      this.vhs.set(true);
+      this.applyNoise.set(true);
+    }
+
+    this.redraw();
+  }
+
+  togglePreset2(){
+    if(this.preset2Active()){
+      // If preset 2 is active, toggle it off
+      this.preset2Active.set(false);
+      this.resetAllEffects();
+    } else {
+      // Apply preset 2 and deactivate preset 1
+      this.preset1Active.set(false);
+      this.preset2Active.set(true);
+
+      // Reset all effects first
+      this.resetAllEffects();
+
+      // Preset 2: 3d on, parallax high, red-cyan, wiggle, chroma
+      this.anaglyphMode.set(true);
+      this.anaglyphParallax.set(2); // High parallax
+      this.anaglyphColorPair.set(0); // Red-cyan
+      this.wiggle.set(true);
+      if(this.theme()!=='light'){
+        this.applyInvert.set(true);
+      }
+      this.chroma.set(true);
+    }
+
+    this.redraw();
+  }
+
+  private resetAllEffects(){
+    this.anaglyphMode.set(false);
+    this.applyInvert.set(false);
+    this.applySolarize.set(false);
+    this.applyColorMultiplier.set(false);
+    this.applyNoise.set(false);
+    this.wiggle.set(false);
+    this.crt.set(false);
+    this.vhs.set(false);
+    this.chroma.set(false);
+  }
 }
