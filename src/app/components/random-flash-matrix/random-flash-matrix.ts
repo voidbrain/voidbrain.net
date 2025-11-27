@@ -6,8 +6,11 @@ import {
   ViewChild,
   PLATFORM_ID,
   inject,
+  effect,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { Theme as ThemeService } from '../../services/ui/theme';
+import { Color as ColorService } from '../../services/ui/color';
 
 @Component({
   selector: 'app-random-flash-matrix',
@@ -22,6 +25,8 @@ import { isPlatformBrowser } from '@angular/common';
 export class RandomFlashMatrix implements OnInit, OnDestroy {
   @ViewChild('canvasMatrix', { static: true }) canvasRef!: ElementRef<HTMLCanvasElement>;
 
+  private themeService = inject(ThemeService);
+  private colorService = inject(ColorService);
   private platformId = inject(PLATFORM_ID);
 
   private ctx!: CanvasRenderingContext2D;
@@ -32,10 +37,6 @@ export class RandomFlashMatrix implements OnInit, OnDestroy {
   private cols = 16;
   private squareSize = Math.ceil(400 / this.cols);
 
-  private baseColorStart = '#B04CBC';
-  private baseColorEnd = '#5F47F5';
-  private flashColors = ['#B04CBC', '#5F47F5'];
-  private flashAccentColors = ['#71bc4c'];
   private flashDuration = 1000; // ms
 
   private squares: {
@@ -48,6 +49,17 @@ export class RandomFlashMatrix implements OnInit, OnDestroy {
 
   constructor() {
     this.isBrowser = isPlatformBrowser(this.platformId);
+
+    // Watch for theme/color changes and reinitialize squares
+    effect(() => {
+      this.themeService.currentThemeSignal();
+      this.colorService.currentColorSignal();
+
+      // Reinitialize squares with new colors
+      if (this.isBrowser && this.ctx) {
+        this.initSquares();
+      }
+    });
   }
 
   ngOnInit() {
@@ -58,24 +70,29 @@ export class RandomFlashMatrix implements OnInit, OnDestroy {
     this.animate();
   }
 
-  ngOnDestroy() {
-    if (this.isBrowser && typeof cancelAnimationFrame !== 'undefined') {
-      cancelAnimationFrame(this.animationId);
-    }
-  }
-
   private initSquares() {
+    // Get current colors from CSS custom properties
+    const computedStyle = getComputedStyle(document.documentElement);
+    const colorSecondary = computedStyle.getPropertyValue('--color-secondary').trim() || '#ff3366';
+    const colorAccent = computedStyle.getPropertyValue('--color-accent').trim() || '#8a2be2';
+
     this.squares = [];
     for (let row = 0; row < this.rows; row++) {
       for (let col = 0; col < this.cols; col++) {
         const t = (row / (this.rows - 1) + col / (this.cols - 1)) / 2;
-        const baseColor = this.lerpColor(this.baseColorStart, this.baseColorEnd, t);
+        const baseColor = this.lerpColor(colorSecondary, colorAccent, t);
         this.squares.push({
           x: col * this.squareSize,
           y: row * this.squareSize,
           baseColor,
         });
       }
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.isBrowser && typeof cancelAnimationFrame !== 'undefined') {
+      cancelAnimationFrame(this.animationId);
     }
   }
 
@@ -103,21 +120,25 @@ export class RandomFlashMatrix implements OnInit, OnDestroy {
 
     const now = performance.now();
 
-    // Set stroke style for borders
-    ctx.strokeStyle = '#28283d';
+    // Get current theme colors for flashes
+    const computedStyle = getComputedStyle(document.documentElement);
+    const colorSecondary = computedStyle.getPropertyValue('--color-secondary').trim() || '#ff3366';
+    const colorPulseStart = computedStyle.getPropertyValue('--color-pulse-start').trim() || '#71bc4c';
+
+    // Set stroke style for borders using theme border color
+    ctx.strokeStyle = computedStyle.getPropertyValue('--color-tertiary').trim() || '#5f2b8f';
     ctx.lineWidth = 2;
 
     for (const sq of this.squares) {
       // Decide if we should start a flash
       if (!sq.flashColor && Math.random() < 0.001) {
-        // ~0.1% chance per frame
-        sq.flashColor = this.flashColors[Math.floor(Math.random() * this.flashColors.length)];
+        // ~0.1% chance per frame - normal flash with secondary color
+        sq.flashColor = colorSecondary;
         sq.flashEndTime = now + this.flashDuration;
       }
       if (!sq.flashColor && Math.random() < 0.0001) {
-        // ~0.01% chance per frame
-        sq.flashColor =
-          this.flashAccentColors[Math.floor(Math.random() * this.flashAccentColors.length)];
+        // ~0.01% chance per frame - special flash with pulse color (green)
+        sq.flashColor = colorPulseStart;
         sq.flashEndTime = now + this.flashDuration;
       }
 
@@ -131,7 +152,7 @@ export class RandomFlashMatrix implements OnInit, OnDestroy {
       ctx.fillStyle = sq.flashColor || sq.baseColor;
       ctx.fillRect(sq.x, sq.y, this.squareSize, this.squareSize);
 
-      // Draw white border (stroke) around the square
+      // Draw border around the square
       ctx.strokeRect(sq.x, sq.y, this.squareSize, this.squareSize);
     }
 

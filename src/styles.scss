@@ -39,36 +39,54 @@
   --color-term-cursor: #71bc4c;
   --color-term-selectionBackground: var(--color-secondary);
   --color-term-selectionForeground: var(--color-background);
+  --color-intro: var(--color-green);
+  --color-terminal: var(--color-magenta);
+  --color-paragraph: var(--color-grey);
+
+  --color-sunburst-start: var(--color-orange);
+  --color-sunburst-end: var(--color-yellow);
 }
 
 /* Orange Theme */
 .color-orange {
   --color-primary: #8b4513; /* Saddle brown */
-  --color-secondary: #ff6b35; /* Orange red */
+  --color-secondary: #fe582a; /* Orange red */
   --color-tertiary: #a0522d; /* Sienna */
   --color-border: #daa520; /* Goldenrod */
-  --color-accent: #ff8c00; /* Dark orange */
+  --color-accent: #ffb700; /* Dark orange */
   --color-modal-bg: #3d2818; /* Dark brown */
   --color-dialog-bg: #5f4a35; /* Medium brown */
-  --color-pulse-start:#71bc4ccc;
-  --color-pulse-end:#e1d11dcc;
+  --color-pulse-start: var(--color-purple);
+  --color-pulse-end: var(--color-blue);
   --color-terminal-background: #16162a;
   --color-terminal-title: #2809f221;
+
+  --color-sunburst-start: var(--color-blue);
+  --color-sunburst-end: var(--color-purple);
+
+  --color-intro: var(--color-blue);
 }
 
 /* Green Theme */
 .color-green {
   --color-primary: #2e4d3a; /* Dark green */
-  --color-secondary: #4caf50; /* Green */
+  --color-secondary: #59d15d; /* Green */
   --color-tertiary: #388e3c; /* Medium green */
   --color-border: #66bb6a; /* Light green */
-  --color-accent: #1b5e20; /* Very dark green */
+  --color-accent: #0d5a13; /* Very dark green */
   --color-modal-bg: #1e3a2e; /* Very dark green */
   --color-dialog-bg: #2e4d3a; /* Dark green */
-  --color-pulse-start:#71bc4ccc;
+  --color-pulse-start:#bc4cbacc;
   --color-pulse-end:#e1d11dcc;
   --color-terminal-background: #16162a;
   --color-terminal-title: #2809f221;
+
+  --color-pulse-start: var(--color-magenta);
+  --color-pulse-end: var(--color-blue);
+  --color-sunburst-start: var(--color-magenta);
+  --color-sunburst-end: var(--color-blue);
+
+  --color-intro: var(--color-yellow);
 }
 
 /* Light theme variables - Base light theme */
@@ -105,6 +123,8 @@ html[data-theme="light"] {
   --color-term-cursor: #71bc4c;
   --color-term-selectionBackground: var(--color-secondary);
   --color-term-selectionForeground: var(--color-background);
+  --color-terminal: var(--color-magenta);
+  --color-paragraph: var(--color-grey);
 }
 
 /* Light Orange Theme */
@@ -120,6 +140,10 @@ html[data-theme="light"].color-orange {
   --color-pulse-end:#71bc4ccc;
   --color-terminal-background: #b0b0ff;
   --color-terminal-title: #2809f221;
+  --color-pulse-start: var(--color-blue);
+  --color-pulse-end: var(--color-purple);
+  --color-sunburst-start: var(--color-purple);
+  --color-sunburst-end: var(--color-blue);
 }
 
 /* Light Green Theme */
@@ -135,14 +159,13 @@ html[data-theme="light"].color-green {
   --color-pulse-end:#71bc4ccc;
   --color-terminal-background: #b0b0ff;
   --color-terminal-title: #2809f221;
+  --color-pulse-start: var(--color-blue);
+  --color-pulse-end: var(--color-magenta);
+  --color-sunburst-start: var(--color-blue);
+  --color-sunburst-end: var(--color-magenta);
+
+  --color-intro: var(--color-info);
 }
-
-/* Light theme adjustments for gradient titles */
-html[data-theme="light"] .gradient-title {
-  filter: drop-shadow(0 0 2px rgba(0,0,0,0.3));
-}
-
-
 
 html,
 body {
