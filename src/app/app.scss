@@ -163,7 +163,7 @@ header {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 1px var(--color-gradient-text));
+  filter: drop-shadow(0 0 1px var(--color-background));
 }
 
 .gradient2-title {
@@ -174,7 +174,7 @@ background: linear-gradient(to right, var(--color-pulse-start), var(--color-puls
 }
 
 .sunburst {
-  background: linear-gradient(to right, var(--color-orange), var(--color-yellow));
+  background: linear-gradient(to right, var(--color-sunburst-start), var(--color-sunburst-end));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -318,46 +318,21 @@ ul.list {
   }
 }
 
-/* Terminal Colors */
-.green-text {
-  color: var(--color-green);
+.intro-text {
+  color: var(--color-intro);
   text-shadow: 0 0 8px currentColor;
 }
 
-.yellow-text {
-  color: var(--color-yellow);
+.terminal-text {
+  color: var(--color-terminal);
   text-shadow: 0 0 8px currentColor;
 }
 
-.red-text {
-  color: var(--color-red);
+.paragraph-text {
+  color: var(--color-praragraph);
   text-shadow: 0 0 8px currentColor;
 }
 
-.blue-text {
-  color: var(--color-blue);
-  text-shadow: 0 0 8px currentColor;
-}
-
-.purple-text {
-  color: var(--color-purple);
-  text-shadow: 0 0 8px currentColor;
-}
-
-.orange-text {
-  color: var(--color-orange);
-  text-shadow: 0 0 8px currentColor;
-}
-
-.magenta-text {
-  color: var(--color-magenta);
-  text-shadow: 0 0 8px currentColor;
-}
-
-.grey-text {
-  color: var(--color-grey);
-  text-shadow: 0 0 8px currentColor;
-}
 
 .status-line {
   margin-bottom: 4px;

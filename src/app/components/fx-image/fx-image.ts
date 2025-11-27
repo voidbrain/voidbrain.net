@@ -6,8 +6,11 @@ import {
   HostListener,
   PLATFORM_ID,
   inject,
+  effect,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { Theme as ThemeService } from '../../services/ui/theme';
+import { Color as ColorService } from '../../services/ui/color';
 
 @Component({
   selector: 'app-fx-image',
@@ -34,10 +37,49 @@ export class FxImageComponent implements AfterViewInit {
   private canvas!: HTMLCanvasElement;
   private img!: HTMLImageElement;
 
+  private themeService = inject(ThemeService);
+  private colorService = inject(ColorService);
   private platformId = inject(PLATFORM_ID);
 
   constructor() {
     this.isBrowser = isPlatformBrowser(this.platformId);
+
+    // Watch for theme/color changes and potentially trigger redraws
+    effect(() => {
+      // React to any theme or color changes
+      this.themeService.currentThemeSignal();
+      this.colorService.currentColorSignal();
+
+      // Effect will re-run draw loop automatically with new multipliers
+    });
+  }
+
+  private getColorMultipliers(): { red: number; green: number; blue: number } {
+    const theme = this.themeService.currentThemeValue;
+    const color = this.colorService.currentColorValue;
+
+    switch (`${theme}-${color}`) {
+      case 'dark-purple':
+        return { red: 0.69, green: 0.3, blue: 1.0 }; // Original purple #b04cbc
+
+      case 'dark-orange':
+        return { red: 1.0, green: 0.6, blue: 0.3 }; // Warm orange tones
+
+      case 'dark-green':
+        return { red: 0.4, green: 1.0, blue: 0.5 }; // Forest green tones
+
+      case 'light-purple':
+        return { red: 0.85, green: 0.75, blue: 0.9 }; // Subtle light purple
+
+      case 'light-orange':
+        return { red: 0.95, green: 0.85, blue: 0.75 }; // Soft light orange
+
+      case 'light-green':
+        return { red: 0.8, green: 0.95, blue: 0.85 }; // Gentle light green
+
+      default:
+        return { red: 0.69, green: 0.3, blue: 1.0 }; // Default to dark purple
+    }
   }
 
   ngAfterViewInit() {
@@ -71,6 +113,9 @@ export class FxImageComponent implements AfterViewInit {
     const imageData = this.ctx.getImageData(0, 0, width, height);
     const data = imageData.data;
 
+    // Get dynamic color multipliers based on current theme and color
+    const multipliers = this.getColorMultipliers();
+
     // Apply effects
     for (let i = 0; i < data.length; i += 4) {
       // Invert
@@ -83,10 +128,10 @@ export class FxImageComponent implements AfterViewInit {
         if (data[i + j] > 128) data[i + j] = 255 - data[i + j];
       }
 
-      // Enhanced purple tint (#b04cbc theme)
-      data[i] *= 0.69; // Red (more red for #b04cbc)
-      data[i + 1] *= 0.3; // Green (moderate green)
-      data[i + 2] *= 1.0; // Blue (boost blue for purple)
+      // Dynamic color tint based on theme and color settings
+      data[i] *= multipliers.red;     // Red multiplier
+      data[i + 1] *= multipliers.green; // Green multiplier
+      data[i + 2] *= multipliers.blue;  // Blue multiplier
 
       // Analog static noise
       const noise = (Math.random() - 0.6) * 200; // +/-25

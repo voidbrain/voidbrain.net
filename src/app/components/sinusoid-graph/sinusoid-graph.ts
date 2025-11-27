@@ -5,9 +5,12 @@ import {
   ViewChild,
   inject,
   PLATFORM_ID,
+  effect,
 } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { isPlatformBrowser } from '@angular/common';
+import { Theme as ThemeService } from '../../services/ui/theme';
+import { Color as ColorService } from '../../services/ui/color';
 
 Chart.register(...registerables);
 
@@ -28,9 +31,22 @@ export class SinusoidGraph implements AfterViewInit {
 
   private isBrowser = false;
   private platformId = inject(PLATFORM_ID);
+  private themeService = inject(ThemeService);
+  private colorService = inject(ColorService);
 
   constructor() {
     this.isBrowser = isPlatformBrowser(this.platformId);
+
+    // Watch for theme/color changes and potentially update chart colors
+    effect(() => {
+      this.themeService.currentThemeSignal();
+      this.colorService.currentColorSignal();
+
+      // Update chart colors if chart is initialized
+      if (this.chart) {
+        this.updateChartColors();
+      }
+    });
   }
 
   ngAfterViewInit() {
@@ -39,8 +55,19 @@ export class SinusoidGraph implements AfterViewInit {
     this.startAnimation();
   }
 
+  private getDynamicColors() {
+    // Get current colors from CSS custom properties
+    const computedStyle = getComputedStyle(document.documentElement);
+    return {
+      borderColor: computedStyle.getPropertyValue('--color-secondary').trim() || '#ff3366',
+      backgroundColor: computedStyle.getPropertyValue('--color-accent').trim() || '#8a2be2',
+      gridColor: computedStyle.getPropertyValue('--color-border').trim() || '#4d4d5e',
+    };
+  }
+
   private initChart() {
     const ctx = this.canvasRef.nativeElement.getContext('2d')!;
+    const colors = this.getDynamicColors();
 
     for (let i = 0; i < this.maxPoints; i++) {
       this.labels.push('');
@@ -68,8 +95,8 @@ export class SinusoidGraph implements AfterViewInit {
           {
             label: 'Sinusoid',
             data: this.data,
-            borderColor: '#b04cbc',
-            backgroundColor: '#5f47f5',
+            borderColor: colors.borderColor,
+            backgroundColor: colors.backgroundColor,
             borderWidth: 1,
             fill: false,
           },
@@ -101,8 +128,20 @@ export class SinusoidGraph implements AfterViewInit {
     this.addBackgroundGrid(ctx);
   }
 
+  private updateChartColors() {
+    const colors = this.getDynamicColors();
+
+    if (this.chart.data.datasets && this.chart.data.datasets[0]) {
+      this.chart.data.datasets[0].borderColor = colors.borderColor;
+      this.chart.data.datasets[0].backgroundColor = colors.backgroundColor;
+      this.chart.update();
+    }
+  }
+
   private addBackgroundGrid(ctx: CanvasRenderingContext2D) {
-    ctx.strokeStyle = 'rgba(200, 200, 200, 0.2)';
+    const colors = this.getDynamicColors();
+    // Create a semi-transparent version of the border color for the grid
+    ctx.strokeStyle = colors.gridColor.replace('#', '').replace(/^(.{6})$/, '$1') + '33'; // Add 20% alpha
     ctx.lineWidth = 1;
     const canvas = this.canvasRef.nativeElement;
 
