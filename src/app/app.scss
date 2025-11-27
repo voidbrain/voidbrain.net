@@ -21,15 +21,11 @@ header {
   z-index: 100;
 }
 
-.lipgloss-stack {
-  flex: 1;
-}
-
-.lipgloss-banner {
+.banner {
   display: flex;
   height: 100%;
   width: 100%;
-  .lipgloss-description {
+  .description {
     flex: 2;
     padding: var(--spacing-unit);
   }
@@ -64,22 +60,6 @@ header {
       overflow-x: auto;
       white-space: pre; /* Preserve whitespace and line breaks */
     }
-
-    code {
-      font-family: var(--font-dev);
-      color: #9cdcfe; /* VSCode-like code color */
-    }
-
-    /* Example of syntax highlighting for the pre code block */
-    code .package {
-      color: #569cd6;
-    } /* blue */
-    code .import {
-      color: #c586c0;
-    } /* purple */
-    code .string {
-      color: #ce9178;
-    } /* orange */
   }
 }
 
@@ -90,14 +70,14 @@ header {
   flex-direction: column;
   justify-content: center;
   padding: var(--spacing-unit);
-  background-color: #16162a; /* Slightly darker background color */
+  background-color: var(--color-terminal-background); /* Slightly darker background color */
   border-left: 1px solid var(--color-border);
   .panel {
     align-self: center;
   }
   .gradient-title {
     font-weight: bold;
-    color: #2809f221;
+    color: var(--color-terminal-title);
   }
 }
 
@@ -143,40 +123,6 @@ header {
 
 }
 
-.lipgloss-stack {
-  display: flex;
-  flex-direction: column;
-  margin: var(--spacing-unit) 0;
-
-  .lipgloss-item {
-    padding: 2px 8px;
-    margin-bottom: 2px;
-    display: block;
-    color: #fff;
-
-    &.gradient-1 {
-      background: linear-gradient(to right, #ff3366, #ff9966);
-      margin-left: 0em;
-    }
-    &.gradient-2 {
-      background: linear-gradient(to right, #ff5e62, #ff9966);
-      margin-left: 1em;
-    }
-    &.gradient-3 {
-      background: linear-gradient(to right, #ff8c61, #ff9966);
-      margin-left: 3em;
-    }
-    &.gradient-4 {
-      background: linear-gradient(to right, #ffb961, #ff9966);
-      margin-left: 4em;
-    }
-    &.gradient-5 {
-      background: linear-gradient(to right, #ffe661, #ff9966);
-      margin-left: 7em;
-    }
-  }
-}
-
 .lipgloss-description {
   margin-bottom: var(--spacing-unit);
 
@@ -204,7 +150,7 @@ header {
 }
 
 .internal-dialog-content {
-  background-color: var(--color-modal-bg);
+  background-color: var(--color-background);
   border: 2px solid var(--color-accent);
   padding: var(--spacing-unit);
   text-align: center;
@@ -213,26 +159,26 @@ header {
 }
 
 .gradient-title {
-  background: linear-gradient(to right, #b04cbc, #5f47f5);
+  background: linear-gradient(to right, var(--color-secondary), var(--color-accent));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 1px #535353);
+  filter: drop-shadow(0 0 1px var(--color-gradient-text));
 }
 
 .gradient2-title {
-background: linear-gradient(to right, #e1d11dcc, #71bc4ccc);
+background: linear-gradient(to right, var(--color-pulse-start), var(--color-pulse-end));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .sunburst {
-  background: linear-gradient(to right, #ff6600, #ffcc00);
+  background: linear-gradient(to right, var(--color-orange), var(--color-yellow));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 1px #535353);
+  filter: drop-shadow(0 0 1px var(--color-gradient-text));
 }
 
 .stripes {
@@ -255,9 +201,7 @@ ul.list {
 }
 
 .emoji {
-  //background: linear-gradient(to right, #b04cbccc, #5f47f5cc  );
-  background: linear-gradient(to right, #e1d11dcc, #71bc4ccc);
-  // background: linear-gradient(to right, #ff6600cc, #ffcc00cc  );
+  background: linear-gradient(to right, var(--color-pulse-end), var(--color-pulse-start));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -296,8 +240,7 @@ ul.list {
 
   .icon-check {
     margin-right: calc(var(--spacing-unit) / 2);
-    // color: #b04cbccc;
-    background: linear-gradient(to right, #e1d11dcc, #71bc4ccc);
+    background: linear-gradient(to right, var(--color-pulse-end), var(--color-pulse-start));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -368,48 +311,51 @@ ul.list {
     }
   }
   button {
-    color: #8a2be2; /* Fixed violet color for panel buttons regardless of theme */
+    color: var(--color-secondary);
+    &:hover {
+      color:var(--color-text)
+    }
   }
 }
 
 /* Terminal Colors */
 .green-text {
-  color: #00ff00;
+  color: var(--color-green);
   text-shadow: 0 0 8px currentColor;
 }
 
 .yellow-text {
-  color: #ffff00;
+  color: var(--color-yellow);
   text-shadow: 0 0 8px currentColor;
 }
 
 .red-text {
-  color: #ff4444;
+  color: var(--color-red);
   text-shadow: 0 0 8px currentColor;
 }
 
 .blue-text {
-  color: #00aaff;
+  color: var(--color-blue);
   text-shadow: 0 0 8px currentColor;
 }
 
 .purple-text {
-  color: #c586c0;
+  color: var(--color-purple);
   text-shadow: 0 0 8px currentColor;
 }
 
 .orange-text {
-  color: #ff6600;
+  color: var(--color-orange);
   text-shadow: 0 0 8px currentColor;
 }
 
 .magenta-text {
-  color: #ff00ff;
+  color: var(--color-magenta);
   text-shadow: 0 0 8px currentColor;
 }
 
 .grey-text {
-  color: #bbb;
+  color: var(--color-grey);
   text-shadow: 0 0 8px currentColor;
 }
 
@@ -453,19 +399,16 @@ ul.list {
 
 @keyframes goto-pulse {
   0% {
-    background: linear-gradient(to right, #71bc4ccc, #e1d11dcc);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  50% {
-    background: linear-gradient(to right, #e1d11dcc, #71bc4ccc);
+    background: linear-gradient(to right,var(--color-pulse-start), var(--color-pulse-end));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
   100% {
-    background: initial;
+    background: linear-gradient(to right, var(--color-pulse-end),var(--color-pulse-start));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 }
 
