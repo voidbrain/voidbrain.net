@@ -37,6 +37,17 @@ import { Color as ColorService } from '../../services/ui/color';
           <button (click)="toggleAnaglyphMode()" [class.active]="anaglyphMode()" class="fx-btn fx-3d-btn">🥽 {{ anaglyphMode() ? 'ON' : 'OFF' }}</button>
         </div>
 
+        <!-- Anaglyph Color Pair -->
+        <div class="control-group">
+          <span class="control-label">3D Colors:</span>
+          <button (click)="setAnaglyphColorPair(0)" [class.active]="anaglyphColorPair() === 0" class="fx-btn">🔴🟦 Red-Cyan</button>
+          <button (click)="setAnaglyphColorPair(1)" [class.active]="anaglyphColorPair() === 1" class="fx-btn">🔵🟡 Blue-Yellow</button>
+          <button (click)="setAnaglyphColorPair(2)" [class.active]="anaglyphColorPair() === 2" class="fx-btn">🟢🟣 Green-Magenta</button>
+          <button (click)="setAnaglyphColorPair(3)" [class.active]="anaglyphColorPair() === 3" class="fx-btn">🟦🔴 Cyan-Red</button>
+          <button (click)="setAnaglyphColorPair(4)" [class.active]="anaglyphColorPair() === 4" class="fx-btn">🟢🔴 Green-Red</button>
+          <button (click)="setAnaglyphColorPair(5)" [class.active]="anaglyphColorPair() === 5" class="fx-btn">🔵🟣 Blue-Magenta</button>
+        </div>
+
         <!-- Parallax -->
         <div class="control-group">
           <span class="control-label">Parallax:</span>
@@ -90,6 +101,7 @@ import { Color as ColorService } from '../../services/ui/color';
     .fx-btn:active{ transform:translate(1px,1px); box-shadow:1px 1px 0px var(--color-border); }
     .fx-btn.active{ background:var(--color-secondary); border-color:var(--color-accent); color:var(--color-background); }
     .fx-3d-btn.active{ background:var(--color-accent); border-color:var(--color-secondary); color:var(--color-background); animation:pulse 2s infinite; }
+    .fx-color-picker { margin: 2px 4px; width: 50px; height: 30px; border: none; border-radius: 4px; cursor: pointer; }
     @keyframes pulse { 0%,100%{ opacity:1 } 50%{ opacity:0.7 } }
   `]
 })
@@ -102,6 +114,7 @@ export class FxImageComponent implements AfterViewInit {
   // toggles
   anaglyphMode = signal(false);
   anaglyphParallax = signal(1);
+  anaglyphColorPair = signal(0); // Index into colorPairs array
   applyInvert = signal(false);
   applySolarize = signal(false);
   applyColorMultiplier = signal(false);
@@ -154,6 +167,16 @@ export class FxImageComponent implements AfterViewInit {
     this.img.onload = () => {
       this.redraw();
     };
+    this.img.onerror = () => {
+      console.error('Failed to load image');
+      // Draw a placeholder if image fails to load
+      this.ctx.fillStyle = 'rgba(255,0,255,0.1)';
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.fillStyle = 'white';
+      this.ctx.font = '20px Arial';
+      this.ctx.textAlign = 'center';
+      this.ctx.fillText('Image failed to load', this.canvas.width / 2, this.canvas.height / 2);
+    };
   }
 
   private createOffscreenCanvases() {
@@ -170,7 +193,7 @@ export class FxImageComponent implements AfterViewInit {
     if (!parent) return;
 
     const w = parent.clientWidth;
-    const h = w / (16/9);
+    const h = parent.clientWidth / (16/9);
     const dpr = window.devicePixelRatio || 1;
 
     this.canvas.style.width = `${w}px`;
@@ -198,6 +221,36 @@ export class FxImageComponent implements AfterViewInit {
       case 'light-green': return {red:0.8, green:0.95, blue:0.85};
       default: return {red:0.69, green:0.3, blue:1};
     }
+  }
+
+  private getAnaglyphColorPair() {
+    const colorPairs = [
+      { // 0: Red / Cyan (default)
+        left:  { name: 'cyan',  rgb: [0, 255, 255] },
+        right: { name: 'red',   rgb: [255, 0, 0] }
+      },
+      { // 1: Blue / Yellow
+        left:  { name: 'blue',  rgb: [0, 0, 255] },
+        right: { name: 'yellow',rgb: [255, 255, 0] }
+      },
+      { // 2: Green / Magenta
+        left:  { name: 'green', rgb: [0, 255, 0] },
+        right: { name: 'magenta',rgb: [255, 0, 255] }
+      },
+      { // 3: Cyan / Red
+        left:  { name: 'cyan',  rgb: [0, 255, 255] },
+        right: { name: 'red',   rgb: [255, 0, 0] }
+      },
+      { // 4: Green / Red
+        left:  { name: 'green', rgb: [0, 255, 0] },
+        right: { name: 'red',   rgb: [255, 0, 0] }
+      },
+      { // 5: Blue / Magenta
+        left:  { name: 'blue',  rgb: [0, 0, 255] },
+        right: { name: 'magenta',rgb: [255, 0, 255] }
+      }
+    ];
+    return colorPairs[this.anaglyphColorPair()] || colorPairs[0]; // Default to red/cyan
   }
 
   private redraw() {
@@ -327,8 +380,50 @@ export class FxImageComponent implements AfterViewInit {
       rightData.data[i]=gray; rightData.data[i+1]=gray; rightData.data[i+2]=gray;
     }
 
-    for(let i=0;i<leftData.data.length;i+=4) leftData.data[i]=0;
-    for(let i=0;i<rightData.data.length;i+=4){ rightData.data[i+1]=0; rightData.data[i+2]=0; }
+    // Get current anaglyph color pair
+    const currentPair = this.getAnaglyphColorPair();
+
+    // Apply traditional channel filtering based on selected pair
+    // Left eye channel filtering
+    if (currentPair.left.name === 'cyan') {
+      // Cyan filter blocks red, keeps green/blue
+      for(let i=0;i<leftData.data.length;i+=4){
+        leftData.data[i]=0; // Block red channel
+      }
+    } else if (currentPair.left.name === 'blue') {
+      // Blue filter - block green and red?
+      for(let i=0;i<leftData.data.length;i+=4){
+        leftData.data[i]=0; leftData.data[i+1]=0; // Block red and green
+      }
+    } else {
+      // For other colors, use simple approach
+      for(let i=0;i<leftData.data.length;i+=4){
+        leftData.data[i]=0; // Block red (default cyan-like)
+      }
+    }
+
+    // Right eye channel filtering
+    if (currentPair.right.name === 'red') {
+      // Red filter blocks green/blue, keeps red
+      for(let i=0;i<rightData.data.length;i+=4){
+        rightData.data[i+1]=0; rightData.data[i+2]=0; // Block green/blue channels
+      }
+    } else if (currentPair.right.name === 'yellow') {
+      // Yellow filter - keeps red/green, blocks blue?
+      for(let i=0;i<rightData.data.length;i+=4){
+        rightData.data[i+2]=0; // Block blue
+      }
+    } else if (currentPair.right.name === 'magenta') {
+      // Magenta filter - keeps red/blue, blocks green?
+      for(let i=0;i<rightData.data.length;i+=4){
+        rightData.data[i+1]=0; // Block green
+      }
+    } else {
+      // Default red filter
+      for(let i=0;i<rightData.data.length;i+=4){
+        rightData.data[i+1]=0; rightData.data[i+2]=0; // Block green/blue
+      }
+    }
 
     const out = this.ctx.createImageData(bufferW,bufferH);
     const wiggleEnabled=this.wiggle();
@@ -364,8 +459,8 @@ export class FxImageComponent implements AfterViewInit {
 
         if(this.applyInvert()){ r=255-r; g=255-g; b=255-b; }
         if(this.applySolarize()){ r=r>128?255-r:r; g=g>128?255-g:g; b=b>128?255-b:b; }
-        if(this.applyNoise()){ const n=(Math.random()-0.5)*40; r=Math.min(255,Math.max(0,r+n)); g=Math.min(255,Math.max(0,g+n)); b=Math.min(255,Math.max(0,b+n)); }
-        if(this.applyColorMultiplier()){ r=Math.min(255,r*multipliers.red); g=Math.min(255,g*multipliers.green); b=Math.min(255,b*multipliers.blue); }
+        if(this.applyNoise()){ const n=(Math.random()-0.5)*40; r=Math.min(255,Math.max(0,r+n)); g=Math.min(255,Math.max(0,g+n)); b*Math.min(255,b*multipliers.blue); }
+        if(this.applyColorMultiplier()){ r=Math.min(255,r*multipliers.red); g*Math.min(255,g*multipliers.green); b=Math.min(255,b*multipliers.blue); }
 
         out.data[idx]=Math.round(r);
         out.data[idx+1]=Math.round(g);
@@ -423,6 +518,7 @@ export class FxImageComponent implements AfterViewInit {
   setImageRendering(mode:'auto'|'smooth'|'crisp-edges'|'pixelated'){ this.imageRenderingMode.set(mode); if(this.canvas) this.canvas.style.imageRendering=mode; this.redraw(); }
   toggleAnaglyphMode(){ this.anaglyphMode.set(!this.anaglyphMode()); this.redraw(); }
   setParallax(val:number){ this.anaglyphParallax.set(val); this.redraw(); }
+  setAnaglyphColorPair(pairIndex:number){ this.anaglyphColorPair.set(pairIndex); this.redraw(); }
   toggleInvert(){ this.applyInvert.set(!this.applyInvert()); this.redraw(); }
   toggleSolarize(){ this.applySolarize.set(!this.applySolarize()); this.redraw(); }
   toggleColorMultiplier(){ this.applyColorMultiplier.set(!this.applyColorMultiplier()); this.redraw(); }
