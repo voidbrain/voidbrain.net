@@ -7,6 +7,7 @@
     "baseUrl": "./",
     "paths": {
       "@services/*": ["src/app/services/*"],
+      "@assets/*": ["src/app/assets/*"],
       "@node_modules/*": ["node_modules/*"]
     },
     "noImplicitOverride": true,
