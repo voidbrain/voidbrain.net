@@ -12,17 +12,16 @@
 }
 
 .gradient-title {
-  background: linear-gradient(to right, #b04cbc, #5f47f5);
+  background: linear-gradient(to right, var(--color-secondary), var(--color-accent));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 1px #535353);
+  filter: drop-shadow(0 0 1px var(--color-text));
   font-weight: bold;
-  color: #2809f221;
 }
 
 .modal-content {
-  background-color: var(--color-modal-bg);
+  background-color: var(--color-background);
   border: 2px solid var(--color-accent);
   box-shadow: 8px 8px 0px var(--color-primary); /* Modal brutalist shadow */
   padding: calc(var(--spacing-unit) * 2);
@@ -64,9 +63,9 @@
     padding-bottom: var(--spacing-unit);
     margin-bottom: var(--spacing-unit);
 
-    h3 {
+    p {
       margin: 0;
-      color: var(--color-accent);
+      filter:drop-shadow(0 0 1px var(--color-background))
     }
 
     button {
@@ -169,9 +168,9 @@
   margin-bottom: var(--spacing-unit);
 }
 
-.modal-header h3 {
+.modal-header p.gradient-title {
   margin: 0;
-  color: var(--color-accent);
+  filter:drop-shadow(0 0 1px var(--color-background))
 }
 
 .modal-header button {

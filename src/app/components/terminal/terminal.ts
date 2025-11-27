@@ -6,8 +6,11 @@ import {
   ViewChild,
   PLATFORM_ID,
   inject,
+  effect,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { Theme as ThemeService } from '../../services/ui/theme';
+import { Color as ColorService } from '../../services/ui/color';
 
 @Component({
   selector: 'app-terminal',
@@ -61,10 +64,24 @@ export class TerminalComponent implements OnInit, OnDestroy {
     },
   };
 
+  private themeService = inject(ThemeService);
+  private colorService = inject(ColorService);
   private platformId = inject(PLATFORM_ID);
 
   constructor() {
     this.isBrowser = isPlatformBrowser(this.platformId);
+
+    // Watch for theme/color changes and update terminal theme
+    effect(() => {
+      // React to any theme or color changes
+      this.themeService.currentThemeSignal();
+      this.colorService.currentColorSignal();
+
+      // Update terminal theme with current colors
+      if (this.term) {
+        this.updateTerminalTheme();
+      }
+    });
   }
 
   async ngOnInit() {
@@ -78,16 +95,10 @@ export class TerminalComponent implements OnInit, OnDestroy {
       cols: 38,
       rows: 12,
       convertEol: true,
-      theme: {
-        background: '#16162a',
-        foreground: '#6699ff',
-        cursor: '#71bc4c',
-        selectionBackground: '#581c9dff',
-        selectionForeground: '#1e1e2e',
-      },
     });
 
     this.term.open(this.container.nativeElement);
+    this.updateTerminalTheme()
 
     // Focus terminal after a short delay to ensure it's ready
     setTimeout(() => {
@@ -106,7 +117,9 @@ export class TerminalComponent implements OnInit, OnDestroy {
       });
     });
 
+    // Initialize terminal prompt
     this.printPrompt();
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const keyListener = this.term.onKey((ev: any) => {
       const key = ev.key;
@@ -115,6 +128,43 @@ export class TerminalComponent implements OnInit, OnDestroy {
     });
     this.disposers.push(() => keyListener.dispose());
   }
+
+  private updateTerminalTheme(): void {
+    if (!this.term || !this.isBrowser) return;
+
+    const computedStyle = getComputedStyle(document.documentElement);
+
+    // Get theme colors from CSS custom properties
+    const rawColors = {
+      background: computedStyle.getPropertyValue('--color-term-background').trim(),
+      foreground: computedStyle.getPropertyValue('--color-term-foreground').trim(),
+      cursor: computedStyle.getPropertyValue('--color-term-cursor').trim(),
+      selectionBackground: computedStyle.getPropertyValue('--color-term-selectionBackground').trim(),
+      selectionForeground: computedStyle.getPropertyValue('--color-term-selectionForeground').trim(),
+    };
+
+    // Use the colors directly (they should already be hex values from our theme system)
+    const themeColors = {
+      background: rawColors.background || '#1e1e2e',
+      foreground: rawColors.foreground || '#e0e0e0',
+      cursor: rawColors.cursor || '#66cc66',
+      selectionBackground: rawColors.selectionBackground || '#8a2be2',
+      selectionForeground: rawColors.selectionForeground || '#1e1e2e',
+    };
+
+    try {
+      if (this.term.options.setOption) {
+        this.term.options.setOption('theme', themeColors);
+      } else {
+        // Fallback: direct assignment
+        this.term.options.theme = themeColors;
+      }
+    } catch (error) {
+      console.warn('Failed to update terminal theme:', error);
+    }
+  }
+
+
 
   private runCommandFromClick(cmdText: string) {
     // Print the command in terminal
