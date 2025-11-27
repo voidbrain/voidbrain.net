@@ -2,7 +2,8 @@ import { Component, inject, signal, ViewChild, ElementRef, HostListener } from '
 import { CommonModule } from '@angular/common'; // Added CommonModule
 import { AppLogoComponent } from './components/app-logo/app-logo'; // Import AppLogoComponent
 import { WireframeSphere } from './components/wireframe-sphere/wireframe-sphere';
-import { Theme } from './services/ui/theme';
+import { Theme as ThemeService } from './services/ui/theme';
+import { Settings } from './services/settings';
 import { TerminalComponent } from './components/terminal/terminal';
 import { RandomFlashMatrix } from './components/random-flash-matrix/random-flash-matrix';
 import { FxImageComponent } from './components/fx-image/fx-image';
@@ -10,7 +11,7 @@ import { SinusoidGraph } from './components/sinusoid-graph/sinusoid-graph';
 import { CommonModal } from './components/common-modal/common-modal';
 import { LangDialog } from './components/lang-dialog/lang-dialog';
 import { ThemeDialog } from './components/theme-dialog/theme-dialog';
-import { DarkmodeDialog } from './components/darkmode-dialog/darkmode-dialog';
+import { FlavourDialog } from './components/flavour-dialog/flavour-dialog';
 import { ColorDialog } from './components/color-dialog/color-dialog';
 
 @Component({
@@ -28,7 +29,7 @@ import { ColorDialog } from './components/color-dialog/color-dialog';
     LangDialog,
     ThemeDialog,
     ColorDialog,
-    DarkmodeDialog,
+    FlavourDialog,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
@@ -38,20 +39,26 @@ export class App {
   protected readonly title = signal('voidbrain.net');
 
   isLangModalOpen = signal(false);
-  isThemeModalOpen = signal(false);
+  isFlavourModalOpen = signal(false);
   isColorModalOpen = signal(false);
-  isDarkModeModalOpen = signal(false);
+  isThemeModalOpen = signal(false);
 
   isInternalDialogVisible = true; // Set to true for initial display as per image
   isSettingsModalOpen = false; // Settings dialog state
-  private themeService = inject(Theme);
+  private settings = inject(Settings);
+  private themeService = inject(ThemeService);
 
   // Save feedback signals
   saveFeedbackMessage = signal('');
   isSavingSettings = signal(false);
   protected modalTitle = '';
 
-  protected selectedTheme = signal(this.themeService.currentThemeValue);
+  protected selectedTheme = signal(this.settings.theme);
+
+  constructor() {
+    // Apply theme from settings on app startup
+    // const settings = this.settings.getSettings();
+  }
 
   openLangModal() {
     this.modalTitle = 'Lang';
@@ -59,24 +66,24 @@ export class App {
     this.saveFeedbackMessage.set('');
     this.isSavingSettings.set(false);
     // Close all other modals first
-    this.isThemeModalOpen.set(false);
+    this.isFlavourModalOpen.set(false);
     this.isColorModalOpen.set(false);
-    this.isDarkModeModalOpen.set(false);
+    this.isThemeModalOpen.set(false);
     // Open the requested modal
     this.isLangModalOpen.set(true);
   }
 
-  openThemeModal() {
-    this.modalTitle = 'Theme';
+  openFlavourModal() {
+    this.modalTitle = 'Flavour';
     // Reset save feedback signals
     this.saveFeedbackMessage.set('');
     this.isSavingSettings.set(false);
     // Close all other modals first
     this.isLangModalOpen.set(false);
     this.isColorModalOpen.set(false);
-    this.isDarkModeModalOpen.set(false);
+    this.isThemeModalOpen.set(false);
     // Open the requested modal
-    this.isThemeModalOpen.set(true);
+    this.isFlavourModalOpen.set(true);
   }
 
   openColorModal() {
@@ -86,47 +93,47 @@ export class App {
     this.isSavingSettings.set(false);
     // Close all other modals first
     this.isLangModalOpen.set(false);
+    this.isFlavourModalOpen.set(false);
     this.isThemeModalOpen.set(false);
-    this.isDarkModeModalOpen.set(false);
     // Open the requested modal
     this.isColorModalOpen.set(true);
   }
 
-  openDarkModeModal() {
-    this.modalTitle = 'Dark Mode';
+  openThemeModal() {
+    this.modalTitle = 'Theme';
     // Reset save feedback signals
     this.saveFeedbackMessage.set('');
     this.isSavingSettings.set(false);
     // Close all other modals first
     this.isLangModalOpen.set(false);
-    this.isThemeModalOpen.set(false);
+    this.isFlavourModalOpen.set(false);
     this.isColorModalOpen.set(false);
     // Open the requested modal
-    this.isDarkModeModalOpen.set(true);
+    this.isThemeModalOpen.set(true);
   }
 
   closeLangModal() {
     this.isLangModalOpen.set(false);
   }
 
-  closeThemeModal() {
-    this.isThemeModalOpen.set(false);
+  closeFlavourModal() {
+    this.isFlavourModalOpen.set(false);
   }
 
   closeColorModal() {
     this.isColorModalOpen.set(false);
   }
 
-  closeDarkmodeModal() {
-    this.isDarkModeModalOpen.set(false);
+  closeThemeModal() {
+    this.isThemeModalOpen.set(false);
   }
 
   // Common close method for modal X button and backdrop click
   closeAnyModal() {
     this.closeLangModal();
-    this.closeThemeModal();
+    this.closeFlavourModal();
     this.closeColorModal();
-    this.closeDarkmodeModal();
+    this.closeThemeModal();
   }
 
   // Save settings with feedback - shows message, waits 2 sec, then closes modal
@@ -155,11 +162,16 @@ export class App {
     this.saveSettings();
   }
 
-  saveThemeSettings() {
+  saveFlavourSettings() {
     this.saveSettings();
   }
 
-  saveDarkModeSettings() {
+  saveThemeSettings() {
+    // Get current theme setting and apply it
+    const currentSettings = this.settings.getSettings();
+    this.themeService.setTheme(currentSettings.theme);
+
+    // Save the general settings
     this.saveSettings();
   }
 
@@ -175,14 +187,14 @@ export class App {
   onEscapeKey() {
     if (
       this.isColorModalOpen() ||
-      this.isDarkModeModalOpen() ||
+      this.isThemeModalOpen() ||
       this.isLangModalOpen() ||
-      this.isThemeModalOpen()
+      this.isFlavourModalOpen()
     ) {
       this.closeLangModal();
-      this.closeThemeModal();
+      this.closeFlavourModal();
       this.closeColorModal();
-      this.closeDarkmodeModal();
+      this.closeThemeModal();
     }
   }
 
@@ -190,14 +202,14 @@ export class App {
     // Only close if clicking the backdrop itself, not the modal content
     if (
       this.isColorModalOpen() ||
-      this.isDarkModeModalOpen() ||
+      this.isThemeModalOpen() ||
       this.isLangModalOpen() ||
-      this.isThemeModalOpen()
+      this.isFlavourModalOpen()
     ) {
       this.closeLangModal();
-      this.closeThemeModal();
+      this.closeFlavourModal();
       this.closeColorModal();
-      this.closeDarkmodeModal();
+      this.closeThemeModal();
     }
   }
 

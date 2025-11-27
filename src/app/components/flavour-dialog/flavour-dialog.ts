@@ -1,15 +1,15 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Settings } from '../../services/settings';
+import { Settings, Flavour } from '../../services/settings';
 
 @Component({
-  selector: 'app-darkmode-dialog',
+  selector: 'app-flavour-dialog',
   imports: [CommonModule, FormsModule],
-  templateUrl: './darkmode-dialog.html',
-  styleUrl: './darkmode-dialog.scss',
+  templateUrl: './flavour-dialog.html',
+  styleUrl: './flavour-dialog.scss',
 })
-export class DarkmodeDialog {
+export class FlavourDialog {
   @Output() closeDialog = new EventEmitter<void>();
   @Output() saveSettings = new EventEmitter<void>();
 
@@ -19,9 +19,9 @@ export class DarkmodeDialog {
 
   private settings = inject(Settings);
 
-  darkModes: { value: boolean; label: string; checked: boolean }[] = [
-    { value: true, label: 'Dark', checked: true },
-    { value: false, label: 'Light', checked: false },
+  flavours: { value: Flavour; label: string; checked: boolean }[] = [
+    { value: 'terminal', label: 'Terminal', checked: true },
+    { value: 'second', label: 'Second', checked: false },
   ];
 
   constructor() {
@@ -31,12 +31,11 @@ export class DarkmodeDialog {
   private loadCurrentSettings(): void {
     // Load current settings and set checked states
     const current = this.settings.getSettings();
-
-    this.darkModes.forEach((mode) => (mode.checked = mode.value === current.darkMode));
+    this.flavours.forEach((flavour) => (flavour.checked = flavour.value === current.flavour));
   }
 
-  onDarkModeChange(mode: boolean): void {
-    this.darkModes.forEach((d) => (d.checked = d.value === mode));
+  onFlavourChange(flavour: Flavour): void {
+    this.flavours.forEach((f) => (f.checked = f.value === flavour));
   }
 
   doSaveSettings(): void {

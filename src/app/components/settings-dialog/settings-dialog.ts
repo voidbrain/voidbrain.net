@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Settings, Language, Theme, Color } from '../../services/settings';
+import { Settings, Language, Theme, Color, Flavour } from '../../services/settings';
 
 @Component({
   selector: 'app-settings-dialog',
@@ -20,7 +20,7 @@ export class SettingsDialog {
     { value: 'it', label: 'Italiano', checked: false },
   ];
 
-  themes: { value: Theme; label: string; checked: boolean }[] = [
+  flavours: { value: Flavour; label: string; checked: boolean }[] = [
     { value: 'terminal', label: 'Terminal', checked: true },
     { value: 'second', label: 'Second', checked: false },
   ];
@@ -31,9 +31,9 @@ export class SettingsDialog {
     { value: 'green', label: 'Green', checked: false },
   ];
 
-  darkModes: { value: boolean; label: string; checked: boolean }[] = [
-    { value: true, label: 'Dark', checked: true },
-    { value: false, label: 'Light', checked: false },
+  themes: { value: Theme; label: string; checked: boolean }[] = [
+    { value: 'dark', label: 'Dark', checked: true },
+    { value: 'light', label: 'Light', checked: false },
   ];
 
   constructor() {
@@ -45,40 +45,40 @@ export class SettingsDialog {
     const current = this.settings.getSettings();
 
     this.languages.forEach((lang) => (lang.checked = lang.value === current.language));
-    this.themes.forEach((theme) => (theme.checked = theme.value === current.theme));
+    this.flavours.forEach((flavour) => (flavour.checked = flavour.value === current.flavour));
     this.colors.forEach((color) => (color.checked = color.value === current.color));
-    this.darkModes.forEach((mode) => (mode.checked = mode.value === current.darkMode));
+    this.themes.forEach((mode) => (mode.checked = mode.value === current.theme));
   }
 
   onLanguageChange(lang: Language): void {
     this.languages.forEach((l) => (l.checked = l.value === lang));
   }
 
-  onThemeChange(theme: Theme): void {
-    this.themes.forEach((t) => (t.checked = t.value === theme));
+  onFlavourChange(Flavour: Flavour): void {
+    this.flavours.forEach((t) => (t.checked = t.value === Flavour));
   }
 
   onColorChange(color: Color): void {
     this.colors.forEach((c) => (c.checked = c.value === color));
   }
 
-  onDarkModeChange(mode: boolean): void {
-    this.darkModes.forEach((d) => (d.checked = d.value === mode));
+  onThemeChange(mode: Theme): void {
+    this.themes.forEach((d) => (d.checked = d.value === mode));
   }
 
   saveSettings(): void {
     // Get selected values
     const selectedLanguage = this.languages.find((l) => l.checked)?.value || 'en';
-    const selectedTheme = this.themes.find((t) => t.checked)?.value || 'terminal';
+    const selectedFlavour = this.flavours.find((t) => t.checked)?.value || 'terminal';
     const selectedColor = this.colors.find((c) => c.checked)?.value || 'purple';
-    const selectedDarkMode = this.darkModes.find((m) => m.checked)?.value ?? true;
+    const selectedTheme = this.themes.find((m) => m.checked)?.value ?? 'dark';
 
     // Update settings
     this.settings.updateSettings({
       language: selectedLanguage,
-      theme: selectedTheme,
+      flavour: selectedFlavour,
       color: selectedColor,
-      darkMode: selectedDarkMode,
+      theme: selectedTheme,
     });
 
     this.closeDialog.emit();

@@ -20,8 +20,8 @@ export class ThemeDialog {
   private settings = inject(Settings);
 
   themes: { value: Theme; label: string; checked: boolean }[] = [
-    { value: 'terminal', label: 'Terminal', checked: true },
-    { value: 'second', label: 'Second', checked: false },
+    { value: 'dark', label: 'Dark', checked: true },
+    { value: 'light', label: 'Light', checked: false },
   ];
 
   constructor() {
@@ -31,11 +31,14 @@ export class ThemeDialog {
   private loadCurrentSettings(): void {
     // Load current settings and set checked states
     const current = this.settings.getSettings();
-    this.themes.forEach((theme) => (theme.checked = theme.value === current.theme));
+    console.log(current)
+    this.themes.forEach((mode) => (mode.checked = mode.value === current.theme));
   }
 
   onThemeChange(theme: Theme): void {
-    this.themes.forEach((t) => (t.checked = t.value === theme));
+    this.themes.forEach((f) => (f.checked = f.value === theme));
+    // Update the settings service with the new theme
+    this.settings.updateSettings({ theme });
   }
 
   doSaveSettings(): void {

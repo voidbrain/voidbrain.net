@@ -1,16 +1,16 @@
 <div class="settings-dialog">
-  <!-- Dark Mode -->
+  <!-- Flavour -->
   <div class="settings-group">
     <div class="checkbox-list">
-      @for (mode of darkModes; track mode.value) {
+      @for (flavour of flavours; track flavour.value) {
         <label class="checkbox-item">
           <input
             type="radio"
-            [checked]="mode.checked"
-            (change)="onDarkModeChange(mode.value)"
-            name="darkMode"
+            [checked]="flavour.checked"
+            (change)="onFlavourChange(flavour.value)"
+            name="flavour"
           />
-          <span>{{ mode.label }}</span>
+          <span>{{ flavour.label }}</span>
         </label>
       }
     </div>
@@ -32,7 +32,7 @@
       @if (isSavingSettings) {
         ⧗ {{ 'Saving...' }}
       } @else {
-        {{ 'Save' }}
+        {{ 'Close' }}
       }
     </button>
   </div>

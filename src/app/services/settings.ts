@@ -2,14 +2,15 @@ import { Injectable, signal, computed, inject, PLATFORM_ID } from '@angular/core
 import { isPlatformBrowser } from '@angular/common';
 
 export type Language = 'en' | 'it';
-export type Theme = 'terminal' | 'second';
+export type Flavour = 'terminal' | 'second';
 export type Color = 'purple' | 'orange' | 'green';
+export type Theme = 'dark' | 'light';
 
 export interface AppSettings {
   language: Language;
-  theme: Theme;
+  flavour: Flavour;
   color: Color;
-  darkMode: boolean;
+  theme: Theme;
 }
 
 @Injectable({
@@ -24,23 +25,23 @@ export class Settings {
   // Default settings
   private defaultSettings: AppSettings = {
     language: 'en',
-    theme: 'terminal',
+    flavour: 'terminal',
     color: 'purple',
-    darkMode: true,
+    theme: 'dark',
   };
 
   // Signals for reactive settings
   language = signal<Language>('en');
-  theme = signal<Theme>('terminal');
+  flavour = signal<Flavour>('terminal');
   color = signal<Color>('purple');
-  darkMode = signal<boolean>(true);
+  theme = signal<Theme>('dark');
 
   // Computed signal for full settings object
   currentSettings = computed<AppSettings>(() => ({
     language: this.language(),
-    theme: this.theme(),
+    flavour: this.flavour(),
     color: this.color(),
-    darkMode: this.darkMode(),
+    theme: this.theme(),
   }));
 
   constructor() {
@@ -63,15 +64,17 @@ export class Settings {
       if (stored) {
         const settings: AppSettings = JSON.parse(stored);
         this.language.set(settings.language || this.defaultSettings.language);
-        this.theme.set(settings.theme || this.defaultSettings.theme);
+        this.flavour.set(settings.flavour || this.defaultSettings.flavour);
         this.color.set(settings.color || this.defaultSettings.color);
-        this.darkMode.set(
-          settings.darkMode !== undefined ? settings.darkMode : this.defaultSettings.darkMode,
-        );
+        this.theme.set(settings.theme || this.defaultSettings.theme);
+      } else {
+        // First time user - seed localStorage with defaults
+        this.saveSettings();
       }
     } catch (error) {
       console.warn('Failed to load settings from localStorage:', error);
-      // Use defaults
+      // Use defaults and save them
+      this.saveSettings();
     }
   }
 
@@ -91,18 +94,18 @@ export class Settings {
   // Update settings - can pass partial settings object
   updateSettings(settings: Partial<AppSettings>): void {
     if (settings.language !== undefined) this.language.set(settings.language);
-    if (settings.theme !== undefined) this.theme.set(settings.theme);
+    if (settings.flavour !== undefined) this.flavour.set(settings.flavour);
     if (settings.color !== undefined) this.color.set(settings.color);
-    if (settings.darkMode !== undefined) this.darkMode.set(settings.darkMode);
+    if (settings.theme !== undefined) this.theme.set(settings.theme);
     this.saveSettings();
   }
 
   // Reset to defaults
   resetSettings(): void {
     this.language.set(this.defaultSettings.language);
-    this.theme.set(this.defaultSettings.theme);
+    this.flavour.set(this.defaultSettings.flavour);
     this.color.set(this.defaultSettings.color);
-    this.darkMode.set(this.defaultSettings.darkMode);
+    this.theme.set(this.defaultSettings.theme);
     if (this.isBrowser()) {
       this.saveSettings();
     }
