@@ -62,7 +62,7 @@ body {
   border: 1px solid var(--color-border);
   padding: calc(var(--spacing-unit) / 2);
   border-radius: 2px;
-  font-size: 0.8em;
+  font-size: 0.5em;
   white-space: nowrap;
   opacity: 0;
   visibility: hidden;
@@ -87,6 +87,7 @@ body {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease;
+  font-size: xx-small!important;
 }
 
 .tooltip:hover::before {

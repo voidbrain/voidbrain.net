@@ -116,7 +116,8 @@ export class RandomFlashMatrix implements OnInit, OnDestroy {
       }
       if (!sq.flashColor && Math.random() < 0.0001) {
         // ~0.01% chance per frame
-        sq.flashColor = this.flashAccentColors[Math.floor(Math.random() * this.flashAccentColors.length)];
+        sq.flashColor =
+          this.flashAccentColors[Math.floor(Math.random() * this.flashAccentColors.length)];
         sq.flashEndTime = now + this.flashDuration;
       }
 

@@ -1,0 +1,39 @@
+<div class="settings-dialog">
+  <!-- Language -->
+  <div class="settings-group">
+    <div class="checkbox-list">
+      @for (lang of languages; track lang.value) {
+        <label class="checkbox-item">
+          <input
+            type="radio"
+            [checked]="lang.checked"
+            (change)="onLanguageChange(lang.value)"
+            name="language"
+          />
+          <span>{{ lang.label }}</span>
+        </label>
+      }
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="dialog-actions">
+    <div>
+      @if (saveFeedbackMessage) {
+        <p class="saveSettingsFeedback">{{ saveFeedbackMessage }}</p>
+      }
+    </div>
+    <button
+      (click)="doSaveSettings()"
+      (keydown.enter)="doSaveSettings()"
+      type="button"
+      class="tab-button"
+    >
+      @if (isSavingSettings) {
+        ⧗ {{ 'Saving...' }}
+      } @else {
+        {{ 'Save' }}
+      }
+    </button>
+  </div>
+</div>

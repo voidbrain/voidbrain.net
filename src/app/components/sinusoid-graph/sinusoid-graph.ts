@@ -1,4 +1,11 @@
-import { Component, AfterViewInit, ElementRef, ViewChild, inject, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  ElementRef,
+  ViewChild,
+  inject,
+  PLATFORM_ID,
+} from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { isPlatformBrowser } from '@angular/common';
 
@@ -44,10 +51,11 @@ export class SinusoidGraph implements AfterViewInit {
       const amplitude2 = 0.3 + Math.random() * 0.4; // Second wave amplitude
       const noise = (Math.random() - 0.5) * 0.3; // Random noise
 
-      const value = Math.sin(phase1) * amplitude1 +
-                   Math.cos(phase2) * amplitude2 +
-                   Math.sin(i * (0.15 + Math.random() * 0.1)) * 0.2 + // Extra random wave
-                   noise;
+      const value =
+        Math.sin(phase1) * amplitude1 +
+        Math.cos(phase2) * amplitude2 +
+        Math.sin(i * (0.15 + Math.random() * 0.1)) * 0.2 + // Extra random wave
+        noise;
 
       this.data.push(value);
     }
@@ -130,14 +138,16 @@ export class SinusoidGraph implements AfterViewInit {
       const phase2 = baseIndex * (0.03 + Math.random() * 0.04);
       const amplitude1 = 0.7 + Math.random() * 0.6; // Random amplitudes
       const amplitude2 = 0.3 + Math.random() * 0.4;
-      const timeNoise = Math.sin(this.time * (1.5 + Math.random() * 2)) * (0.3 + Math.random() * 0.4);
+      const timeNoise =
+        Math.sin(this.time * (1.5 + Math.random() * 2)) * (0.3 + Math.random() * 0.4);
       const randomNoise = (Math.random() - 0.5) * 0.4; // Additional noise
 
-      const value = Math.sin(phase1) * amplitude1 +
-                   Math.cos(phase2) * amplitude2 +
-                   Math.sin(baseIndex * (0.15 + Math.random() * 0.1)) * 0.2 +
-                   timeNoise +
-                   randomNoise;
+      const value =
+        Math.sin(phase1) * amplitude1 +
+        Math.cos(phase2) * amplitude2 +
+        Math.sin(baseIndex * (0.15 + Math.random() * 0.1)) * 0.2 +
+        timeNoise +
+        randomNoise;
 
       this.data.push(value);
 
