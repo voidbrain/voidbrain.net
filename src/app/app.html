@@ -73,10 +73,10 @@
       <div class="lipgloss-banner">
         <div class="lipgloss-description">
           <p>
-            <span class="gradient2-title">#</span> 
-            <span class="purple-text"> Humans.txt </span> 
-            <span class="gradient-title">/</span> 
-            Driven by constant learning and improvement, I am an  
+            <span class="gradient2-title">#</span>
+            <span class="purple-text"> Humans.txt </span>
+            <span class="gradient-title">/</span>
+            Driven by constant learning and improvement, I am an
             analytical thinker with a structured, solution-oriented approach.
             Strong teamwork and communication skills, with the ability to identify opportunities and solve problems effectively.
           </p>
@@ -165,9 +165,9 @@
 
     <div class="panel">
       <button class="panel-button tooltip" data-tooltip="Lang" (click)="openLangModal()" (keydown.enter)="openLangModal()" type="button" aria-label="Open Language Settings">◰</button>
-      <button class="panel-button tooltip" data-tooltip="Theme" (click)="openThemeModal()" (keydown.enter)="openThemeModal()" type="button" aria-label="Open Theme Settings">⧆</button>
+      <button class="panel-button tooltip" data-tooltip="Flavour" (click)="openFlavourModal()" (keydown.enter)="openFlavourModal()" type="button" aria-label="Open Flavour Settings">⧆</button>
       <button class="panel-button tooltip" data-tooltip="Colors" (click)="openColorModal()" (keydown.enter)="openColorModal()" type="button" aria-label="Open Color Settings">▨</button>
-      <button class="panel-button tooltip" data-tooltip="Dark Mode" (click)="openDarkModeModal()" (keydown.enter)="openDarkModeModal()" type="button" aria-label="Open Dark Mode Settings">⬔</button>
+      <button class="panel-button tooltip" data-tooltip="Theme" (click)="openThemeModal()" (keydown.enter)="openThemeModal()" type="button" aria-label="Open Theme Settings">⬔</button>
     </div>
 
     <div class="terminal-prompt">
@@ -195,20 +195,20 @@
 
 <!-- Settings Modal -->
 <app-common-modal
-  [isOpen]="isLangModalOpen() || isThemeModalOpen() || isColorModalOpen() || isDarkModeModalOpen()"
+  [isOpen]="isLangModalOpen() || isFlavourModalOpen() || isColorModalOpen() || isThemeModalOpen()"
   title="{{modalTitle}}"
   (closed)="closeAnyModal()">
   @if(isLangModalOpen()){
     <app-lang-dialog (closeDialog)="closeLangModal()" (saveSettings)="saveLangSettings()" [saveFeedbackMessage]="saveFeedbackMessage()" [isSavingSettings]="isSavingSettings()"></app-lang-dialog>
   }
-  @if(isThemeModalOpen()){
-    <app-theme-dialog (closeDialog)="closeThemeModal()" (saveSettings)="saveThemeSettings()" [saveFeedbackMessage]="saveFeedbackMessage()" [isSavingSettings]="isSavingSettings()"></app-theme-dialog>
+  @if(isFlavourModalOpen()){
+    <app-flavour-dialog (closeDialog)="closeFlavourModal()" (saveSettings)="saveFlavourSettings()" [saveFeedbackMessage]="saveFeedbackMessage()" [isSavingSettings]="isSavingSettings()"></app-flavour-dialog>
   }
   @if(isColorModalOpen()){
     <app-color-dialog (closeDialog)="closeColorModal()" (saveSettings)="saveColorSettings()" [saveFeedbackMessage]="saveFeedbackMessage()" [isSavingSettings]="isSavingSettings()"></app-color-dialog>
   }
-  @if(isDarkModeModalOpen()){
-    <app-darkmode-dialog (closeDialog)="closeDarkmodeModal()" (saveSettings)="saveDarkModeSettings()" [saveFeedbackMessage]="saveFeedbackMessage()" [isSavingSettings]="isSavingSettings()"></app-darkmode-dialog>
+  @if(isThemeModalOpen()){
+    <app-theme-dialog (closeDialog)="closeThemeModal()" (saveSettings)="saveThemeSettings()" [saveFeedbackMessage]="saveFeedbackMessage()" [isSavingSettings]="isSavingSettings()"></app-theme-dialog>
   }
 </app-common-modal>
 </div>

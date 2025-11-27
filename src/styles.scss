@@ -18,6 +18,22 @@
   --spacing-unit: 8px;
 }
 
+/* Light theme variables */
+html[data-theme="light"] {
+  --color-background: #f8f9fa; /* Light background */
+  --color-text: #212529; /* Dark text */
+  --color-primary: #e9ecef; /* Light primary */
+  --color-secondary: #6f42c1; /* Purple accent */
+  --color-tertiary: #dee2e6; /* Light tertiary */
+  --color-border: #adb5bd; /* Light borders */
+  --color-accent: #6610f2; /* Purple accent */
+  --color-modal-bg: #ffffff; /* Light modal background */
+  --color-dialog-bg: #f8f9fa; /* Light dialog background */
+  --color-success: #28a745; /* Green */
+  --color-warning: #ffc107; /* Yellow */
+  --color-info: #17a2b8; /* Blue */
+}
+
 html,
 body {
   height: 100%;

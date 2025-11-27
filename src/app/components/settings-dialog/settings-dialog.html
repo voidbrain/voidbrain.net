@@ -57,13 +57,13 @@
   <div class="settings-group">
     <h5 class="gradient-title">Dark Mode</h5>
     <div class="checkbox-list">
-      @for (mode of darkModes; track mode.value) {
+      @for (mode of themes; track mode.value) {
         <label class="checkbox-item">
           <input
             type="radio"
             [checked]="mode.checked"
-            (change)="onDarkModeChange(mode.value)"
-            name="darkMode"
+            (change)="onThemeChange(mode.value)"
+            name="theme"
           />
           <span>{{ mode.label }}</span>
         </label>

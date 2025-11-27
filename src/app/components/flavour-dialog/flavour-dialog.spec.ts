@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DarkmodeDialog } from './darkmode-dialog';
+import { ThemeDialog } from './theme-dialog';
 
-describe('DarkmodeDialog', () => {
-  let component: DarkmodeDialog;
-  let fixture: ComponentFixture<DarkmodeDialog>;
+describe('ThemeDialog', () => {
+  let component: ThemeDialog;
+  let fixture: ComponentFixture<ThemeDialog>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DarkmodeDialog],
+      imports: [ThemeDialog],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DarkmodeDialog);
+    fixture = TestBed.createComponent(ThemeDialog);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
