@@ -297,7 +297,7 @@ export class FxImageComponent implements AfterViewInit {
 
     // ------------------- ANAGLYPH -------------------
     const baseParallax = Math.max(2,Math.floor(cssW/200));
-    const parallaxOffset = baseParallax*this.anaglyphParallax();
+    const parallaxOffset = baseParallax*this.anaglyphParallax()*2;
 
     this.leftCtx.clearRect(0,0,cssW,cssH);
     this.rightCtx.clearRect(0,0,cssW,cssH);
@@ -316,6 +316,17 @@ export class FxImageComponent implements AfterViewInit {
 
     const leftData = this.leftCtx.getImageData(0,0,bufferW,bufferH);
     const rightData = this.rightCtx.getImageData(0,0,bufferW,bufferH);
+
+    // Convert to black & white before anaglyph processing
+    for(let i=0;i<leftData.data.length;i+=4){
+      const gray = Math.round(0.299*leftData.data[i] + 0.587*leftData.data[i+1] + 0.114*leftData.data[i+2]);
+      leftData.data[i]=gray; leftData.data[i+1]=gray; leftData.data[i+2]=gray;
+    }
+    for(let i=0;i<rightData.data.length;i+=4){
+      const gray = Math.round(0.299*rightData.data[i] + 0.587*rightData.data[i+1] + 0.114*rightData.data[i+2]);
+      rightData.data[i]=gray; rightData.data[i+1]=gray; rightData.data[i+2]=gray;
+    }
+
     for(let i=0;i<leftData.data.length;i+=4) leftData.data[i]=0;
     for(let i=0;i<rightData.data.length;i+=4){ rightData.data[i+1]=0; rightData.data[i+2]=0; }
 
@@ -364,7 +375,6 @@ export class FxImageComponent implements AfterViewInit {
     }
     this.ctx.putImageData(out,0,0);
     if(this.applyNoise()||this.vhs()) this.addThemeNoiseOverlay(cssW,cssH,timeSec);
-    this.addAnaglyphInstructions();
   }
 
   private applyEffectsToImageData(data:Uint8ClampedArray,multipliers:{red:number,green:number,blue:number},timeSec:number){
@@ -406,20 +416,6 @@ export class FxImageComponent implements AfterViewInit {
       }
       this.ctx.putImageData(imgData,0,0);
     }
-    this.ctx.restore();
-  }
-
-  private addAnaglyphInstructions(){
-    const theme = this.themeService.currentThemeValue;
-    const color = theme==='light'?'rgba(0,0,0,0.7)':'rgba(255,255,255,0.7)';
-    this.ctx.save();
-    this.ctx.font='14px monospace';
-    this.ctx.fillStyle=color;
-    this.ctx.textAlign='center';
-    const cx=this.canvas.width/(window.devicePixelRatio||1)/2;
-    const by=this.canvas.height/(window.devicePixelRatio||1)-28;
-    this.ctx.fillText('👁️ Red-Cyan 3D Effect',cx,by);
-    this.ctx.fillText('(Red=Right, Cyan=Left) Mix effects freely',cx,by+18);
     this.ctx.restore();
   }
 
