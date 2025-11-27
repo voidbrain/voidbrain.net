@@ -368,7 +368,7 @@ ul.list {
     }
   }
   button {
-    color: var(--color-accent);
+    color: #8a2be2; /* Fixed violet color for panel buttons regardless of theme */
   }
 }
 
@@ -475,7 +475,7 @@ ul.list {
 
 /* Responsive Design Breakpoints */
 @media (max-width: 768px) {
-  
+
   app-logo {
     margin: auto;
   }

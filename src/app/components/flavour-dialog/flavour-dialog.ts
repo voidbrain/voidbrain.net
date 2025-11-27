@@ -39,6 +39,11 @@ export class FlavourDialog {
   }
 
   doSaveSettings(): void {
+    // Get the selected flavour and update settings
+    const selectedFlavour = this.flavours.find(f => f.checked)?.value;
+    if (selectedFlavour) {
+      this.settings.updateSettings({ flavour: selectedFlavour });
+    }
     // Emit save event to parent (settings logic moved to parent)
     this.saveSettings.emit();
   }

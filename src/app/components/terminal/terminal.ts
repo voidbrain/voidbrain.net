@@ -266,8 +266,7 @@ export class TerminalComponent implements OnInit, OnDestroy {
       case 'explain':
         this.conversationMode = true;
         this.pendingCommand = 'explain';
-        this.pendingPrompt = 'explain what?';
-        this.writeln('Available Catalogue: FPV, Ultimate Frisbee, Astrophotography, Hiking, ML');
+        this.writeln('Definitions: FPV, Ultimate Frisbee, Astrophotography, Hiking, ML');
         this.printPrompt();
         if (args.length) {
           const response = this.runSubCommand(cmd, args[0]);
@@ -302,7 +301,7 @@ export class TerminalComponent implements OnInit, OnDestroy {
     if (parent === 'explain') {
       switch (input.toLowerCase()) {
         case 'fpv':
-          return '🚁  FPV:\nGo Send It!';
+          return '🚁  FPV: Go Send It!';
         case 'ultimate frisbee':
           return '🥏  Ultimate Frisbee:\nPlease don\'t ask me where is the dog.';
         case 'ml':

@@ -41,6 +41,11 @@ export class ColorDialog {
   }
 
   doSaveSettings(): void {
+    // Get the selected color and update settings
+    const selectedColor = this.colors.find(c => c.checked)?.value;
+    if (selectedColor) {
+      this.settings.updateSettings({ color: selectedColor });
+    }
     // Emit save event to parent (settings logic moved to parent)
     this.saveSettings.emit();
   }
