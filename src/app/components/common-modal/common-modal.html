@@ -1,0 +1,23 @@
+@if (isOpen) {
+  <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -->
+  <div
+    class="modal-overlay"
+    (click)="onBackdropClick($event)"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Modal backdrop"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="gradient-title">{{ title }}</h3>
+
+        <button (click)="close()" (keydown.enter)="close()" type="button" aria-label="Close modal">
+          X
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-content></ng-content>
+      </div>
+    </div>
+  </div>
+}

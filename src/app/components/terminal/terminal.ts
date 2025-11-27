@@ -13,7 +13,7 @@ import { isPlatformBrowser } from '@angular/common';
   selector: 'app-terminal',
   standalone: true,
   template: ` <div class="cli-host" #container></div>`,
-  styles: [``,],
+  styles: [``],
 })
 export class TerminalComponent implements OnInit, OnDestroy {
   @ViewChild('container', { static: true }) container!: ElementRef<HTMLDivElement>;
@@ -41,19 +41,19 @@ export class TerminalComponent implements OnInit, OnDestroy {
 
   private fakeFS = {
     '/': {
-      "Plugins": {
+      Plugins: {
         'Angular/': null,
         'HTML/': null,
         'iOS/': null,
       },
-      "Modules": {
+      Modules: {
         '~web-development': null,
       },
-      "Extras": {
+      Extras: {
         'fpv.txt': null,
         'frisbee.txt': null,
       },
-      "Add-On": {
+      'Add-On': {
         'readme.md': null,
         'changelog.md': null,
       },
@@ -84,7 +84,6 @@ export class TerminalComponent implements OnInit, OnDestroy {
         cursor: '#71bc4c',
         selectionBackground: '#581c9dff',
         selectionForeground: '#1e1e2e',
-
       },
     });
 
@@ -303,11 +302,11 @@ export class TerminalComponent implements OnInit, OnDestroy {
     if (parent === 'explain') {
       switch (input.toLowerCase()) {
         case 'fpv':
-          return '🚁 FPV = First Person View drone piloting with goggles.';
+          return '🚁  FPV = First Person View drone piloting with goggles.';
         case 'ultimate frisbee':
-          return '🥏 Ultimate Frisbee = a fast-paced team disc sport.';
+          return '🥏  Ultimate Frisbee = a fast-paced team disc sport.';
         case 'ml':
-          return '🤖 ML = Machine Learning — algorithms that learn from data.';
+          return '🤖  ML = Machine Learning — algorithms that learn from data.';
         default:
           return `Invalid option: ${input}`;
       }

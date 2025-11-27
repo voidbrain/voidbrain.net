@@ -1,0 +1,39 @@
+<div class="settings-dialog">
+  <!-- Dark Mode -->
+  <div class="settings-group">
+    <div class="checkbox-list">
+      @for (mode of darkModes; track mode.value) {
+        <label class="checkbox-item">
+          <input
+            type="radio"
+            [checked]="mode.checked"
+            (change)="onDarkModeChange(mode.value)"
+            name="darkMode"
+          />
+          <span>{{ mode.label }}</span>
+        </label>
+      }
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="dialog-actions">
+    <div>
+      @if (saveFeedbackMessage) {
+        <p class="saveSettingsFeedback">{{ saveFeedbackMessage }}</p>
+      }
+    </div>
+    <button
+      (click)="doSaveSettings()"
+      (keydown.enter)="doSaveSettings()"
+      type="button"
+      class="tab-button"
+    >
+      @if (isSavingSettings) {
+        ⧗ {{ 'Saving...' }}
+      } @else {
+        {{ 'Save' }}
+      }
+    </button>
+  </div>
+</div>

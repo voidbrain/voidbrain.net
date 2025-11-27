@@ -1,0 +1,78 @@
+<div class="settings-dialog">
+  <!-- Language -->
+  <div class="settings-group">
+    <h5 class="gradient-title">Language</h5>
+    <div class="checkbox-list">
+      @for (lang of languages; track lang.value) {
+        <label class="checkbox-item">
+          <input
+            type="radio"
+            [checked]="lang.checked"
+            (change)="onLanguageChange(lang.value)"
+            name="language"
+          />
+          <span>{{ lang.label }}</span>
+        </label>
+      }
+    </div>
+  </div>
+
+  <!-- Theme -->
+  <div class="settings-group">
+    <h5 class="gradient-title">Theme</h5>
+    <div class="checkbox-list">
+      @for (theme of themes; track theme.value) {
+        <label class="checkbox-item">
+          <input
+            type="radio"
+            [checked]="theme.checked"
+            (change)="onThemeChange(theme.value)"
+            name="theme"
+          />
+          <span>{{ theme.label }}</span>
+        </label>
+      }
+    </div>
+  </div>
+
+  <!-- Color -->
+  <div class="settings-group">
+    <h5 class="gradient-title">Color Scheme</h5>
+    <div class="checkbox-list">
+      @for (color of colors; track color.value) {
+        <label class="checkbox-item">
+          <input
+            type="radio"
+            [checked]="color.checked"
+            (change)="onColorChange(color.value)"
+            name="color"
+          />
+          <span>{{ color.label }}</span>
+        </label>
+      }
+    </div>
+  </div>
+
+  <!-- Dark Mode -->
+  <div class="settings-group">
+    <h5 class="gradient-title">Dark Mode</h5>
+    <div class="checkbox-list">
+      @for (mode of darkModes; track mode.value) {
+        <label class="checkbox-item">
+          <input
+            type="radio"
+            [checked]="mode.checked"
+            (change)="onDarkModeChange(mode.value)"
+            name="darkMode"
+          />
+          <span>{{ mode.label }}</span>
+        </label>
+      }
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="dialog-actions">
+    <button (click)="saveSettings()" class="tab-button">{{ 'Save' }}</button>
+  </div>
+</div>

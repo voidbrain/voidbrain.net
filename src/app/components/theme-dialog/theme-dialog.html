@@ -1,0 +1,39 @@
+<div class="settings-dialog">
+  <!-- Theme -->
+  <div class="settings-group">
+    <div class="checkbox-list">
+      @for (theme of themes; track theme.value) {
+        <label class="checkbox-item">
+          <input
+            type="radio"
+            [checked]="theme.checked"
+            (change)="onThemeChange(theme.value)"
+            name="theme"
+          />
+          <span>{{ theme.label }}</span>
+        </label>
+      }
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="dialog-actions">
+    <div>
+      @if (saveFeedbackMessage) {
+        <p class="saveSettingsFeedback">{{ saveFeedbackMessage }}</p>
+      }
+    </div>
+    <button
+      (click)="doSaveSettings()"
+      (keydown.enter)="doSaveSettings()"
+      type="button"
+      class="tab-button"
+    >
+      @if (isSavingSettings) {
+        ⧗ {{ 'Saving...' }}
+      } @else {
+        {{ 'Save' }}
+      }
+    </button>
+  </div>
+</div>

@@ -6,11 +6,11 @@
       </div>
 
       <div class="tabs-container">
-        <button (click)="goTo('Plugins')" class="tab-button">Plugins</button>
-        <button (click)="goTo('Modules')" class="tab-button">Modules</button>
-        <button (click)="goTo('Add-On')" class="tab-button">Add-On</button>
-        <button (click)="goTo('Extra')" class="tab-button">Extra</button>
-        <button (click)="goTo('Links')" class="tab-button">Links</button>
+        <button (click)="goTo('Plugins')" (keydown.enter)="goTo('Plugins')" type="button" class="tab-button">Plugins</button>
+        <button (click)="goTo('Modules')" (keydown.enter)="goTo('Modules')" type="button" class="tab-button">Modules</button>
+        <button (click)="goTo('Add-On')" (keydown.enter)="goTo('Add-On')" type="button" class="tab-button">Add-On</button>
+        <button (click)="goTo('Extra')" (keydown.enter)="goTo('Extra')" type="button" class="tab-button">Extra</button>
+        <button (click)="goTo('Links')" (keydown.enter)="goTo('Links')" type="button" class="tab-button">Links</button>
       </div>
 
     </header>
@@ -78,9 +78,10 @@
         </div>
       </div>
       <div class="panel">
-        <button (click)="openModal()" class="page-button yes">Open</button>
-        <button (click)="openModal()" class="page-button No">Open</button>
+        <button (click)="openLangModal()" (keydown.enter)="openLangModal()" type="button" class="page-button yes">Open</button>
+        <button (click)="openLangModal()" (keydown.enter)="openLangModal()" type="button" class="page-button No">Open</button>
       </div>
+
       <div class="lipgloss-banner">
         <div class="lipgloss-description">
           <p>Style Definitions for Nice Terminal Layouts</p>
@@ -118,9 +119,9 @@
           </div>
 
           <ul class="list">
-            <li><span class="icon-check"># </span> <span data-command="explain" data-term="FPV" class="terminal-trigger">FPV Freestyle</span></li>
+            <li><span class="icon-check"># </span> <button data-command="explain" data-term="FPV" class="terminal-trigger" type="button" role="button" tabindex="0">FPV Freestyle</button></li>
             <li><span class="icon-check">#</span> Astrophotography</li>
-            <li><span class="icon-check"># </span> <span data-command="explain" data-term="Ultimate" class="terminal-trigger">Ultimate Frisbee</span></li>
+            <li><span class="icon-check"># </span> <button data-command="explain" data-term="Ultimate" class="terminal-trigger" type="button" role="button" tabindex="0">Ultimate Frisbee</button></li>
             <li><span class="icon-check">#</span> Hiking</li>
           </ul>
           <span class="gradient-title text-center stripes">
@@ -167,10 +168,10 @@
     <app-logo></app-logo>
 
     <div class="panel">
-    <button class="panel-button tooltip" data-tooltip="Lang" (click)="openModal()">◰</button>
-    <button class="panel-button tooltip" data-tooltip="Theme" (click)="openModal()">◪</button>
-    <button class="panel-button tooltip" data-tooltip="Color" (click)="openModal()">▧</button>
-    <button class="panel-button tooltip" data-tooltip="Dark Mode" (click)="openModal()">▣</button>
+      <button class="panel-button tooltip" data-tooltip="Lang" (click)="openLangModal()" (keydown.enter)="openLangModal()" type="button" aria-label="Open Language Settings">◰</button>
+      <button class="panel-button tooltip" data-tooltip="Theme" (click)="openThemeModal()" (keydown.enter)="openThemeModal()" type="button" aria-label="Open Theme Settings">⧆</button>
+      <button class="panel-button tooltip" data-tooltip="Colors" (click)="openColorModal()" (keydown.enter)="openColorModal()" type="button" aria-label="Open Color Settings">▨</button>
+      <button class="panel-button tooltip" data-tooltip="Dark Mode" (click)="openDarkModeModal()" (keydown.enter)="openDarkModeModal()" type="button" aria-label="Open Dark Mode Settings">⬔</button>
     </div>
 
     <div class="terminal-prompt">
@@ -185,37 +186,33 @@
       </div>
 
       <div class="status-line">
-        <span class="">Type</span> <span data-command="help" class="terminal-trigger magenta-text">help</span> to get started
+        <span class="">Type</span> <button data-command="help" class="terminal-trigger magenta-text" type="button" role="button" tabindex="0">help</button> to get started
       </div>
-      <div class="command-line">
+      <div class="command-line">{{isLangModalOpen()}}
         <span class="user">[user@voidbrain.net ~/]</span>
       </div>
       <app-terminal></app-terminal>
     </div>
   </div>
 
-  <!-- Original Modal retained for now, will be refined if necessary -->
-  @if(isModalOpen) {
-    <div class="modal-overlay" (click)="onBackdropClick($event)">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3 class="gradient-title">Permission Required</h3>
-          <button (click)="closeModal()">X</button>
-        </div>
-        <div class="modal-body">
-          <p>Tool multiedit</p>
-          <p>Path ~/src</p>
-          <p>File ~/src/crush/internal/tui/components/chat/sidebar/sidebar.go</p>
-          <div class="code-diff">
-            <pre><code [innerHTML]="codeDiffContent"></code></pre>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button (click)="allowAction()">Allow</button>
-          <button (click)="allowForSession()">Allow for Session</button>
-          <button (click)="denyAction()">Deny</button>
-        </div>
-      </div>
-    </div>
+
+
+<!-- Settings Modal -->
+<app-common-modal
+  [isOpen]="isLangModalOpen() || isThemeModalOpen() || isColorModalOpen() || isDarkModeModalOpen()"
+  title="{{modalTitle}}"
+  (closed)="closeAnyModal()">
+  @if(isLangModalOpen()){
+    <app-lang-dialog (closeDialog)="closeLangModal()" (saveSettings)="saveLangSettings()" [saveFeedbackMessage]="saveFeedbackMessage()" [isSavingSettings]="isSavingSettings()"></app-lang-dialog>
   }
+  @if(isThemeModalOpen()){
+    <app-theme-dialog (closeDialog)="closeThemeModal()" (saveSettings)="saveThemeSettings()" [saveFeedbackMessage]="saveFeedbackMessage()" [isSavingSettings]="isSavingSettings()"></app-theme-dialog>
+  }
+  @if(isColorModalOpen()){
+    <app-color-dialog (closeDialog)="closeColorModal()" (saveSettings)="saveColorSettings()" [saveFeedbackMessage]="saveFeedbackMessage()" [isSavingSettings]="isSavingSettings()"></app-color-dialog>
+  }
+  @if(isDarkModeModalOpen()){
+    <app-darkmode-dialog (closeDialog)="closeDarkmodeModal()" (saveSettings)="saveDarkModeSettings()" [saveFeedbackMessage]="saveFeedbackMessage()" [isSavingSettings]="isSavingSettings()"></app-darkmode-dialog>
+  }
+</app-common-modal>
 </div>
