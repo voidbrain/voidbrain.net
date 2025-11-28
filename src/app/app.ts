@@ -4,6 +4,7 @@ import { AppLogoComponent } from './components/app-logo/app-logo'; // Import App
 import { WireframeSphere } from './components/wireframe-sphere/wireframe-sphere';
 import { Theme as ThemeService } from './services/ui/theme';
 import { Color as ColorService } from './services/ui/color';
+import { Flavour as FlavourService } from './services/ui/flavour';
 import { Settings } from './services/settings';
 import { TerminalComponent } from './components/terminal/terminal';
 import { RandomFlashMatrix } from './components/random-flash-matrix/random-flash-matrix';
@@ -49,6 +50,7 @@ export class App {
   private settings = inject(Settings);
   private themeService = inject(ThemeService);
   private colorService = inject(ColorService);
+  private flavourService = inject(FlavourService);
 
   // Save feedback signals
   saveFeedbackMessage = signal('');
@@ -170,6 +172,11 @@ export class App {
   }
 
   saveFlavourSettings() {
+    // Get current flavour setting and apply it
+    const currentSettings = this.settings.getSettings();
+    this.flavourService.setFlavour(currentSettings.flavour);
+
+    // Save the general settings
     this.saveSettings();
   }
 

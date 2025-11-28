@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Fredoka+One&family=Bubblegum+Sans&display=swap');
 @import 'xterm/css/xterm.css';
 
 /* Purple Theme (default) */
@@ -281,4 +281,92 @@ textarea {
     transparent 4px
   );
   margin: var(--spacing-unit) 0;
+}
+
+/* Flavour-specific styles */
+
+/* Cereal Box Flavour - Bold, vibrant, pop colors with paper texture */
+.flavour-cereal-box {
+  /* Bold, high-contrast color scheme inspired by cereal box design */
+  --color-background: #fefefe; /* Very light background like glossy paper */
+  --color-text: #1a1a1a;
+  --color-primary: #ffff00; /* Bright yellow like frosted flakes */
+  --color-secondary: #ff6b35; /* Vibrant orange like fruit loops */
+  --color-tertiary: #8b4513; /* Rich brown like cinnamon */
+  --color-border: #4169e1; /* Royal blue like lucky charms */
+  --color-accent: #ff1493; /* Deep pink like fruit loops box */
+  --color-success: #32cd32; /* Lime green */
+  --color-warning: #ffd700; /* Gold */
+  --color-info: #00bfff; /* Deep sky blue */
+
+  /* Bold typography */
+  --font-dev: 'Fredoka One', 'Bubblegum Sans', cursive, 'Impact', 'Arial Black', sans-serif;
+  font-weight: bold;
+  font-family: var(--font-dev);
+
+  /* Subtle paper texture with vibrant overlay */
+  background-image:
+    radial-gradient(circle at 25% 25%, rgba(255,255,0,0.05) 2px, transparent 2px),
+    radial-gradient(circle at 75% 75%, rgba(255,105,53,0.05) 2px, transparent 2px),
+    radial-gradient(circle at 50% 10%, rgba(79,148,205,0.08) 3px, transparent 3px),
+    linear-gradient(45deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.2) 50%, rgba(0,0,0,0.1) 100%);
+  background-size: 60px 60px, 40px 40px, 80px 80px, 100% 100%;
+  background-color: var(--color-background);
+
+  /* Vibrant glow effects reminiscent of neon cereal box designs */
+  text-shadow:
+    0 0 2px rgba(255,255,0,0.3),
+    0 0 4px rgba(255,255,0,0.2),
+    0 0 1px rgba(255,20,147,0.3);
+
+  /* Enhance buttons with bold cereal box styling */
+  button {
+    box-shadow:
+      0 0 0 2px var(--color-accent),
+      4px 4px 0px rgba(255,105,53,0.6),
+      inset 0 1px 0 rgba(255,255,255,0.8);
+    text-shadow: none;
+  }
+
+  button:hover {
+    background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
+    box-shadow:
+      0 0 0 2px var(--color-border),
+      4px 4px 0px rgba(255,105,53,0.6),
+      inset 0 1px 0 rgba(255,255,255,0.8);
+  }
+}
+
+/* Newspaper Flavour - Combined serif fonts with monotone, grain, and low saturation */
+.flavour-newspaper {
+  --font-dev: 'Times New Roman', 'Georgia', serif;
+  font-family: var(--font-dev);
+
+  /* Combined effects: low saturation, greasedale, sepia tone with grain added via CSS */
+  filter: sepia(0.3) saturate(0.3) contrast(1.05) brightness(1.1);
+
+  /* Add subtle paper texture */
+  background-image:
+    radial-gradient(circle at 20px 20px, rgba(255,255,255,0.1) 1px, transparent 1px),
+    radial-gradient(circle at 60px 50px, rgba(0,0,0,0.05) 1px, transparent 1px);
+  background-size: 80px 80px;
+
+  /* Add film grain overlay effect */
+  position: relative;
+}
+
+.flavour-newspaper::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10000;
+
+  /* Film grain overlay combined with newspaper theme */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.08;
+  mix-blend-mode: overlay;
 }
