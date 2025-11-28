@@ -1,4 +1,6 @@
-# VoidbrainNet
+# Voidbrain.Net
+
+Personal portfolio website featuring custom terminal interface, 3D graphics, and interactive elements.
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.0.
 
