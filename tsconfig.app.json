@@ -4,7 +4,11 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": ["node", "xterm"]
+    "types": [
+      "node",
+      "xterm",
+      "@angular/localize"
+    ]
   },
   "include": ["src/**/*.ts"],
   "exclude": ["src/**/*.spec.ts"]
