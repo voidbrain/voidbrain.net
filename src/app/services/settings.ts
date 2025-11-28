@@ -53,6 +53,21 @@ export class Settings {
     return isPlatformBrowser(this.platformId);
   }
 
+  // Detect browser language and map to available languages
+  private getBrowserLanguage(): Language {
+    if (!this.isBrowser()) {
+      return 'en';
+    }
+
+    const browserLang = navigator.language || 'en';
+    // Check if browser language starts with 'it' for Italian
+    if (browserLang.toLowerCase().startsWith('it')) {
+      return 'it';
+    }
+    // Default to English for all other languages
+    return 'en';
+  }
+
   // Load settings from localStorage
   private loadSettings(): void {
     if (!this.isBrowser()) {
@@ -62,18 +77,30 @@ export class Settings {
     try {
       const stored = localStorage.getItem(this.STORAGE_KEY);
       if (stored) {
+        // Use saved settings
         const settings: AppSettings = JSON.parse(stored);
         this.language.set(settings.language || this.defaultSettings.language);
         this.flavour.set(settings.flavour || this.defaultSettings.flavour);
         this.color.set(settings.color || this.defaultSettings.color);
         this.theme.set(settings.theme || this.defaultSettings.theme);
       } else {
-        // First time user - seed localStorage with defaults
+        // First time user - detect browser language and use it
+        const browserLanguage = this.getBrowserLanguage();
+        const initialSettings: AppSettings = {
+          ...this.defaultSettings,
+          language: browserLanguage,
+        };
+        this.language.set(browserLanguage);
+        this.flavour.set(initialSettings.flavour);
+        this.color.set(initialSettings.color);
+        this.theme.set(initialSettings.theme);
+
+        // Save the initial settings with detected language
         this.saveSettings();
       }
     } catch (error) {
       console.warn('Failed to load settings from localStorage:', error);
-      // Use defaults and save them
+      // Fall back to defaults and save them
       this.saveSettings();
     }
   }

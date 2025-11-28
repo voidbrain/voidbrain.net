@@ -6,6 +6,7 @@ import { Theme as ThemeService } from './services/ui/theme';
 import { Color as ColorService } from './services/ui/color';
 import { Flavour as FlavourService } from './services/ui/flavour';
 import { Settings } from './services/settings';
+import { TranslationService } from './services/translation';
 import { TerminalComponent } from './components/terminal/terminal';
 import { RandomFlashMatrix } from './components/random-flash-matrix/random-flash-matrix';
 import { FxImageComponent } from './components/fx-image/fx-image';
@@ -51,6 +52,7 @@ export class App {
   private themeService = inject(ThemeService);
   private colorService = inject(ColorService);
   private flavourService = inject(FlavourService);
+  private translationService = inject(TranslationService);
 
   // Save feedback signals
   saveFeedbackMessage = signal('');
@@ -159,6 +161,10 @@ export class App {
 
   // Specific save methods for different dialogs
   saveLangSettings() {
+    // Apply language change immediately
+    const currentSettings = this.settings.getSettings();
+    this.translationService.setLanguage(currentSettings.language);
+
     this.saveSettings();
   }
 

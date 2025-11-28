@@ -6,11 +6,11 @@
       </div>
 
       <div class="tabs-container">
-        <button (click)="goTo('Plugins')" (keydown.enter)="goTo('Plugins')" type="button" class="tab-button">Plugins</button>
-        <button (click)="goTo('Modules')" (keydown.enter)="goTo('Modules')" type="button" class="tab-button">Modules</button>
-        <button (click)="goTo('Add-On')" (keydown.enter)="goTo('Add-On')" type="button" class="tab-button">Add-On</button>
-        <button (click)="goTo('Extra')" (keydown.enter)="goTo('Extra')" type="button" class="tab-button">Extra</button>
-        <button (click)="goTo('Links')" (keydown.enter)="goTo('Links')" type="button" class="tab-button">Links</button>
+        <button (click)="goTo('Plugins')" (keydown.enter)="goTo('Plugins')" type="button" class="tab-button" i18n="@@navigation.plugins">Plugins</button>
+        <button (click)="goTo('Modules')" (keydown.enter)="goTo('Modules')" type="button" class="tab-button" i18n="@@navigation.modules">Modules</button>
+        <button (click)="goTo('Add-On')" (keydown.enter)="goTo('Add-On')" type="button" class="tab-button" i18n="@@navigation.addon">Add-On</button>
+        <button (click)="goTo('Extra')" (keydown.enter)="goTo('Extra')" type="button" class="tab-button" i18n="@@navigation.extra">Extra</button>
+        <button (click)="goTo('Links')" (keydown.enter)="goTo('Links')" type="button" class="tab-button" i18n="@@navigation.links">Links</button>
       </div>
 
     </header>
@@ -30,7 +30,7 @@
     <div class="content-grid">
       <div class="content-block list-block">
           <div class="block-title-row">
-            <p id="Plugins" class="block-title gradient-title">Plugins</p>
+            <p id="Plugins" class="block-title gradient-title" i18n="@@sections.plugins.title">Plugins</p>
             <p class="emoji">🔌</p>
           </div>
           <ul>
@@ -184,7 +184,7 @@
       <div class="status-line">
         <span class="">Type</span> <a data-command="help" class="terminal-trigger terminal-text" type="button" role="button" tabindex="0">help</a> to get started
       </div>
-      <div class="command-line">{{isLangModalOpen()}}
+      <div class="command-line">
         <span class="user">[user@voidbrain.net ~/]</span>
       </div>
       <app-terminal></app-terminal>
