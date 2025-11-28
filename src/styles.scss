@@ -17,6 +17,7 @@
   --color-warning: #ffcc00; /* Yellow for warnings */
   --color-info: #6699ff; /* Blue for info */
   --font-dev: 'Roboto Mono', monospace;
+  --font-title: 'Roboto Mono', monospace;
   --spacing-unit: 8px;
   --color-gradient-text: #535353;
 
@@ -341,6 +342,7 @@ textarea {
 .flavour-newspaper {
   --font-dev: 'Times New Roman', 'Georgia', serif;
   font-family: var(--font-dev);
+
 
   /* Combined effects: low saturation, greasedale, sepia tone with grain added via CSS */
   filter: sepia(0.3) saturate(0.3) contrast(1.05) brightness(1.1);
