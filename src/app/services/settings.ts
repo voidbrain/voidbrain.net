@@ -53,21 +53,6 @@ export class Settings {
     return isPlatformBrowser(this.platformId);
   }
 
-  // Detect browser language and map to available languages
-  private getBrowserLanguage(): Language {
-    if (!this.isBrowser()) {
-      return 'en';
-    }
-
-    const browserLang = navigator.language || 'en';
-    // Check if browser language starts with 'it' for Italian
-    if (browserLang.toLowerCase().startsWith('it')) {
-      return 'it';
-    }
-    // Default to English for all other languages
-    return 'en';
-  }
-
   // Load settings from localStorage
   private loadSettings(): void {
     if (!this.isBrowser()) {
@@ -84,18 +69,7 @@ export class Settings {
         this.color.set(settings.color || this.defaultSettings.color);
         this.theme.set(settings.theme || this.defaultSettings.theme);
       } else {
-        // First time user - detect browser language and use it
-        const browserLanguage = this.getBrowserLanguage();
-        const initialSettings: AppSettings = {
-          ...this.defaultSettings,
-          language: browserLanguage,
-        };
-        this.language.set(browserLanguage);
-        this.flavour.set(initialSettings.flavour);
-        this.color.set(initialSettings.color);
-        this.theme.set(initialSettings.theme);
-
-        // Save the initial settings with detected language
+        // First time user - use defaults (XLIFF compilation determines language)
         this.saveSettings();
       }
     } catch (error) {
