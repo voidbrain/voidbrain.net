@@ -23,7 +23,7 @@ services:
       - ./dist/voidbrain.net:/dist
     environment:
       - NODE_ENV=production
-    command: npx express -s /dist/browser/browser -p 4220 -c "res.header('Cache-Control', 'public, max-age=31536000');" -e html
+    command: npx http-server /dist/browser/browser -p 4220 -c-1 --cors
     depends_on:
       - build-app
     networks:
