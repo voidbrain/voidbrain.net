@@ -1,4 +1,15 @@
 services:
+  build-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run build -- --configuration=production
+    networks:
+      - voidbrain-network
+
   voidbrain-net:
     build:
       context: .
@@ -8,9 +19,12 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+      - ./dist/voidbrain.net:/dist
     environment:
-      - NODE_ENV=development
-    command: npm run start -- --host 0.0.0.0 --port 4220 --poll=500 --hmr
+      - NODE_ENV=production
+    command: npx express -s /dist/browser/browser -p 4220 -c "res.header('Cache-Control', 'public, max-age=31536000');" -e html
+    depends_on:
+      - build-app
     networks:
       - voidbrain-network
 
