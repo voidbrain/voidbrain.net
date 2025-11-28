@@ -2,7 +2,7 @@ import { Injectable, signal, computed, inject, PLATFORM_ID } from '@angular/core
 import { isPlatformBrowser } from '@angular/common';
 
 export type Language = 'en' | 'it';
-export type Flavour = 'terminal' | 'newspaper';
+export type Flavour = 'terminal' | 'newspaper' | 'cereal-box';
 export type Color = 'purple' | 'orange' | 'green';
 export type Theme = 'dark' | 'light';
 
