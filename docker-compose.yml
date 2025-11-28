@@ -23,7 +23,7 @@ services:
       - ./dist/voidbrain.net:/dist
     environment:
       - NODE_ENV=production
-    command: npx http-server /dist/browser/browser -p 4220 -c-1 --cors
+    command: npx serve -s /dist/browser/browser -p 4220
     depends_on:
       - build-app
     networks:
