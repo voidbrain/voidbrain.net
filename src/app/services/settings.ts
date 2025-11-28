@@ -5,6 +5,7 @@ export type Language = 'en' | 'it';
 export type Flavour = 'terminal' | 'newspaper' | 'cereal-box';
 export type Color = 'purple' | 'orange' | 'green';
 export type Theme = 'dark' | 'light';
+export type ImagePreset = 'none' | 'preset1' | 'preset2';
 
 export interface AppSettings {
   language: Language;

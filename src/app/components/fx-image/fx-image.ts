@@ -468,57 +468,71 @@ export class FxImageComponent implements AfterViewInit {
   setChromaIntensity(v:number|string){ this.chromaIntensity.set(Number(v)); this.redraw(); }
 
   togglePreset1(){
+    // Toggle preset1 off/on, and automatically activate preset2 when preset1 is deactivated
     if(this.preset1Active()){
-      // If preset 1 is active, toggle it off
+      // Preset1 was active, turn it off and activate preset2
       this.preset1Active.set(false);
       this.resetAllEffects();
+
+      // Activate preset2 automatically
+      this.preset2Active.set(true);
+      this.applyPreset2Effects();
     } else {
-      // Apply preset 1 and deactivate preset 2
-      this.preset2Active.set(false);
+      // Preset1 not active (so preset2 is active), activate preset1 and deactivate preset2
       this.preset1Active.set(true);
+      this.preset2Active.set(false);
 
-      // Reset all effects first
       this.resetAllEffects();
-
-      // Preset 1: multi on, solar on, wiggle, crt, noise
-      this.applyColorMultiplier.set(true);
-      this.applyInvert.set(true);
-      this.applySolarize.set(true);
-      this.wiggle.set(true);
-      this.crt.set(true);
-      this.vhs.set(true);
-      this.applyNoise.set(true);
+      this.applyPreset1Effects();
     }
 
     this.redraw();
   }
 
   togglePreset2(){
+    // Toggle preset2 off/on, and automatically activate preset1 when preset2 is deactivated
     if(this.preset2Active()){
-      // If preset 2 is active, toggle it off
+      // Preset2 was active, turn it off and activate preset1
       this.preset2Active.set(false);
       this.resetAllEffects();
+
+      // Activate preset1 automatically
+      this.preset1Active.set(true);
+      this.applyPreset1Effects();
     } else {
-      // Apply preset 2 and deactivate preset 1
-      this.preset1Active.set(false);
+      // Preset2 not active (so preset1 is active), activate preset2 and deactivate preset1
       this.preset2Active.set(true);
+      this.preset1Active.set(false);
 
-      // Reset all effects first
       this.resetAllEffects();
-
-      // Preset 2: 3d on, parallax high, red-cyan, wiggle, chroma
-      this.anaglyphMode.set(true);
-      this.anaglyphParallax.set(2); // High parallax
-      this.anaglyphColorPair.set(0); // Red-cyan
-      this.wiggle.set(true);
-      if(this.theme()!=='light'){
-        console.log("apply")
-        this.applyInvert.set(true);
-      }
-      this.chroma.set(true);
+      this.applyPreset2Effects();
     }
 
     this.redraw();
+  }
+
+  private applyPreset1Effects(){
+    // Preset 1: multi on, solar on, wiggle, crt, noise
+    this.applyColorMultiplier.set(true);
+    this.applyInvert.set(true);
+    this.applySolarize.set(true);
+    this.wiggle.set(true);
+    this.crt.set(true);
+    this.vhs.set(true);
+    this.applyNoise.set(true);
+  }
+
+  private applyPreset2Effects(){
+    // Preset 2: 3d on, parallax high, red-cyan, wiggle, chroma
+    this.anaglyphMode.set(true);
+    this.anaglyphParallax.set(2); // High parallax
+    this.anaglyphColorPair.set(0); // Red-cyan
+    this.wiggle.set(true);
+    if(this.theme()!=='light'){
+      console.log("apply")
+      this.applyInvert.set(true);
+    }
+    this.chroma.set(true);
   }
 
   private resetAllEffects(){

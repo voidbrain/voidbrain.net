@@ -22,7 +22,7 @@ export class FlavourDialog {
   flavours: { value: Flavour; label: string; checked: boolean }[] = [
     { value: 'terminal', label: 'Terminal', checked: true },
     { value: 'newspaper', label: 'Newspaper', checked: false },
-    { value: 'cereal-box', label: 'Cereal box', checked: false },
+    { value: 'cereal-box', label: 'Cereal Box', checked: false },
   ];
 
   constructor() {
