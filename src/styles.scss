@@ -1,4 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Fredoka+One&family=Bubblegum+Sans&display=swap');
+@font-face {
+  font-family: "Roboto Mono";
+  src: url("/assets/fonts/roboto-mono-v31-latin-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fredoka One";
+  src: url("/assets/fonts/fredoka-one.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Bubblegum Sans";
+  src: url("/assets/fonts/bubblegum-sans.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
 @import 'xterm/css/xterm.css';
 
 /* Purple Theme (default) */
