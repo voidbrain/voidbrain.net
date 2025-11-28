@@ -4,7 +4,7 @@ import { AppLogoComponent } from './components/app-logo/app-logo'; // Import App
 import { WireframeSphere } from './components/wireframe-sphere/wireframe-sphere';
 import { Theme as ThemeService } from './services/ui/theme';
 import { Color as ColorService } from './services/ui/color';
-import { Flavour as FlavourService, type FlavourType } from './services/ui/flavour';
+import { Flavour as FlavourService } from './services/ui/flavour';
 import { Settings } from './services/settings';
 
 import { TerminalComponent } from './components/terminal/terminal';
@@ -161,13 +161,20 @@ export class App {
 
   // Specific save methods for different dialogs
   saveLangSettings() {
-    // For XLIFF, show message that page refresh is needed
-    this.saveFeedbackMessage.set('Language change. Please refresh the page.');
+    // Save language setting first, then refresh to load correct locale bundle
+    const currentSettings = this.settings.getSettings();
+
+    // Show feedback message
+    this.saveFeedbackMessage.set(`Language set to: ${currentSettings.language.toUpperCase()}. Refreshing...`);
+
+    // Close modal immediately
     this.closeAnyModal();
-    // Wait 3 seconds then hide message (keep modal closed)
+
+    // Auto refresh after 2 seconds
     setTimeout(() => {
       this.saveFeedbackMessage.set('');
-    }, 3000);
+      location.reload();
+    }, 2000);
   }
 
   saveColorSettings() {
