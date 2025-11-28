@@ -22,7 +22,7 @@ export class SettingsDialog {
 
   flavours: { value: Flavour; label: string; checked: boolean }[] = [
     { value: 'terminal', label: 'Terminal', checked: true },
-    { value: 'second', label: 'Second', checked: false },
+    { value: 'newspaper', label: 'Newspaper', checked: false },
   ];
 
   colors: { value: Color; label: string; checked: boolean }[] = [
