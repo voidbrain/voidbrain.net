@@ -285,54 +285,54 @@ textarea {
 
 /* Flavour-specific styles */
 
-/* Cereal Box Flavour - Bold, vibrant, pop colors with paper texture */
+/* Cereal Box Flavour - Bold, vibrant, pop colors with paper texture that respect theme */
 .flavour-cereal-box {
-  /* Bold, high-contrast color scheme inspired by cereal box design */
-  --color-background: #fefefe; /* Very light background like glossy paper */
-  --color-text: #1a1a1a;
-  --color-primary: #ffff00; /* Bright yellow like frosted flakes */
-  --color-secondary: #ff6b35; /* Vibrant orange like fruit loops */
-  --color-tertiary: #8b4513; /* Rich brown like cinnamon */
-  --color-border: #4169e1; /* Royal blue like lucky charms */
-  --color-accent: #ff1493; /* Deep pink like fruit loops box */
-  --color-success: #32cd32; /* Lime green */
-  --color-warning: #ffd700; /* Gold */
-  --color-info: #00bfff; /* Deep sky blue */
-
   /* Bold typography */
   --font-dev: 'Fredoka One', 'Bubblegum Sans', cursive, 'Impact', 'Arial Black', sans-serif;
   font-weight: bold;
   font-family: var(--font-dev);
 
-  /* Subtle paper texture with vibrant overlay */
+  /* Enhanced cereal box colors that work with current theme */
+  --color-primary: #ffff00; /* Bright yellow like frosted flakes - always bright */
+  --color-secondary: #ff6b35; /* Vibrant orange like fruit loops - always bright */
+  --color-accent: #ff1493; /* Deep pink like fruit loops box - always bright */
+  --color-success: #32cd32; /* Lime green - always bright */
+  --color-warning: #ffd700; /* Gold - always bright */
+  --color-info: #00bfff; /* Deep sky blue - always bright */
+
+  /* Background and text adapt to theme but maintain paper feel */
+  --color-background: rgba(255, 255, 255, 0.05); /* Always clean paper look */
+  --color-text: var(--color-text); /* Keep current theme text */
+
+  /* Subtle paper texture overlay */
   background-image:
-    radial-gradient(circle at 25% 25%, rgba(255,255,0,0.05) 2px, transparent 2px),
-    radial-gradient(circle at 75% 75%, rgba(255,105,53,0.05) 2px, transparent 2px),
-    radial-gradient(circle at 50% 10%, rgba(79,148,205,0.08) 3px, transparent 3px),
+    radial-gradient(circle at 25% 25%, rgba(255,255,0,0.03) 2px, transparent 2px),
+    radial-gradient(circle at 75% 75%, rgba(255,107,53,0.03) 2px, transparent 2px),
+    radial-gradient(circle at 50% 10%, rgba(255,20,147,0.05) 3px, transparent 3px),
     linear-gradient(45deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.2) 50%, rgba(0,0,0,0.1) 100%);
   background-size: 60px 60px, 40px 40px, 80px 80px, 100% 100%;
-  background-color: var(--color-background);
+  background-blend-mode: overlay;
 
-  /* Vibrant glow effects reminiscent of neon cereal box designs */
+  /* Vibrant glow effects for cereal box theme */
   text-shadow:
     0 0 2px rgba(255,255,0,0.3),
     0 0 4px rgba(255,255,0,0.2),
     0 0 1px rgba(255,20,147,0.3);
 
-  /* Enhance buttons with bold cereal box styling */
+  /* Enhanced buttons with bright cereal box styling */
   button {
     box-shadow:
       0 0 0 2px var(--color-accent),
-      4px 4px 0px rgba(255,105,53,0.6),
+      4px 4px 0px rgba(255,107,53,0.6),
       inset 0 1px 0 rgba(255,255,255,0.8);
     text-shadow: none;
   }
 
   button:hover {
-    background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
+    background: linear-gradient(45deg, #ffff00, #ff6b35);
     box-shadow:
-      0 0 0 2px var(--color-border),
-      4px 4px 0px rgba(255,105,53,0.6),
+      0 0 0 2px var(--color-accent),
+      4px 4px 0px rgba(255,107,53,0.6),
       inset 0 1px 0 rgba(255,255,255,0.8);
   }
 }
