@@ -45,6 +45,7 @@
           "configurations": {
             "production": {
               "localize": ["en", "it"],
+              "baseHref": "/voidbrain.net/",
               "budgets": [
                 {
                   "type": "initial",
