@@ -24,6 +24,51 @@ jobs:
       - name: Build Angular (with i18n)
         run: npm run build --configuration=production
 
+      - name: Create root index.html for language redirection
+        run: |
+          cat > dist/voidbrain.net/browser/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <title>VoidbrainNet - Language Detection...</title>
+            <script>
+              // Available locales
+              const AVAILABLE_LOCALES = ['en', 'it'];
+
+              // Detect browser language
+              function detectBrowserLanguage() {
+                const languages = navigator.languages || [navigator.language];
+
+                for (const lang of languages) {
+                  const baseLang = lang.toLowerCase().split('-')[0]; // Remove country code
+                  if (AVAILABLE_LOCALES.includes(baseLang)) {
+                    return baseLang;
+                  }
+                }
+                return 'en'; // Default fallback
+              }
+
+              // Redirect to appropriate language
+              const locale = detectBrowserLanguage();
+              window.location.href = locale + '/';
+            </script>
+            <style>
+              body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+              .loading { color: #666; }
+              a { color: #007acc; text-decoration: none; }
+              a:hover { text-decoration: underline; }
+            </style>
+          </head>
+          <body>
+            <div class="loading">
+              <h2>Detecting your language...</h2>
+              <p>Select language: <a href="en/">English</a> | <a href="it/">Italiano</a></p>
+            </div>
+          </body>
+          </html>
+          EOF
+
       - name: Setup pages
         uses: actions/configure-pages@v4
 
