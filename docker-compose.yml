@@ -4,10 +4,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: build
     volumes:
       - .:/app
       - /app/node_modules
-    command: npm run build -- --configuration=production
+    command: sh -c "npm install -g @angular/cli@latest && npm install && npm run build -- --configuration=production"
     networks:
       - voidbrain-network
 
@@ -15,15 +16,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: final
     ports:
       - '4220:4220'
-    volumes:
-      - .:/app
-      - /app/node_modules
-      - ./dist/voidbrain.net:/dist
     environment:
       - NODE_ENV=production
-    command: npx serve -s /dist/browser/browser -p 4220
     depends_on:
       - build-app
     networks:

@@ -17,6 +17,12 @@
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
+      "i18n": {
+        "sourceLocale": "en",
+        "locales": {
+          "it": "src/locale/messages.it.xlf"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular/build:application",
@@ -34,11 +40,11 @@
             "styles": ["src/styles.scss"],
             "polyfills": [
               "@angular/localize/init"
-            ],
-            "localize": ["it"]
+            ]
           },
           "configurations": {
             "production": {
+              "localize": ["en", "it"],
               "budgets": [
                 {
                   "type": "initial",
@@ -57,6 +63,14 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "it": {
+              "localize": ["it"],
+              "outputPath": "dist/voidbrain.net/it"
+            },
+            "en": {
+              "localize": ["en"],
+              "outputPath": "dist/voidbrain.net/en"
             }
           },
           "defaultConfiguration": "production"
@@ -69,6 +83,12 @@
             },
             "development": {
               "buildTarget": "voidbrain.net:build:development"
+            },
+            "it": {
+              "buildTarget": "voidbrain.net:build:it"
+            },
+            "en": {
+              "buildTarget": "voidbrain.net:build:en"
             }
           },
           "defaultConfiguration": "development"

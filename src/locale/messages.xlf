@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file source-language="en" target-language="en" datatype="plaintext" original="ng2.template">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
       <trans-unit id="navigation.plugins" datatype="html">
         <source>Plugins</source>
-        <target>Plugins</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.html</context>
           <context context-type="linenumber">9,10</context>
@@ -12,7 +11,6 @@
       </trans-unit>
       <trans-unit id="navigation.modules" datatype="html">
         <source>Modules</source>
-        <target>Modules</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.html</context>
           <context context-type="linenumber">10,11</context>
@@ -20,7 +18,6 @@
       </trans-unit>
       <trans-unit id="navigation.addon" datatype="html">
         <source>Add-On</source>
-        <target>Add-On</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.html</context>
           <context context-type="linenumber">11,12</context>
@@ -28,7 +25,6 @@
       </trans-unit>
       <trans-unit id="navigation.extra" datatype="html">
         <source>Extra</source>
-        <target>Extra</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.html</context>
           <context context-type="linenumber">12,13</context>
@@ -36,7 +32,6 @@
       </trans-unit>
       <trans-unit id="navigation.links" datatype="html">
         <source>Links</source>
-        <target>Links</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.html</context>
           <context context-type="linenumber">13,16</context>
@@ -44,110 +39,100 @@
       </trans-unit>
       <trans-unit id="sections.quote.text" datatype="html">
         <source>We will be restoring normality as soon as we are sure what is normal anyway.</source>
-        <target>We will be restoring normality as soon as we are sure what is normal anyway.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.html</context>
-          <context context-type="linenumber">23,24</context>
+          <context context-type="linenumber">22,23</context>
         </context-group>
       </trans-unit>
       <trans-unit id="sections.quote.source" datatype="html">
-        <source>The Hitchhiker's Guide to the Galaxy</source>
-        <target>The Hitchhiker's Guide to the Galaxy</target>
+        <source>The Hitchhiker&apos;s Guide to the Galaxy</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.html</context>
-          <context context-type="linenumber">25,28</context>
+          <context context-type="linenumber">24,27</context>
         </context-group>
       </trans-unit>
       <trans-unit id="sections.plugins.title" datatype="html">
         <source>Plugins</source>
-        <target>Plugins</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.html</context>
-          <context context-type="linenumber">33,34</context>
+          <context context-type="linenumber">32,33</context>
         </context-group>
       </trans-unit>
       <trans-unit id="sections.plugins.emoji" datatype="html">
         <source>🔌</source>
-        <target>🔌</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.html</context>
-          <context context-type="linenumber">35,37</context>
+          <context context-type="linenumber">34,36</context>
         </context-group>
       </trans-unit>
       <trans-unit id="sections.modules.title" datatype="html">
         <source>Modules</source>
-        <target>Modules</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.html</context>
-          <context context-type="linenumber">46,47</context>
+          <context context-type="linenumber">45,46</context>
         </context-group>
       </trans-unit>
       <trans-unit id="sections.modules.fullstack-developer" datatype="html">
         <source>#</source>
-        <target>#</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.html</context>
-          <context context-type="linenumber">50,51</context>
+          <context context-type="linenumber">49,50</context>
         </context-group>
       </trans-unit>
       <trans-unit id="sections.modules.Automation" datatype="html">
         <source>#</source>
-        <target>#</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.html</context>
-          <context context-type="linenumber">52,54</context>
+          <context context-type="linenumber">51,53</context>
         </context-group>
       </trans-unit>
       <trans-unit id="sections.personal-info.how-i-do" datatype="html">
         <source>I am a Software Developer who leverages modern technologies to build reliable, high-performance solutions with a focus on usability and maintainability.</source>
-        <target>I am a Software Developer who leverages modern technologies to build reliable, high-performance solutions with a focus on usability and maintainability.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.html</context>
-          <context context-type="linenumber">63,65</context>
+          <context context-type="linenumber">62,64</context>
         </context-group>
       </trans-unit>
       <trans-unit id="sections.personal-info.what-i-do" datatype="html">
         <source>I create full-stack, industrial-grade systems featuring smart dashboards, real-time data and intuitive interfaces for effective control and monitoring.</source>
-        <target>I create full-stack, industrial-grade systems featuring smart dashboards, real-time data and intuitive interfaces for effective control and monitoring.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.html</context>
-          <context context-type="linenumber">66,68</context>
+          <context context-type="linenumber">65,67</context>
         </context-group>
       </trans-unit>
       <trans-unit id="sections.personal-info.who-am-i" datatype="html">
-        <source>My name is Daniele and I live in Venice, Italy.<x id="LINE_BREAK" ctype="lb" equiv-text="<br />"/>I am passionate about the Web, Computer Science, Technology and Innovation.</source>
-        <target>My name is Daniele and I live in Venice, Italy.<x id="LINE_BREAK" ctype="lb" equiv-text="<br />"/>I am passionate about the Web, Computer Science, Technology and Innovation.</target>
+        <source>My name is Daniele and I live in Venice, Italy.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br /&gt;"/>I am passionate about the Web, Computer Science, Technology and Innovation.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.html</context>
-          <context context-type="linenumber">69,70</context>
+          <context context-type="linenumber">68,69</context>
         </context-group>
+      </trans-unit>
+      <trans-unit id="sections.personal-info.claim" datatype="html">
+        <source> Driven by constant learning and improvement, I am an analytical thinker with a structured, solution-oriented approach. Strong teamwork and communication skills, with the ability to identify opportunities and solve problems effectively. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.html</context>
-          <context context-type="linenumber">80,83</context>
+          <context context-type="linenumber">79,82</context>
         </context-group>
       </trans-unit>
       <trans-unit id="sections.add-on.3dprint" datatype="html">
         <source>3D Printing</source>
-        <target>3D Printing</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.html</context>
-          <context context-type="linenumber">98,99</context>
+          <context context-type="linenumber">97,98</context>
         </context-group>
       </trans-unit>
       <trans-unit id="sections.exrtra.astrophotography" datatype="html">
         <source>Astrophotography</source>
-        <target>Astrophotography</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.html</context>
-          <context context-type="linenumber">120,121</context>
+          <context context-type="linenumber">119,120</context>
         </context-group>
       </trans-unit>
       <trans-unit id="sections.exrtra.hiking" datatype="html">
         <source>Hiking</source>
-        <target>Hiking</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.html</context>
-          <context context-type="linenumber">122,124</context>
+          <context context-type="linenumber">121,123</context>
         </context-group>
       </trans-unit>
     </body>
