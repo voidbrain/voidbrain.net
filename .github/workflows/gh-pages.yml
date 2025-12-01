@@ -21,13 +21,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Angular
-        run: npm run build -- --output-path=dist/browser --base-href=/voidbrain.net/
+      - name: Build Angular (with i18n)
+        run: npm run build --configuration=production
+
+      - name: Setup pages
+        uses: actions/configure-pages@v4
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/browser/browser
+          path: dist/voidbrain.net/browser
 
   deploy:
     needs: build
