@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Flavour } from '../../services/ui/flavour';
 
 @Component({
   selector: 'app-logo',
@@ -9,9 +10,18 @@ import { CommonModule } from '@angular/common';
   styleUrl: './app-logo.scss',
 })
 export class AppLogoComponent {
-  logoText: string = `
+  private flavour = inject(Flavour);
+
+  logoText = computed<string>(() => {
+    const textLogo: string = 'Voidbrain()';
+    const asciiLogo: string = `
   █░░█      ▀    █ █▀▀▄          ▀      ▄▀ ▀▄
   █░░█ ▄▀▀█ █ ▄▀▀█ █▀▀▄ █▄▀ ▄▀▀█ █ █░▀█ █   █
   ▀▄▄▀ █▄▄█ █ ▀▄▄▀ █▄▄▀ █   ▀▄▄█ █ █  █ ▀▄ ▄▀
-  `; // CRUSH logo
+  `;
+
+    // Access the flavour signal directly to avoid issues
+    return (this.flavour.currentFlavourSignal() === 'terminal') ?
+      asciiLogo : textLogo;
+  });
 }

@@ -19,7 +19,22 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Knewave";
+  src: url("/assets/fonts/Knewave-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Jacquard";
+  src: url("/assets/fonts/Jacquard24-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+
 @import 'xterm/css/xterm.css';
+@import 'styles/dialogs';
 
 /* Purple Theme (default) */
 /* Dark theme */
@@ -146,6 +161,10 @@ html[data-theme="light"] {
   --color-term-selectionForeground: var(--color-background);
   --color-terminal: var(--color-magenta);
   --color-paragraph: var(--color-grey);
+
+
+  --color-sunburst-start: var(--color-blue);
+  --color-sunburst-end: var(--color-magenta);
 }
 
 /* Light Orange Theme */
@@ -309,7 +328,7 @@ textarea {
 /* Cereal Box Flavour - Bold, vibrant, pop colors with paper texture that respect theme */
 .flavour-cereal-box {
   /* Bold typography */
-  --font-dev: 'Fredoka One', 'Bubblegum Sans', cursive, 'Impact', 'Arial Black', sans-serif;
+  --font-dev: 'Knewave', 'Fredoka One', 'Bubblegum Sans', cursive, 'Impact', 'Arial Black', sans-serif;
   font-weight: bold;
   font-family: var(--font-dev);
 
@@ -335,10 +354,6 @@ textarea {
   background-blend-mode: overlay;
 
   /* Vibrant glow effects for cereal box theme */
-  text-shadow:
-    0 0 2px rgba(255,255,0,0.3),
-    0 0 4px rgba(255,255,0,0.2),
-    0 0 1px rgba(255,20,147,0.3);
 
   /* Enhanced buttons with bright cereal box styling */
   button {
@@ -355,6 +370,61 @@ textarea {
       0 0 0 2px var(--color-accent),
       4px 4px 0px rgba(255,107,53,0.6),
       inset 0 1px 0 rgba(255,255,255,0.8);
+  }
+
+  /* Big, 3D, bold ASCII logo with stroke and curves */
+  .logo-container .ascii-logo {
+    font-family: var(--font-dev)!important;
+    font-size: 2.5em !important; /* Very big */
+    font-weight: 900 !important; /* Super bold */
+    transform: perspective(500px) rotateX(15deg) rotateY(-5deg) !important; /* 3D inclined effect */
+    text-shadow:
+      0 1px 0 #ff6b35,           /* 3D depth layers */
+      0 2px 0 #ff1493,
+      0 3px 0 #00bfff,
+      0 4px 0 #32cd32,
+      0 5px 0 #ffffff,
+      0 6px 0 #ffd700,
+      /* Horizontal/vertical offsets for depth */
+      1px 0 0 #ff6b35,
+      2px 0 0 #ff1493,
+      1px 1px 0 #00bfff,
+      2px 2px 0 #32cd32,
+      /* Curved stroke effect */
+      -1px -1px 0 #ffff00,
+      1px -1px 0 #ffff00,
+      -1px 1px 0 #ffff00,
+      1px 1px 0 #ffff00,
+      0 0 10px rgba(255,255,0,0.8), /* Glowing yellow stroke */
+      0 0 20px rgba(255,107,53,0.6),
+      0 0 30px rgba(255,20,147,0.4);
+
+    /* Extra bold border stroke */
+    -webkit-text-stroke: 1px rgba(25, 25, 25, 0.5);
+    stroke: 1px rgba(25, 25, 25, 0.5);
+
+    /* Override gradient text fill for pure colors */
+    -webkit-text-fill-color: #ffff00 !important;
+    background: none !important;
+  }
+
+  /* Bubbly font for gradient titles */
+  .gradient-title {
+    font-size: 1.2em !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    background: linear-gradient(45deg, #ffff00, #ff6b35, #ff1493, #00bfff, #32cd32) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    -webkit-text-stroke: 1px var(--color-accent);
+    letter-spacing: 0.05em !important;
+    transform: scale(1.05) perspective(400px) rotateX(5deg) !important;
+    animation: cereal-bubble 1.5s ease-in-out infinite;
+  }
+
+  .intro-text, .paragraph-text {
+    text-shadow: none!important;
   }
 }
 
@@ -375,6 +445,20 @@ textarea {
 
   /* Add film grain overlay effect */
   position: relative;
+
+  .ascii-logo {
+    font-family: 'Jacquard', serif !important; /* Newspaper font */
+    font-size: 4em !important;
+    font-weight: 600 !important;
+    text-shadow:
+      2px 2px 0 rgba(139, 69, 19, 0.8), /* Sepia brown shadows for vintage look */
+      4px 4px 0 rgba(160, 82, 45, 0.6),
+      6px 6px 0 rgba(101, 67, 33, 0.4); /* Glow effect */
+
+    /* Subtle border for newspaper style */
+    -webkit-text-stroke: 0.5px rgba(101, 67, 33, 0.3);
+    text-stroke: 0.5px rgba(101, 67, 33, 0.3);
+  }
 }
 
 .flavour-newspaper::before {
