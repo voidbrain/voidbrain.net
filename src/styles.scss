@@ -332,17 +332,20 @@ textarea {
   font-weight: bold;
   font-family: var(--font-dev);
 
-  /* Enhanced cereal box colors that work with current theme */
-  --color-primary: #ffff00; /* Bright yellow like frosted flakes - always bright */
-  --color-secondary: #ff6b35; /* Vibrant orange like fruit loops - always bright */
-  --color-accent: #ff1493; /* Deep pink like fruit loops box - always bright */
-  --color-success: #32cd32; /* Lime green - always bright */
-  --color-warning: #ffd700; /* Gold - always bright */
-  --color-info: #00bfff; /* Deep sky blue - always bright */
+  /* Light accent colors derived from the current theme color scheme */
+  --cereal-light-bg: rgba(230, 242, 230, 0.3); /* Light green-grey with opacity */
+  --cereal-medium: color-mix(in srgb, var(--color-primary) 50%, var(--color-accent) 50%);
+  --cereal-bright: color-mix(in srgb, var(--color-accent) 80%, #32cd32 20%);
+  --cereal-brighter: color-mix(in srgb, var(--color-accent) 90%, whitesmoke 10%);
+  --cereal-glow: color-mix(in srgb, var(--color-accent) 70%, whitesmoke 30%);
+  --color-success: var(--color-accent); /* Use theme accent as success color */
+  --color-warning: #ffcc00; /* Keep yellow for warnings */
+  --cereal-shadow-base: var(--color-accent);
+  --color-text: var(--cereal-light-bg);
 
   /* Background and text adapt to theme but maintain paper feel */
   //--color-background: rgba(255, 255, 255, 0.05); /* Always clean paper look */
-  --color-text: var(--color-text); /* Keep current theme text */
+  // --color-text: var(--color-text); /* Keep current theme text */
 
   /* Subtle paper texture overlay */
   background-image:
@@ -353,22 +356,26 @@ textarea {
   background-size: 60px 60px, 40px 40px, 80px 80px, 100% 100%;
   background-blend-mode: overlay;
 
+  .tooltip::after {
+    color: var(--color-secondary)
+  }
+
   /* Vibrant glow effects for cereal box theme */
 
   /* Enhanced buttons with bright cereal box styling */
   button {
     box-shadow:
       0 0 0 2px var(--color-accent),
-      4px 4px 0px rgba(255,107,53,0.6),
+      4px 4px 0px var(--color-secondary),
       inset 0 1px 0 rgba(255,255,255,0.8);
     text-shadow: none;
   }
 
   button:hover {
-    background: linear-gradient(45deg, #ffff00, #ff6b35);
+    background: linear-gradient(45deg, var(--color-accent), var(--color-secondary));
     box-shadow:
       0 0 0 2px var(--color-accent),
-      4px 4px 0px rgba(255,107,53,0.6),
+      4px 4px 0px var(--color-secondary),
       inset 0 1px 0 rgba(255,255,255,0.8);
   }
 
@@ -379,32 +386,32 @@ textarea {
     font-weight: 900 !important; /* Super bold */
     transform: perspective(500px) rotateX(15deg) rotateY(-5deg) !important; /* 3D inclined effect */
     text-shadow:
-      0 1px 0 #ff6b35,           /* 3D depth layers */
-      0 2px 0 #ff1493,
-      0 3px 0 #00bfff,
-      0 4px 0 #32cd32,
+      0 1px 0 var(--cereal-medium),           /* 3D depth layers - theme colors */
+      0 2px 0 var(--cereal-shadow-base),
+      0 3px 0 var(--cereal-bright),
+      0 4px 0 var(--color-accent),
       0 5px 0 #ffffff,
-      0 6px 0 #ffd700,
+      0 6px 0 var(--cereal-glow),
       /* Horizontal/vertical offsets for depth */
-      1px 0 0 #ff6b35,
-      2px 0 0 #ff1493,
-      1px 1px 0 #00bfff,
-      2px 2px 0 #32cd32,
-      /* Curved stroke effect */
-      -1px -1px 0 #ffff00,
-      1px -1px 0 #ffff00,
-      -1px 1px 0 #ffff00,
-      1px 1px 0 #ffff00,
-      0 0 10px rgba(255,255,0,0.8), /* Glowing yellow stroke */
-      0 0 20px rgba(255,107,53,0.6),
-      0 0 30px rgba(255,20,147,0.4);
+      1px 0 0 var(--cereal-medium),
+      2px 0 0 var(--cereal-shadow-base),
+      1px 1px 0 var(--cereal-bright),
+      2px 2px 0 var(--color-accent),
+      /* Curved stroke effect using theme colors */
+      -1px -1px 0 var(--cereal-brighter),
+      1px -1px 0 var(--cereal-brighter),
+      -1px 1px 0 var(--cereal-brighter),
+      1px 1px 0 var(--cereal-brighter),
+      0 0 10px color-mix(in srgb, var(--cereal-shadow-base) 60%, transparent 40%), /* Glowing effect */
+      0 0 20px color-mix(in srgb, var(--cereal-medium) 70%, transparent 30%),
+      0 0 30px color-mix(in srgb, var(--cereal-glow) 50%, transparent 50%);
 
     /* Extra bold border stroke */
     -webkit-text-stroke: 1px rgba(25, 25, 25, 0.5);
     stroke: 1px rgba(25, 25, 25, 0.5);
 
     /* Override gradient text fill for pure colors */
-    -webkit-text-fill-color: #ffff00 !important;
+    -webkit-text-fill-color: var(--color-accent) !important;
     background: none !important;
   }
 
@@ -413,11 +420,11 @@ textarea {
     font-size: 1.2em !important;
     font-weight: 700 !important;
     text-align: center !important;
-    background: linear-gradient(45deg, #ffff00, #ff6b35, #ff1493, #00bfff, #32cd32) !important;
+    background: linear-gradient(45deg, var(--color-accent), var(--color-secondary), var(--color-success)) !important;
     -webkit-background-clip: text !important;
     background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
-    -webkit-text-stroke: 1px var(--color-accent);
+    -webkit-text-stroke: 1px var(--color-primary);
     letter-spacing: 0.05em !important;
     transform: scale(1.05) perspective(400px) rotateX(5deg) !important;
     animation: cereal-bubble 1.5s ease-in-out infinite;
