@@ -161,19 +161,21 @@ export class App {
 
   // Specific save methods for different dialogs
   saveLangSettings() {
-    // Save language setting first, then refresh to load correct locale bundle
+    // Save language setting first, then redirect to the language-specific URL
     const currentSettings = this.settings.getSettings();
 
     // Show feedback message
-    this.saveFeedbackMessage.set(`Language set to: ${currentSettings.language.toUpperCase()}. Refreshing...`);
+    this.saveFeedbackMessage.set(`Language set to: ${currentSettings.language.toUpperCase()}. Redirecting...`);
 
     // Close modal immediately
     this.closeAnyModal();
 
-    // Auto refresh after 2 seconds
+    // Auto redirect after 2 seconds
     setTimeout(() => {
       this.saveFeedbackMessage.set('');
-      location.reload();
+      // Redirect to the language-specific URL
+      const baseUrl = window.location.origin;
+      window.location.href = `${baseUrl}/${currentSettings.language}`;
     }, 2000);
   }
 
