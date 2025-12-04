@@ -87,6 +87,14 @@ export class TerminalComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     if (!this.isBrowser) return; // SSR: do nothing
 
+    // Load xterm.css dynamically
+    if (!document.querySelector('link[href="/assets/xterm.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/assets/xterm.css';
+      document.head.appendChild(link);
+    }
+
     const mod = await import('xterm');
     this.Terminal = mod.Terminal;
 
