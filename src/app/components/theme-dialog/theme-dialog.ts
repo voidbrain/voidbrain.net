@@ -40,7 +40,7 @@ export class ThemeDialog {
 
   doSaveSettings(): void {
     // Get the selected theme and update settings
-    const selectedTheme = this.themes.find(t => t.checked)?.value;
+    const selectedTheme = this.themes.find((t) => t.checked)?.value;
     if (selectedTheme) {
       this.settings.updateSettings({ theme: selectedTheme });
     }

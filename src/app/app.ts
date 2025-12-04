@@ -53,7 +53,6 @@ export class App {
   private colorService = inject(ColorService);
   private flavourService = inject(FlavourService);
 
-
   // Save feedback signals
   saveFeedbackMessage = signal('');
   isSavingSettings = signal(false);
@@ -165,7 +164,9 @@ export class App {
     const currentSettings = this.settings.getSettings();
 
     // Show feedback message
-    this.saveFeedbackMessage.set(`Language set to: ${currentSettings.language.toUpperCase()}. Redirecting...`);
+    this.saveFeedbackMessage.set(
+      `Language set to: ${currentSettings.language.toUpperCase()}. Redirecting...`,
+    );
 
     // Close modal immediately
     this.closeAnyModal();

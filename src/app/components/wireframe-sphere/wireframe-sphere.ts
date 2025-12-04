@@ -7,7 +7,7 @@ import {
   ViewChild,
   PLATFORM_ID,
   inject,
-  effect
+  effect,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Theme as ThemeService } from '../../services/ui/theme';
@@ -16,13 +16,15 @@ import { Color as ColorService } from '../../services/ui/color';
 @Component({
   selector: 'app-wireframe-sphere',
   template: `<div #rendererContainer class="three-container"></div>`,
-  styles: [`
-    .three-container {
-      width: 100%;
-      height: 200px;
-      display: block;
-    }
-  `]
+  styles: [
+    `
+      .three-container {
+        width: 100%;
+        height: 200px;
+        display: block;
+      }
+    `,
+  ],
 })
 export class WireframeSphere implements OnInit, OnDestroy {
   @ViewChild('rendererContainer', { static: true })
@@ -67,7 +69,9 @@ export class WireframeSphere implements OnInit, OnDestroy {
     if (!this.isBrowser) return;
 
     this.THREE = await import('three');
-    this.OrbitControls = (await import('three/examples/jsm/controls/OrbitControls.js')).OrbitControls;
+    this.OrbitControls = (
+      await import('three/examples/jsm/controls/OrbitControls.js')
+    ).OrbitControls;
 
     this.initScene();
     this.createWireframeSphere();
@@ -156,8 +160,12 @@ export class WireframeSphere implements OnInit, OnDestroy {
 
     // Get dynamic colors from CSS custom properties
     const computedStyle = getComputedStyle(document.documentElement);
-    const colorA = new THREE.Color(computedStyle.getPropertyValue('--color-secondary').trim() || '#ff3366');
-    const colorB = new THREE.Color(computedStyle.getPropertyValue('--color-accent').trim() || '#8a2be2');
+    const colorA = new THREE.Color(
+      computedStyle.getPropertyValue('--color-secondary').trim() || '#ff3366',
+    );
+    const colorB = new THREE.Color(
+      computedStyle.getPropertyValue('--color-accent').trim() || '#8a2be2',
+    );
 
     const colors: number[] = [];
     for (let i = 0; i < wireframe.attributes['position'].count; i++) {

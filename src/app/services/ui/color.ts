@@ -53,7 +53,7 @@ export class Color {
     // Update document classes
     if (isPlatformBrowser(this.platformId)) {
       // Remove all color classes first
-      Object.values(this.COLOR_CLASSES).forEach(className => {
+      Object.values(this.COLOR_CLASSES).forEach((className) => {
         this.renderer.removeClass(this.document.documentElement, className);
       });
 

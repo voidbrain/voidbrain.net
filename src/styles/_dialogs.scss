@@ -108,25 +108,28 @@
 }
 
 .flavour-newspaper {
-  button[data-tooltip="Colors"],
-  button[data-tooltip="Flavour"]{
-    font-size: 0.9em!important;
-    padding-top:4px!important;
+  button[data-tooltip='Colors'],
+  button[data-tooltip='Flavour'] {
+    font-size: 0.9em !important;
+    padding-top: 4px !important;
   }
-  input[type=radio]:checked:before {
-    margin-left: -6px!important;
-    margin-top: -2px!important;
+  input[type='radio']:checked:before {
+    margin-left: -6px !important;
+    margin-top: -2px !important;
   }
 }
 
 .flavour-cereal-box {
-  button[data-tooltip="Colors"]{
-    font-size: 0.9em!important;
-    padding-top:4px!important;
-    position: relative!important;
+  button[data-tooltip='Colors'] {
+    font-size: 0.9em !important;
+    padding-top: 4px !important;
+    position: relative !important;
   }
-  .settings-dialog .settings-group .checkbox-item input[type=radio]:checked:before {
-    margin-left: -6px!important;
-    margin-top: -5px!important;
+  .settings-dialog .settings-group .checkbox-item input[type='radio']:checked:before {
+    margin-left: -6px !important;
+    margin-top: -5px !important;
+  }
+  .terminal-text {
+    text-shadow: none !important;
   }
 }

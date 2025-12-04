@@ -98,7 +98,7 @@ export class TerminalComponent implements OnInit, OnDestroy {
     });
 
     this.term.open(this.container.nativeElement);
-    this.updateTerminalTheme()
+    this.updateTerminalTheme();
 
     // Focus terminal after a short delay to ensure it's ready
     setTimeout(() => {
@@ -139,8 +139,12 @@ export class TerminalComponent implements OnInit, OnDestroy {
       background: computedStyle.getPropertyValue('--color-term-background').trim(),
       foreground: computedStyle.getPropertyValue('--color-term-foreground').trim(),
       cursor: computedStyle.getPropertyValue('--color-term-cursor').trim(),
-      selectionBackground: computedStyle.getPropertyValue('--color-term-selectionBackground').trim(),
-      selectionForeground: computedStyle.getPropertyValue('--color-term-selectionForeground').trim(),
+      selectionBackground: computedStyle
+        .getPropertyValue('--color-term-selectionBackground')
+        .trim(),
+      selectionForeground: computedStyle
+        .getPropertyValue('--color-term-selectionForeground')
+        .trim(),
     };
 
     // Use the colors directly (they should already be hex values from our theme system)
@@ -163,8 +167,6 @@ export class TerminalComponent implements OnInit, OnDestroy {
       console.warn('Failed to update terminal theme:', error);
     }
   }
-
-
 
   private runCommandFromClick(cmdText: string) {
     // Print the command in terminal
@@ -353,13 +355,13 @@ export class TerminalComponent implements OnInit, OnDestroy {
         case 'fpv':
           return '🚁  FPV: Go Send It!';
         case 'ultimate frisbee':
-          return '🥏  Ultimate Frisbee:\nPlease don\'t ask me where is the dog.';
+          return "🥏  Ultimate Frisbee:\nPlease don't ask me where is the dog.";
         case 'ml':
           return '🤖  Machine Learning:\nHAL? Is that you?';
         case 'astrophotography':
-          return '🔭  Astrophotography:\nActually yes, we landed to the moon.'
+          return '🔭  Astrophotography:\nActually yes, we landed to the moon.';
         case 'hiking':
-          return '🏔️  Hiking:\nGood news is I can see the top…\nBad news is I can see the top.'
+          return '🏔️  Hiking:\nGood news is I can see the top…\nBad news is I can see the top.';
         default:
           return `Invalid option: ${input}`;
       }
