@@ -1,40 +1,40 @@
 @font-face {
-  font-family: "Roboto Mono";
-  src: url("/assets/fonts/roboto-mono-v31-latin-regular.woff2") format("woff2");
+  font-family: 'Roboto Mono';
+  src: url('/assets/fonts/roboto-mono-v31-latin-regular.woff2') format('woff2');
   font-weight: 400;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Fredoka One";
-  src: url("/assets/fonts/fredoka-one.woff2") format("woff2");
+  font-family: 'Fredoka One';
+  src: url('/assets/fonts/fredoka-one.woff2') format('woff2');
   font-weight: 400;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Bubblegum Sans";
-  src: url("/assets/fonts/bubblegum-sans.woff2") format("woff2");
+  font-family: 'Bubblegum Sans';
+  src: url('/assets/fonts/bubblegum-sans.woff2') format('woff2');
   font-weight: 400;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Knewave";
-  src: url("/assets/fonts/Knewave-Regular.ttf") format("truetype");
+  font-family: 'Knewave';
+  src: url('/assets/fonts/Knewave-Regular.ttf') format('truetype');
   font-weight: 400;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Jacquard";
-  src: url("/assets/fonts/Jacquard24-Regular.ttf") format("truetype");
+  font-family: 'Jacquard';
+  src: url('/assets/fonts/Jacquard24-Regular.ttf') format('truetype');
   font-weight: 400;
   font-display: swap;
 }
 
-@import 'xterm/css/xterm.css';
-@import 'styles/dialogs';
+@use 'xterm/css/xterm.css';
+@use 'styles/dialogs';
 
 /* Purple Theme (default) */
 /* Dark theme */
@@ -56,8 +56,8 @@
   --spacing-unit: 8px;
   --color-gradient-text: #535353;
 
-  --color-pulse-start:#71bc4ccc;
-  --color-pulse-end:#e1d11dcc;
+  --color-pulse-start: #71bc4ccc;
+  --color-pulse-end: #e1d11dcc;
   --color-terminal-background: #16162a;
   --color-terminal-title: #2809f221;
 
@@ -112,8 +112,8 @@
   --color-accent: #0d5a13; /* Very dark green */
   --color-modal-bg: #1e3a2e; /* Very dark green */
   --color-dialog-bg: #2e4d3a; /* Dark green */
-  --color-pulse-start:#bc4cbacc;
-  --color-pulse-end:#e1d11dcc;
+  --color-pulse-start: #bc4cbacc;
+  --color-pulse-end: #e1d11dcc;
   --color-terminal-background: #16162a;
   --color-terminal-title: #2809f221;
 
@@ -126,7 +126,7 @@
 }
 
 /* Light theme variables - Base light theme */
-html[data-theme="light"] {
+html[data-theme='light'] {
   --color-background: #dadada; /* Light background */
   --color-text: #212529; /* Dark text */
   --color-primary: #e9ecef; /* Light primary */
@@ -140,8 +140,8 @@ html[data-theme="light"] {
   --color-warning: #ffc107; /* Yellow */
   --color-info: #0e535e; /* Blue */
   --color-gradient-text: 212529;
-  --color-pulse-end:#4e8134cc;
-  --color-pulse-start:#8b8112cc;
+  --color-pulse-end: #4e8134cc;
+  --color-pulse-start: #8b8112cc;
   --color-terminal-background: #b0b0ff;
   --color-terminal-title: #2809f221;
 
@@ -162,13 +162,12 @@ html[data-theme="light"] {
   --color-terminal: var(--color-magenta);
   --color-paragraph: var(--color-grey);
 
-
   --color-sunburst-start: var(--color-blue);
   --color-sunburst-end: var(--color-magenta);
 }
 
 /* Light Orange Theme */
-html[data-theme="light"].color-orange {
+html[data-theme='light'].color-orange {
   --color-primary: #fff4e6; /* Very light orange background */
   --color-secondary: #ff8c00; /* Orange */
   --color-tertiary: #ffe4b5; /* Light orange */
@@ -176,8 +175,8 @@ html[data-theme="light"].color-orange {
   --color-accent: #ff6b35; /* Bright orange */
   --color-modal-bg: #ffffff; /* White modal */
   --color-dialog-bg: #fff8dc; /* Cream background */
-  --color-pulse-start:#e1d11dcc;
-  --color-pulse-end:#71bc4ccc;
+  --color-pulse-start: #e1d11dcc;
+  --color-pulse-end: #71bc4ccc;
   --color-terminal-background: #b0b0ff;
   --color-terminal-title: #2809f221;
   --color-pulse-start: var(--color-blue);
@@ -187,7 +186,7 @@ html[data-theme="light"].color-orange {
 }
 
 /* Light Green Theme */
-html[data-theme="light"].color-green {
+html[data-theme='light'].color-green {
   --color-primary: #f1f8e9; /* Very light green background */
   --color-secondary: #4caf50; /* Green */
   --color-tertiary: #e8f5e8; /* Light green */
@@ -195,8 +194,8 @@ html[data-theme="light"].color-green {
   --color-accent: #2e7d32; /* Dark green */
   --color-modal-bg: #ffffff; /* White modal */
   --color-dialog-bg: #f1f8e9; /* Light green background */
-  --color-pulse-start:#e1d11dcc;
-  --color-pulse-end:#71bc4ccc;
+  --color-pulse-start: #e1d11dcc;
+  --color-pulse-end: #71bc4ccc;
   --color-terminal-background: #b0b0ff;
   --color-terminal-title: #2809f221;
   --color-pulse-start: var(--color-blue);
@@ -276,7 +275,7 @@ body {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease;
-  font-size: xx-small!important;
+  font-size: xx-small !important;
 }
 
 .tooltip:hover::before {
@@ -328,7 +327,8 @@ textarea {
 /* Cereal Box Flavour - Bold, vibrant, pop colors with paper texture that respect theme */
 .flavour-cereal-box {
   /* Bold typography */
-  --font-dev: 'Knewave', 'Fredoka One', 'Bubblegum Sans', cursive, 'Impact', 'Arial Black', sans-serif;
+  --font-dev:
+    'Knewave', 'Fredoka One', 'Bubblegum Sans', cursive, 'Impact', 'Arial Black', sans-serif;
   font-weight: bold;
   font-family: var(--font-dev);
 
@@ -349,15 +349,24 @@ textarea {
 
   /* Subtle paper texture overlay */
   background-image:
-    radial-gradient(circle at 25% 25%, rgba(255,255,0,0.03) 2px, transparent 2px),
-    radial-gradient(circle at 75% 75%, rgba(255,107,53,0.03) 2px, transparent 2px),
-    radial-gradient(circle at 50% 10%, rgba(255,20,147,0.05) 3px, transparent 3px),
-    linear-gradient(45deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.2) 50%, rgba(0,0,0,0.1) 100%);
-  background-size: 60px 60px, 40px 40px, 80px 80px, 100% 100%;
+    radial-gradient(circle at 25% 25%, rgba(255, 255, 0, 0.03) 2px, transparent 2px),
+    radial-gradient(circle at 75% 75%, rgba(255, 107, 53, 0.03) 2px, transparent 2px),
+    radial-gradient(circle at 50% 10%, rgba(255, 20, 147, 0.05) 3px, transparent 3px),
+    linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.8) 0%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(0, 0, 0, 0.1) 100%
+    );
+  background-size:
+    60px 60px,
+    40px 40px,
+    80px 80px,
+    100% 100%;
   background-blend-mode: overlay;
 
   .tooltip::after {
-    color: var(--color-secondary)
+    color: var(--color-secondary);
   }
 
   /* Vibrant glow effects for cereal box theme */
@@ -367,7 +376,7 @@ textarea {
     box-shadow:
       0 0 0 2px var(--color-accent),
       4px 4px 0px var(--color-secondary),
-      inset 0 1px 0 rgba(255,255,255,0.8);
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
     text-shadow: none;
   }
 
@@ -381,29 +390,27 @@ textarea {
 
   /* Big, 3D, bold ASCII logo with stroke and curves */
   .logo-container .ascii-logo {
-    font-family: var(--font-dev)!important;
+    font-family: var(--font-dev) !important;
     font-size: 2.5em !important; /* Very big */
     font-weight: 900 !important; /* Super bold */
     transform: perspective(500px) rotateX(15deg) rotateY(-5deg) !important; /* 3D inclined effect */
     text-shadow:
-      0 1px 0 var(--cereal-medium),           /* 3D depth layers - theme colors */
-      0 2px 0 var(--cereal-shadow-base),
+      0 1px 0 var(--cereal-medium),
+      /* 3D depth layers - theme colors */ 0 2px 0 var(--cereal-shadow-base),
       0 3px 0 var(--cereal-bright),
       0 4px 0 var(--color-accent),
       0 5px 0 #ffffff,
       0 6px 0 var(--cereal-glow),
-      /* Horizontal/vertical offsets for depth */
-      1px 0 0 var(--cereal-medium),
+      /* Horizontal/vertical offsets for depth */ 1px 0 0 var(--cereal-medium),
       2px 0 0 var(--cereal-shadow-base),
       1px 1px 0 var(--cereal-bright),
       2px 2px 0 var(--color-accent),
-      /* Curved stroke effect using theme colors */
-      -1px -1px 0 var(--cereal-brighter),
+      /* Curved stroke effect using theme colors */ -1px -1px 0 var(--cereal-brighter),
       1px -1px 0 var(--cereal-brighter),
       -1px 1px 0 var(--cereal-brighter),
       1px 1px 0 var(--cereal-brighter),
-      0 0 10px color-mix(in srgb, var(--cereal-shadow-base) 60%, transparent 40%), /* Glowing effect */
-      0 0 20px color-mix(in srgb, var(--cereal-medium) 70%, transparent 30%),
+      0 0 10px color-mix(in srgb, var(--cereal-shadow-base) 60%, transparent 40%),
+      /* Glowing effect */ 0 0 20px color-mix(in srgb, var(--cereal-medium) 70%, transparent 30%),
       0 0 30px color-mix(in srgb, var(--cereal-glow) 50%, transparent 50%);
 
     /* Extra bold border stroke */
@@ -420,7 +427,12 @@ textarea {
     font-size: 1.2em !important;
     font-weight: 700 !important;
     text-align: center !important;
-    background: linear-gradient(45deg, var(--color-accent), var(--color-secondary), var(--color-success)) !important;
+    background: linear-gradient(
+      45deg,
+      var(--color-accent),
+      var(--color-secondary),
+      var(--color-success)
+    ) !important;
     -webkit-background-clip: text !important;
     background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
@@ -430,8 +442,9 @@ textarea {
     animation: cereal-bubble 1.5s ease-in-out infinite;
   }
 
-  .intro-text, .paragraph-text {
-    text-shadow: none!important;
+  .intro-text,
+  .paragraph-text {
+    text-shadow: none !important;
   }
 }
 
@@ -440,14 +453,13 @@ textarea {
   --font-dev: 'Times New Roman', 'Georgia', serif;
   font-family: var(--font-dev);
 
-
   /* Combined effects: low saturation, greasedale, sepia tone with grain added via CSS */
   filter: sepia(0.3) saturate(0.3) contrast(1.05) brightness(1.1);
 
   /* Add subtle paper texture */
   background-image:
-    radial-gradient(circle at 20px 20px, rgba(255,255,255,0.1) 1px, transparent 1px),
-    radial-gradient(circle at 60px 50px, rgba(0,0,0,0.05) 1px, transparent 1px);
+    radial-gradient(circle at 20px 20px, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 60px 50px, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
   background-size: 80px 80px;
 
   /* Add film grain overlay effect */
@@ -458,8 +470,8 @@ textarea {
     font-size: 4em !important;
     font-weight: 600 !important;
     text-shadow:
-      2px 2px 0 rgba(139, 69, 19, 0.8), /* Sepia brown shadows for vintage look */
-      4px 4px 0 rgba(160, 82, 45, 0.6),
+      2px 2px 0 rgba(139, 69, 19, 0.8),
+      /* Sepia brown shadows for vintage look */ 4px 4px 0 rgba(160, 82, 45, 0.6),
       6px 6px 0 rgba(101, 67, 33, 0.4); /* Glow effect */
 
     /* Subtle border for newspaper style */

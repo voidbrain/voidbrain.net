@@ -42,7 +42,7 @@ export class LangDialog {
 
   doSaveSettings(): void {
     // Get the selected language and update settings
-    const selectedLanguage = this.languages.find(l => l.checked)?.value;
+    const selectedLanguage = this.languages.find((l) => l.checked)?.value;
     if (selectedLanguage) {
       this.settings.updateSettings({ language: selectedLanguage });
     }

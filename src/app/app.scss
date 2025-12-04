@@ -5,7 +5,9 @@
   overflow: hidden;
 }
 
-app-logo { width: 100%; }
+app-logo {
+  width: 100%;
+}
 
 .main-container {
   display: flex;
@@ -122,7 +124,6 @@ header {
   padding-bottom: 4px;
   padding-left: 3px;
   padding-right: 3px;
-
 }
 
 .lipgloss-description {
@@ -169,10 +170,10 @@ header {
 }
 
 .gradient2-title {
-background: linear-gradient(to right, var(--color-pulse-start), var(--color-pulse-end));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+  background: linear-gradient(to right, var(--color-pulse-start), var(--color-pulse-end));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .sunburst {
@@ -315,7 +316,7 @@ ul.list {
   button {
     color: var(--color-secondary);
     &:hover {
-      color:var(--color-text)
+      color: var(--color-text);
     }
   }
 }
@@ -334,7 +335,6 @@ ul.list {
   color: var(--color-praragraph);
   text-shadow: 0 0 8px currentColor;
 }
-
 
 .status-line {
   margin-bottom: 4px;
@@ -376,13 +376,13 @@ ul.list {
 
 @keyframes goto-pulse {
   0% {
-    background: linear-gradient(to right,var(--color-pulse-start), var(--color-pulse-end));
+    background: linear-gradient(to right, var(--color-pulse-start), var(--color-pulse-end));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
   100% {
-    background: linear-gradient(to right, var(--color-pulse-end),var(--color-pulse-start));
+    background: linear-gradient(to right, var(--color-pulse-end), var(--color-pulse-start));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -395,7 +395,6 @@ ul.list {
 
 /* Responsive Design Breakpoints */
 @media (max-width: 768px) {
-
   app-logo {
     margin: auto;
   }

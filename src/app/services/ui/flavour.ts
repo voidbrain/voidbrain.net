@@ -53,7 +53,7 @@ export class Flavour {
     // Update document classes
     if (isPlatformBrowser(this.platformId)) {
       // Remove all flavour classes first
-      Object.values(this.FLAVOUR_CLASSES).forEach(className => {
+      Object.values(this.FLAVOUR_CLASSES).forEach((className) => {
         this.renderer.removeClass(this.document.documentElement, className);
       });
 
@@ -77,6 +77,4 @@ export class Flavour {
   isCerealBox(): boolean {
     return this.currentFlavour() === 'cereal-box';
   }
-
-
 }

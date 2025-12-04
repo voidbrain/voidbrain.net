@@ -38,9 +38,7 @@
               }
             ],
             "styles": ["src/styles.scss"],
-            "polyfills": [
-              "@angular/localize/init"
-            ]
+            "polyfills": ["@angular/localize/init"]
           },
           "configurations": {
             "production": {

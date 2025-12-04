@@ -21,7 +21,6 @@ export class AppLogoComponent {
   `;
 
     // Access the flavour signal directly to avoid issues
-    return (this.flavour.currentFlavourSignal() === 'terminal') ?
-      asciiLogo : textLogo;
+    return this.flavour.currentFlavourSignal() === 'terminal' ? asciiLogo : textLogo;
   });
 }

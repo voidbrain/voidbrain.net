@@ -42,7 +42,7 @@ export class ColorDialog {
 
   doSaveSettings(): void {
     // Get the selected color and update settings
-    const selectedColor = this.colors.find(c => c.checked)?.value;
+    const selectedColor = this.colors.find((c) => c.checked)?.value;
     if (selectedColor) {
       this.settings.updateSettings({ color: selectedColor });
     }

@@ -123,7 +123,8 @@ export class RandomFlashMatrix implements OnInit, OnDestroy {
     // Get current theme colors for flashes
     const computedStyle = getComputedStyle(document.documentElement);
     const colorSecondary = computedStyle.getPropertyValue('--color-secondary').trim() || '#ff3366';
-    const colorPulseStart = computedStyle.getPropertyValue('--color-pulse-start').trim() || '#71bc4c';
+    const colorPulseStart =
+      computedStyle.getPropertyValue('--color-pulse-start').trim() || '#71bc4c';
 
     // Set stroke style for borders using theme border color
     ctx.strokeStyle = computedStyle.getPropertyValue('--color-tertiary').trim() || '#5f2b8f';
