@@ -1,28 +1,48 @@
 // Global tokens and the poster layout. Documented in docs/STYLE-GUIDE.md: a token change updates its tables.
 // Fonts are self-hosted from @fontsource (OFL-1.1), listed in angular.json "styles".
 
+@mixin tone-work {
+  --ground: var(--vb-acid);
+  --accent: var(--vb-black);
+  --on-accent: var(--vb-acid);
+  --mark: #fff;
+  --font-display: 'Anton', 'Impact', sans-serif;
+}
+
+@mixin tone-play {
+  --ground: var(--vb-orange);
+  --accent: var(--vb-black);
+  --on-accent: var(--vb-orange);
+  --mark: #fff;
+  --font-display: 'Rubik Glitch', 'Impact', sans-serif;
+}
+
+@mixin tone-sleep {
+  --ground: var(--vb-paper);
+  --accent: var(--vb-black);
+  --on-accent: var(--vb-acid);
+  --mark: var(--vb-green);
+  --font-display: 'Major Mono Display', ui-monospace, monospace;
+}
+
 :root {
   // palette: print colours, black does the drawing
   --vb-black: #0a0a0a;
   --vb-paper: #f2f0ea;
   --vb-orange: #ff5a1f;
   --vb-acid: #a6ff00;
-  --vb-lime: #c6ff00;
+  --vb-green: #2fbf00;
 
-  // roles, set per state below
-  --ground: var(--vb-acid);
+  // roles: one tone per state (mixins above), set on the page and on each poster sheet
   --ink: var(--vb-black);
-  --accent: var(--vb-black);
-  --on-accent: var(--vb-acid);
+  @include tone-work;
 
   // type
-  --font-display: 'Rubik Glitch', 'Impact', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'Menlo', monospace;
-  --text-xs: 0.75rem;
-  --text-s: 0.875rem;
+  --text-xs: 0.6875rem;
+  --text-s: 0.8125rem;
   --text-m: 1rem;
   --text-l: 1.375rem;
-  --text-display: clamp(2.75rem, 11vw, 9.5rem);
 
   // spacing and lines
   --space-1: 4px;
@@ -31,29 +51,27 @@
   --space-4: 16px;
   --space-5: 24px;
   --space-6: 40px;
-  --gutter: clamp(16px, 3vw, 40px);
+  --gutter: clamp(12px, 2.4vw, 28px);
   --line: 2px;
   --bar: 52px;
+  --figure-h: min(40dvh, 340px); // the figure's height on narrow sheets
 
   --switch-time: 420ms;
 }
 
-:root[data-state='work'] {
-  --ground: var(--vb-acid);
-  --accent: var(--vb-black);
-  --on-accent: var(--vb-acid);
+:root[data-state='work'],
+[data-tone='work'] {
+  @include tone-work;
 }
 
-:root[data-state='play'] {
-  --ground: var(--vb-orange);
-  --accent: var(--vb-black);
-  --on-accent: var(--vb-orange);
+:root[data-state='play'],
+[data-tone='play'] {
+  @include tone-play;
 }
 
-:root[data-state='sleep'] {
-  --ground: var(--vb-paper);
-  --accent: var(--vb-lime);
-  --on-accent: var(--vb-black);
+:root[data-state='sleep'],
+[data-tone='sleep'] {
+  @include tone-sleep;
 }
 
 *,
@@ -63,10 +81,9 @@
 }
 
 html {
-  background: var(--ground);
+  background: var(--vb-black);
   color: var(--ink);
-  font: var(--text-s) / 1.55 var(--font-mono);
-  transition: background-color var(--switch-time) steps(6, end);
+  font: var(--text-s) / 1.4 var(--font-mono);
   -webkit-text-size-adjust: 100%;
 }
 
@@ -85,6 +102,8 @@ a {
 :focus-visible {
   outline: 3px solid var(--ink);
   outline-offset: 3px;
+  // a ground-coloured ring keeps the focus visible where it is drawn over the black figure
+  box-shadow: 0 0 0 6px var(--ground);
 }
 
 .visually-hidden {
@@ -113,6 +132,8 @@ a {
 
 .bar {
   position: relative;
+  background: var(--ground);
+  transition: background-color var(--switch-time) steps(6, end);
   z-index: 3;
   display: flex;
   flex-wrap: wrap;
@@ -169,64 +190,106 @@ a {
 
 .hazard {
   height: 14px;
-  background: repeating-linear-gradient(-45deg, var(--ink) 0 10px, transparent 10px 20px);
+  background: repeating-linear-gradient(-45deg, var(--ink) 0 10px, var(--ground) 10px 20px);
 }
 
-// ---- stage: the persistent figure behind the poster
+// ---- stage: the current poster as a portrait sheet, its neighbours peeking in at the sides on wide screens
 
 .stage {
-  position: relative;
-  min-height: calc(100dvh - 2 * var(--bar));
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+  min-height: calc(100dvh - 2 * var(--bar) - 28px);
   touch-action: pan-y;
+
+  @media (min-width: 1100px) {
+    padding: var(--space-3);
+  }
+}
+
+.side {
+  display: none;
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  background: var(--ground);
+  color: var(--ink);
+  cursor: pointer;
+  filter: saturate(0.6) brightness(0.9);
+  transition: filter 160ms;
+
+  &:hover {
+    filter: none;
+  }
+
+  @media (min-width: 1100px) {
+    display: block;
+  }
+
+  &__word {
+    display: block;
+    font: 400 clamp(6rem, 13vw, 14rem) / 0.85 var(--font-display);
+    text-transform: uppercase;
+    white-space: nowrap;
+    writing-mode: vertical-rl;
+  }
+
+  &--prev .side__word {
+    margin-left: auto;
+    transform: rotate(180deg);
+  }
+}
+
+.sheet {
+  container: sheet / inline-size;
+  position: relative;
+  isolation: isolate;
+  flex: 0 0 auto;
+  width: 100%;
+  overflow: hidden;
+  background: var(--ground);
+  color: var(--ink);
+
+  @media (min-width: 1100px) {
+    width: min(860px, max(620px, 84dvh));
+  }
 }
 
 .figure {
-  position: absolute;
+  position: relative;
   z-index: 1;
-  inset: 8% 28% 10%;
   display: grid;
   place-items: center;
+  height: min(48dvh, 420px);
+  pointer-events: none;
 
-  @media (max-width: 800px) {
-    position: relative;
-    inset: auto;
-    height: min(52dvh, 460px);
+  vb-self-model {
+    pointer-events: auto;
   }
 }
 
 .figure-placeholder {
-  width: min(60%, 320px);
+  width: min(60%, 260px);
   aspect-ratio: 3 / 4;
   border-radius: 48% 48% 40% 40%;
   background: var(--ink);
 }
 
-// ---- poster
+// ---- poster: shared pieces (narrow sheets stack them; the per-state grids follow)
 
 .poster {
   position: relative;
-  z-index: 2;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1fr);
-  grid-template-areas:
-    'head head head'
-    'left . right'
-    'foot foot foot';
-  grid-template-rows: auto 1fr auto;
-  gap: var(--space-5) var(--gutter);
-  min-height: calc(100dvh - 2 * var(--bar));
-  padding: var(--space-5) var(--gutter);
-  pointer-events: none;
-  animation: poster-in var(--switch-time) steps(5, end);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--gutter) var(--space-5);
 
   > * {
-    pointer-events: auto;
-  }
-
-  @media (max-width: 800px) {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: 'head' 'left' 'right' 'foot';
-    min-height: 0;
+    position: relative;
+    z-index: 2;
+    animation: poster-in var(--switch-time) steps(5, end);
   }
 }
 
@@ -234,80 +297,135 @@ a {
   0% {
     opacity: 0;
     clip-path: inset(0 0 100% 0);
-    transform: translateX(-8px);
+    translate: -8px 0;
   }
   40% {
     opacity: 1;
     clip-path: inset(0 0 40% 0);
-    transform: translateX(6px);
+    translate: 6px 0;
   }
   100% {
     clip-path: inset(0 0 0 0);
-    transform: none;
+    translate: none;
   }
 }
 
-.poster__head {
-  grid-area: head;
+.poster > .back {
+  position: absolute;
+  z-index: 0;
+  margin: 0;
+  font: 400 40cqw / 0.8 var(--font-display);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+.poster > .vert {
+  position: absolute;
+  z-index: 3;
+  top: var(--space-4);
+  left: 2px;
+  margin: 0;
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  pointer-events: none;
+}
+
+.poster > .marks {
+  position: absolute;
+  // above the figure (later in paint order at the same level), below every text and HUD block (z-index 2)
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  color: var(--mark);
+  pointer-events: none;
+}
+
+.mark {
+  position: absolute;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  &--big {
+    font-size: 1.75rem;
+    line-height: 1;
+    font-weight: 400;
+  }
+}
+
+.barcode {
+  position: absolute;
+  right: 6%;
+  bottom: 2.5%;
+  width: max(90px, 18cqw);
+  height: 20px;
+  background: repeating-linear-gradient(
+    90deg,
+    currentColor 0 2px,
+    transparent 2px 4px,
+    currentColor 4px 5px,
+    transparent 5px 8px,
+    currentColor 8px 11px,
+    transparent 11px 12px
+  );
+}
+
+.poster__head,
+.poster__foot {
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--space-4);
-  border-bottom: var(--line) solid var(--ink);
-  padding-bottom: var(--space-3);
+  flex-direction: column;
+  gap: var(--space-2);
 }
 
 .poster__foot {
-  grid-area: foot;
-  display: flex;
-  align-items: flex-start;
+  flex-direction: row;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: var(--space-4);
+  gap: var(--space-3);
   border-top: var(--line) solid var(--ink);
-  padding-top: var(--space-3);
-}
+  padding-top: var(--space-2);
 
-.poster__foot > .hud {
-  flex: 0 0 auto;
-  width: min(220px, 42%);
+  > .hud {
+    flex: 0 0 auto;
+    width: min(150px, 34%);
+  }
 }
 
 .poster__left,
 .poster__right {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--space-3);
   min-width: 0;
-}
-
-.poster__left {
-  grid-area: left;
-}
-
-.poster__right {
-  grid-area: right;
-  align-items: stretch;
 }
 
 .display {
   margin: 0;
   font-family: var(--font-display);
-  font-size: var(--text-display);
+  font-size: 22cqw;
   font-weight: 400;
   line-height: 0.82;
-  letter-spacing: -0.02em;
   overflow-wrap: anywhere;
-  transform: scaleX(1.08);
-  transform-origin: left bottom;
+  // a ground-coloured outline keeps the letters apart from the figure where they overlap it
+  -webkit-text-stroke: 4px var(--ground);
+  paint-order: stroke fill;
 }
 
 .display--foot {
-  font-size: calc(var(--text-display) * 0.62);
-  transform-origin: left top;
+  font-size: 9cqw;
+  -webkit-text-stroke-width: 2px;
 }
 
 .kanji {
-  font-size: clamp(2rem, 6vw, 4.5rem);
+  align-self: flex-start;
+  font-size: clamp(1.75rem, 7cqw, 3.5rem);
   font-weight: 700;
   line-height: 1;
   writing-mode: vertical-rl;
@@ -315,33 +433,37 @@ a {
 
 .title {
   margin: 0;
-  font-size: var(--text-l);
+  font-size: var(--text-m);
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
+  &:focus-visible {
+    outline-offset: 2px;
+  }
 }
 
 .kicker {
   margin: 0;
   font-size: var(--text-xs);
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
 
 .copy p {
-  margin: 0 0 var(--space-3);
-  max-width: 46ch;
+  margin: 0 0 var(--space-2);
+  max-width: 44ch;
 }
 
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-1);
+  gap: 3px;
   margin: 0;
   padding: 0;
   list-style: none;
 
   li {
-    padding: 2px var(--space-2);
+    padding: 1px 6px;
     background: var(--accent);
     color: var(--on-accent);
     font-size: var(--text-xs);
@@ -350,24 +472,26 @@ a {
   }
 }
 
+// entries sit on a solid black block so they read where they overlap the figure
 .entries {
   margin: 0;
-  padding: 0;
+  padding: var(--space-2) var(--space-3);
   list-style: none;
-  border-top: var(--line) solid var(--ink);
+  background: var(--vb-black);
+  color: var(--ground);
 
   li {
     display: grid;
-    grid-template-columns: 12ch minmax(0, 1fr);
-    gap: var(--space-1) var(--space-3);
-    padding: var(--space-2) 0;
-    border-bottom: 1px solid var(--ink);
+    grid-template-columns: 9ch minmax(0, 1fr);
+    gap: 0 var(--space-2);
+    padding: var(--space-1) 0;
+    border-bottom: 1px solid currentColor;
+    &:last-child {
+      border-bottom: 0;
+    }
   }
 
-  .when {
-    font-weight: 700;
-  }
-
+  .when,
   .what {
     font-weight: 700;
     text-transform: uppercase;
@@ -382,7 +506,7 @@ a {
 .links {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2) var(--space-4);
+  gap: var(--space-1) var(--space-3);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -392,6 +516,8 @@ a {
   a {
     display: inline-block;
     min-height: 24px;
+    padding: 2px 4px;
+    background: var(--ground);
     &::before {
       content: '↗ ';
     }
@@ -400,26 +526,31 @@ a {
 
 .hud-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(104px, 1fr));
+  gap: var(--space-2);
   align-items: start;
 }
 
-// a framed HUD piece
+// a framed HUD piece: solid ground, so it reads as a sticker where it overlaps the figure
 .hud {
   display: block;
   border: var(--line) solid var(--ink);
-  padding: var(--space-2);
+  padding: 6px;
+  background: var(--ground);
   cursor: crosshair;
   user-select: none;
-  touch-action: none;
+  touch-action: pan-y; // pieces without a drag gesture still let the page scroll
+
+  &:is(vb-signal-chart, vb-wire-sphere, vb-wire-cube, vb-height-map) {
+    touch-action: none;
+  }
 
   &__caption {
     display: flex;
     justify-content: space-between;
     gap: var(--space-2);
     margin-top: var(--space-1);
-    font-size: 0.625rem;
+    font-size: 0.5625rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
@@ -432,11 +563,255 @@ a {
   }
 }
 
+// ---- wide sheets: one dense, overlapping layout per state, the figure smaller and in a different place
+
+@container sheet (min-width: 600px) {
+  .figure {
+    position: absolute;
+    height: auto;
+  }
+
+  .poster {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-rows: auto auto 1fr auto auto;
+    gap: var(--space-2) var(--space-3);
+    min-height: calc(100dvh - 2 * var(--bar) - 28px - 2 * var(--space-3));
+    font-size: 0.75rem;
+    padding: var(--space-4) var(--space-5) var(--space-5) var(--space-6);
+    pointer-events: none;
+
+    > * {
+      pointer-events: auto;
+    }
+  }
+
+  .poster__head {
+    grid-area: head;
+  }
+  .kanji {
+    grid-area: kanji;
+  }
+  .poster__left {
+    grid-area: left;
+  }
+  .poster__right {
+    grid-area: right;
+  }
+  .hud-row {
+    grid-area: hud;
+  }
+  .poster__foot {
+    grid-area: foot;
+  }
+}
+
+// work: a huge condensed WORK over the top, the figure low on the right behind an outlined FULL STACK
+@container sheet (min-width: 600px) {
+  [data-tone='work'] {
+    .figure {
+      right: 6%;
+      top: 27%;
+      width: 42%;
+      height: 46%;
+    }
+
+    .poster {
+      grid-template-areas:
+        'head head head head head kanji'
+        'left left left . . kanji'
+        'left left left . . .'
+        'hud hud hud right right right'
+        'foot foot foot foot foot foot';
+    }
+
+    .display {
+      font-size: 27cqw;
+      line-height: 0.78;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+    }
+
+    .display--foot {
+      font-size: 8.5cqw;
+    }
+
+    .back {
+      top: 14%;
+      right: 1%;
+      font-size: 19cqw;
+      color: transparent;
+      -webkit-text-stroke: 2px var(--ink);
+      writing-mode: vertical-rl;
+    }
+  }
+}
+
+// play: the figure high on the left over a giant FPV, the glitched headline running down the right edge
+@container sheet (min-width: 600px) {
+  [data-tone='play'] {
+    .figure {
+      left: 8%;
+      top: 11%;
+      width: 46%;
+      height: 44%;
+    }
+
+    .poster {
+      grid-template-areas:
+        'kanji . . left left'
+        '. . . left left'
+        '. . . . .'
+        'right right hud hud hud'
+        'foot foot foot foot foot';
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      padding-right: 17cqw;
+    }
+
+    .poster__head .display {
+      font-size: 11.5cqw;
+      line-height: 0.9;
+      writing-mode: vertical-rl;
+      white-space: nowrap;
+    }
+
+    .kicker {
+      writing-mode: vertical-rl;
+    }
+
+    .hud-row {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .display--foot {
+      font-size: 11cqw;
+    }
+
+    .back {
+      top: 16%;
+      left: -3%;
+      font-size: 46cqw;
+      color: color-mix(in srgb, var(--ink) 16%, transparent);
+    }
+  }
+}
+
+// sleep: quiet paper, the figure low on the left on a green slab, a thin vertical sleep_mode on the right
+@container sheet (min-width: 600px) {
+  [data-tone='sleep'] {
+    .figure {
+      left: 6%;
+      bottom: 13%;
+      width: 42%;
+      height: 42%;
+    }
+
+    .poster {
+      grid-template-areas:
+        'left left left left .'
+        'left left left left .'
+        '. . right right right'
+        '. . hud hud hud'
+        'foot foot foot foot foot';
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      padding-right: 15cqw;
+    }
+
+    .poster__head .display {
+      font-size: 9.5cqw;
+      line-height: 0.9;
+      writing-mode: vertical-rl;
+      white-space: nowrap;
+    }
+
+    .kicker {
+      writing-mode: vertical-rl;
+    }
+
+    .kanji {
+      display: none;
+    }
+
+    .copy p:first-child {
+      font: 400 clamp(1.1rem, 3.4cqw, 1.9rem) / 1.15 var(--font-display);
+      max-width: none;
+    }
+
+    .hud-row {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .back {
+      top: 34%;
+      left: 0;
+      width: 64%;
+      height: 46%;
+      padding: 0 var(--space-4);
+      background: var(--vb-acid);
+      font-size: 22cqw;
+      text-align: right;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+    }
+  }
+}
+
+// play and sleep: the headline runs down the right edge, outside the grid
+@container sheet (min-width: 600px) {
+  [data-tone='play'],
+  [data-tone='sleep'] {
+    .poster__head {
+      position: absolute;
+      top: var(--space-4);
+      right: var(--space-2);
+      flex-direction: row-reverse;
+      align-items: flex-start;
+    }
+  }
+}
+
+// narrow sheets: the stacked layout keeps the big words, just smaller
+@container sheet (max-width: 599px) {
+  .poster > .back {
+    top: 0;
+    right: 0;
+    font-size: 30cqw;
+    color: color-mix(in srgb, var(--ink) 14%, transparent);
+    transform: translateY(-110%);
+  }
+  .kanji {
+    display: none;
+  }
+  .display {
+    font-size: 15cqw;
+  }
+  .display--foot {
+    font-size: 11cqw;
+  }
+  .figure {
+    height: var(--figure-h);
+  }
+  [data-tone='sleep'] .poster__head .display {
+    font-size: 11.5cqw;
+  }
+  .poster > .vert {
+    display: none;
+  }
+  // the marks layer covers the figure, never the text below it
+  .poster > .marks {
+    top: calc(-1 * var(--figure-h));
+    bottom: auto;
+    height: var(--figure-h);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  html {
+  .bar,
+  .side {
     transition: none;
   }
-  .poster {
+  .poster > * {
     animation: none;
   }
 }

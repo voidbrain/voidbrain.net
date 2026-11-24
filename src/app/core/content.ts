@@ -1,6 +1,6 @@
-// The page text, per state. Sources: the 2012 site, the earlier Angular attempt and Daniele's CV; contact and
-// personal details beyond the public links are deliberately left out (AGENTS, "Privacy"). Decorative fillers
-// (logs, lorem) come from core/hud.ts, never from here.
+// The page text, per state. Sources: the 2012 site, the earlier Angular attempt and Daniele's CV, made fuzzy on
+// purpose (owner, 2026-11-24): no employer or client names, no exact dates or places. Contact and personal details
+// beyond the public links stay out (AGENTS, "Privacy"). Decorative fillers (logs, lorem) come from core/hud.ts.
 import type { StateId } from './states';
 
 export interface Entry {
@@ -30,25 +30,39 @@ export interface Poster {
   readonly links: readonly LinkItem[];
   /** Text alternative of the self-model in this state. */
   readonly figure: string;
+  /** Giant word behind the figure (decorative). */
+  readonly back: string;
+  /** A line set vertically along the poster edge (decorative). */
+  readonly vertical: string;
+  /** The top layer of small marks and symbols over everything (decorative), placed in % of the poster. */
+  readonly marks: readonly Mark[];
+}
+
+export interface Mark {
+  readonly text: string;
+  readonly x: number;
+  readonly y: number;
+  /** Bigger symbol instead of small caption type. */
+  readonly big?: boolean;
 }
 
 export const OWNER = {
   name: 'Daniele Bordignon',
   role: 'app & web full-stack developer',
-  place: 'in north-east Italy',
+  place: 'somewhere in north-east Italy',
 } as const;
 
 export const POSTERS: Record<StateId, Poster> = {
   work: {
     title: 'Work',
-    headline: 'FULL_STACK',
+    headline: 'WORK',
     footline: 'APP & WEB',
     kanji: '仕事',
     kicker: 'app & web // full-stack developer // R&D',
     paragraphs: [
-      'I am a software developer who builds reliable, high-performance solutions with a focus on usability and maintainability.',
-      'Today I create full-stack, industrial-grade systems: smart dashboards, real-time data and intuitive interfaces to control and monitor automated production lines for Industry 4.0.',
-      'Analytical, structured, solution-oriented. I take on complex projects on my own and I like organising a team.',
+      'I build reliable, fast software with a focus on usability and maintainability.',
+      'Today: full-stack, industrial-grade systems. Smart dashboards, real-time data and interfaces that control and monitor automated production lines.',
+      'Analytical, structured, solution-oriented. I take on complex projects alone and I like organising a team.',
     ],
     tags: [
       'Angular',
@@ -66,25 +80,18 @@ export const POSTERS: Record<StateId, Poster> = {
       {
         when: 'now →',
         what: 'R&D lab',
-        detail:
-          'R&D, web & app developer: web, desktop and mobile apps for smart production systems.',
+        detail: 'Web, desktop and mobile apps for smart factories.',
       },
       {
         when: '~10 yrs',
         what: 'Agency',
-        detail:
-          'Full-stack developer: e-commerce, corporate and public service websites, iOS and Android apps.',
+        detail: 'E-commerce, corporate and public-service sites; iOS and Android apps.',
       },
       { when: 'before', what: 'Studio', detail: 'Web design and development.' },
       {
         when: 'long ago',
         what: 'Odd jobs',
-        detail: 'Webmaster, AutoCAD 3D libraries, help desk, beta test.',
-      },
-      {
-        when: 'way back',
-        what: 'Back office',
-        detail: 'Help desk and back office for business software.',
+        detail: 'Webmaster, 3D libraries, help desk, beta tests.',
       },
     ],
     links: [
@@ -92,6 +99,22 @@ export const POSTERS: Record<StateId, Poster> = {
       { label: 'Stack Overflow', href: 'https://stackoverflow.com/users/1000137/voidbrain' },
     ],
     figure: 'Placeholder 3D figure of Daniele, head tilted down towards a screen, wearing glasses.',
+    back: 'FULL STACK',
+    vertical: 'BUILD // TEST // SHIP // REPEAT // BUILD // TEST // SHIP',
+    marks: [
+      { text: '⊕', x: 3, y: 2, big: true },
+      { text: '⊕', x: 94, y: 2, big: true },
+      { text: 'VB-01 // 0x2A', x: 62, y: 4 },
+      { text: '▲▲▲', x: 44, y: 18, big: true },
+      { text: 'SYS.OK', x: 70, y: 30 },
+      { text: '+', x: 30, y: 44, big: true },
+      { text: '→→→ DEPLOY', x: 58, y: 52 },
+      { text: '[■■■■□□]', x: 8, y: 66 },
+      { text: '★', x: 88, y: 70, big: true },
+      { text: 'NO_REAL_DATA', x: 40, y: 86 },
+      { text: '⊕', x: 3, y: 95, big: true },
+      { text: '⊕', x: 94, y: 95, big: true },
+    ],
   },
   play: {
     title: 'Play',
@@ -102,7 +125,7 @@ export const POSTERS: Record<StateId, Poster> = {
     paragraphs: [
       'Out of office I fly FPV freestyle: goggles on, the world seen from a drone a few metres above the grass.',
       'I build things with Raspberry Pi and Arduino, print parts in 3D, and play with machine learning, AR, mesh networks and edge computing.',
-      'When the sky is clear I point a camera at it. When it is not, I play Ultimate Frisbee: competition, fun and fair play in one game.',
+      'Clear sky: a camera pointed at it. Cloudy: Ultimate Frisbee.',
     ],
     tags: [
       'FPV freestyle',
@@ -120,31 +143,42 @@ export const POSTERS: Record<StateId, Poster> = {
       {
         when: 'PRJ_01',
         what: '3D configurator',
-        detail: 'Drag catalogue items into a fitted wall, get the quotation and technical sheet.',
+        detail: 'Drag catalogue items into a fitted wall, get the quote and the spec sheet.',
       },
-      {
-        when: 'PRJ_02',
-        what: 'Product wizard',
-        detail: 'Choose and personalise a bag among 3D elements.',
-      },
+      { when: 'PRJ_02', what: 'Product wizard', detail: 'Build and personalise a bag in 3D.' },
       {
         when: 'PRJ_03',
-        what: 'iOS & Android',
-        detail: 'Calendar, push notifications, photos, geolocation, sync.',
+        what: 'Mobile app',
+        detail: 'Calendar, push, photos, geolocation, sync.',
       },
     ],
     links: [{ label: 'Instagram', href: 'https://www.instagram.com/il_bire/' }],
     figure: 'Placeholder 3D figure of Daniele wearing FPV goggles with an antenna.',
+    back: 'FPV',
+    vertical: 'ARM // THROTTLE UP // DIVE // POWER LOOP // DISARM',
+    marks: [
+      { text: '◢◤', x: 4, y: 3, big: true },
+      { text: 'CH5 5.8GHz', x: 70, y: 3 },
+      { text: '⟲ 360°', x: 86, y: 16 },
+      { text: '[ REC ●]', x: 30, y: 24 },
+      { text: '+', x: 52, y: 38, big: true },
+      { text: 'BAT 16.4V', x: 30, y: 8 },
+      { text: '▶▶', x: 78, y: 50, big: true },
+      { text: 'ALT 012m', x: 60, y: 64 },
+      { text: '✕', x: 20, y: 78, big: true },
+      { text: 'LQ 100 // RSSI -48', x: 52, y: 90 },
+      { text: '◢◤', x: 93, y: 95, big: true },
+    ],
   },
   sleep: {
     title: 'Sleep',
-    headline: 'SLEEP_MODE',
-    footline: 'OFFLINE',
+    headline: 'sleep_mode',
+    footline: 'offline',
     kanji: '睡眠',
     kicker: 'low power // do not disturb // dreaming in lorem ipsum',
     paragraphs: [
       'We will be restoring normality as soon as we are sure what is normal anyway. (Douglas Adams, The Hitchhiker’s Guide to the Galaxy)',
-      'I like reading, travelling and music, and I love nature and mountains.',
+      'Reading, travelling, music, mountains and nature.',
       'Leave a message after the beep: I will answer when I wake up.',
     ],
     tags: ['Reading', 'Travelling', 'Music', 'Mountains', 'Science'],
@@ -156,5 +190,19 @@ export const POSTERS: Record<StateId, Poster> = {
       { label: 'The 2012 site', href: '/old/' },
     ],
     figure: 'Placeholder 3D figure of Daniele asleep, head tilted, wearing a sleep mask.',
+    back: 'zzz',
+    vertical: 'do not disturb // do not disturb // do not disturb',
+    marks: [
+      { text: '☾', x: 5, y: 3, big: true },
+      { text: 'REM 04 // 03:12', x: 60, y: 4 },
+      { text: '✦', x: 36, y: 14, big: true },
+      { text: 'Z', x: 72, y: 24, big: true },
+      { text: 'z', x: 78, y: 18 },
+      { text: 'ALARM: OFF', x: 8, y: 40 },
+      { text: '·  ·  ·', x: 56, y: 48 },
+      { text: '✦', x: 88, y: 60, big: true },
+      { text: '{ 404_dream }', x: 30, y: 74 },
+      { text: '☾', x: 92, y: 94, big: true },
+    ],
   },
 };

@@ -42,7 +42,12 @@ export class App {
     STATES.map((s) => [s, POSTERS[s].title]),
   ) as Record<StateId, string>;
   protected readonly state = signal<StateId>(stateFromHash(this.doc.location.hash));
+  protected readonly posters = POSTERS;
   protected readonly poster = computed(() => POSTERS[this.state()]);
+  /** The previous and the next state, shown at the sides on wide screens. */
+  protected readonly neighbours = computed(
+    () => [stepState(this.state(), -1), stepState(this.state(), 1)] as const,
+  );
   protected readonly announcement = computed(() => `${this.poster().title} poster`);
 
   private swipeStart: { x: number; y: number } | null = null;

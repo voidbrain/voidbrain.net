@@ -93,15 +93,15 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 <details>
 <summary>Next action, estimates and PR history</summary>
 
-**Next action / closure evidence:** owner left the palettes to the agent and asked for text from the website and CV, with lorem/logs as filler (2026-11-24). Built: work = acid green (career, stack), play = orange (FPV, maker, projects), sleep = paper white with lime (quote, links, the old site); text in `src/app/core/content.ts` without contact or personal details (a spec checks). Next: the owner's look and text review; changes go into `content.ts` and the style guide.
+**Next action / closure evidence:** owner left the palettes to the agent and asked for text from the website and CV, with lorem/logs as filler (2026-11-24). Built: work = acid green (career, stack), play = orange (FPV, maker, projects), sleep = paper white (quote, links, the old site; green accents since #2); text in `src/app/core/content.ts` without contact or personal details (a spec checks). First owner review (2026-11-24): real data out (fuzzy career, no employer, client or town names), three display faces and more different posters, locandina style (dense, overlapping, vertical type), a white marks layer on top (green on the white poster), the figure smaller and in a different place per state. Done in #2 (independent review: fresh-context agent (Opus), 2026-11-24, 8 low/medium findings, all fixed in #2: marks over text, touch scrolling on HUD pieces, cube tap after drag, Life seed/unfreeze, side-sheet focus, focus over the figure, location hint, stale docs): portrait sheets with the neighbours at the sides, one grid per state, Anton / Rubik Glitch / Major Mono Display. Next: the owner's second look. The earlier text (employer, client and town names, dates) was removed from the published history too, with the owner's approval (2026-11-24): the commits after `main` on both PR branches were rewritten with `git filter-repo --replace-text` and force-pushed; `main` and `gh-pages` never had it. The owner keeps the Instagram and Stack Overflow links.
 
 **Estimates:** Small remaining effort: text and layout corrections after the owner's review. Reassessed 2026-11-24 after implementation; not acceptance evidence.
 
 | Field | Value |
 |---|---|
-| PR / evidence | [#1](https://github.com/voidbrain/voidbrain.net/pull/1); Review: fresh-context agent (Opus), 2026-11-24; fixed in #1: skip link reset the poster, focus lost on switch (failing tests first confirmed) |
+| PR / evidence | [#1](https://github.com/voidbrain/voidbrain.net/pull/1); Review: fresh-context agent (Opus), 2026-11-24; fixed in #1: skip link reset the poster, focus lost on switch (failing tests first confirmed); [#2](https://github.com/voidbrain/voidbrain.net/pull/2): owner review changes |
 | Opened | 2026-11-24 |
-| Verification | Unit · 2026-11-24 · 30 tests passed (state model, shell across hash, buttons, keys, skip link, focus); Browser · 2026-11-24 · agent check in Chrome 1440 × 900 and iPhone 13 emulation: render, no overflow, click, arrow, back button, reduced motion; Human · Pending |
+| Verification | Unit · 2026-11-24 · 30 tests passed (state model, shell across hash, buttons, keys, skip link, focus); Browser · 2026-11-24 · agent check in Chrome 1440 × 900 and iPhone 13 emulation: render, no overflow, click, arrow, back button, reduced motion; Browser · 2026-11-24 · #2 layouts in Chrome 1440 × 900 (each sheet fits: 757–772 px of 900) and iPhone 13 (no horizontal scroll), no console errors; Human · Pending |
 | Reviewed | 2026-11-24 |
 
 </details>
@@ -154,22 +154,22 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 
 | | |
 |---|---|
-| **Issue** | The posters' furniture (calendar strips, wireframe spheres, charts, QR code, terminal, glyphs, hazard stripes) must be animated, interactive components, not pictures; their values are generated, with no real data (owner decision 2026-11-24). |
+| **Issue** | The posters' furniture (height maps, wire cubes, wireframe spheres, charts, QR code, terminal, glyphs, hazard stripes) must be animated, interactive components, not pictures; their values are generated, with no real data (owner decision 2026-11-24). |
 | **Reproduce** | [Run it](../README.md#run-it), in each state hover, focus (Tab) and drag every HUD piece; repeat with reduced motion on. |
 | **Check** | Every piece animates and reacts to pointer and keyboard, as a focusable group whose accessible name marks it decorative; no label presents a generated number as a real statistic; nothing is fetched; generators have specs; nothing blocks the first paint; reduced motion shows a still frame. |
 
 <details>
 <summary>Next action, estimates and PR history</summary>
 
-**Next action / closure evidence:** built 2026-11-24: signal chart, wire sphere, glyph matrix, terminal log, fake QR, calendar strip (`src/app/hud/`), one shared clock, generators in `src/app/core/hud.ts` with specs. Written new rather than ported: the earlier attempt's components were Angular 21 canvas code without keyboard support. Next: the owner's review with F-003.
+**Next action / closure evidence:** built 2026-11-24: signal chart, wire sphere, glyph matrix, terminal log, fake QR, calendar strip (`src/app/hud/`), one shared clock, generators in `src/app/core/hud.ts` with specs. Written new rather than ported: the earlier attempt's components were Angular 21 canvas code without keyboard support. First owner review (2026-11-24): drop the calendar, keep the height map and the 3D cube of the reference, a Game of Life in the orange poster. Done in #2: calendar strip removed; wire cube, height map, Game of Life and radar added, generators with specs. Next: the owner's second look with F-003.
 
 **Estimates:** Small remaining effort: adjustments after the owner's review. Reassessed 2026-11-24 after implementation; not acceptance evidence.
 
 | Field | Value |
 |---|---|
-| PR / evidence | [#1](https://github.com/voidbrain/voidbrain.net/pull/1); Review: fresh-context agent (Opus), 2026-11-24; fixed in #1: focusable `role="img"` with keys → labelled group, chart `pointercancel`, frozen clock schedules no frames, WebGL context loss |
+| PR / evidence | [#2](https://github.com/voidbrain/voidbrain.net/pull/2): new pieces; [#1](https://github.com/voidbrain/voidbrain.net/pull/1); Review: fresh-context agent (Opus), 2026-11-24; fixed in #1: focusable `role="img"` with keys → labelled group, chart `pointercancel`, frozen clock schedules no frames, WebGL context loss |
 | Opened | 2026-11-24 |
-| Verification | Unit · 2026-11-24 · generator and clock specs and the decorative-group test passed; Browser · 2026-11-24 · agent check: chart moves, and stops with reduced motion; Human · Pending |
+| Verification | Unit · 2026-11-24 · generator and clock specs and the decorative-group test passed; Unit · 2026-11-24 · #2: Life (B3/S23, wrap), terrain, cube and radar generator specs, 36 tests passed; Browser · 2026-11-24 · agent check: chart moves, and stops with reduced motion; Human · Pending |
 | Reviewed | 2026-11-24 |
 
 </details>
@@ -190,18 +190,18 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 |---|---|
 | **Issue** | The style guide's art direction had no tokens or fonts in code. |
 | **Reproduce** | `src/styles.scss` and STYLE-GUIDE "Colour", "Type", "Spacing and layout". |
-| **Check** | Each state has ground, ink and accent roles on `:root`, listed in the style guide; text pairs pass WCAG AA; a display face and a monospaced face are self-hosted with an open licence; no component uses a literal colour (404 page excepted, coupled). |
+| **Check** | Each state has ground, ink and accent roles on `:root`, listed in the style guide; text pairs pass WCAG AA; one display face per state and a monospaced face are self-hosted with an open licence; no component uses a literal colour (404 page excepted, coupled). |
 
 <details>
 <summary>Next action, estimates and PR history</summary>
 
-**Next action / closure evidence:** built 2026-11-24: five palette tokens and four roles per state, contrast 6.3:1 to 17.4:1 for every text pair (lime only as a fill), Rubik Glitch and JetBrains Mono from `@fontsource` (OFL-1.1, Latin subset), type, spacing and layout tokens, all listed in the style guide. Next: the owner's review with F-003.
+**Next action / closure evidence:** built 2026-11-24: five palette tokens and four roles per state, contrast 6.3:1 to 17.4:1 for every text pair (the lime accent was a fill only; replaced in #2), Rubik Glitch and JetBrains Mono from `@fontsource` (OFL-1.1, Latin subset), type, spacing and layout tokens, all listed in the style guide. Owner review 2026-11-24 asked for three fonts: #2 adds Anton (work) and Major Mono Display (sleep), both `@fontsource` 5.3.0, OFL-1.1; roles per state come from one mixin per tone, `--vb-lime` replaced by `--vb-green` (marks only), sleep accent black. Next: the owner's second look with F-003.
 
 **Estimates:** Small remaining effort: adjustments after the owner's review. Reassessed 2026-11-24 after implementation; not acceptance evidence.
 
 | Field | Value |
 |---|---|
-| PR / evidence | [#1](https://github.com/voidbrain/voidbrain.net/pull/1) |
+| PR / evidence | [#1](https://github.com/voidbrain/voidbrain.net/pull/1); [#2](https://github.com/voidbrain/voidbrain.net/pull/2): three display faces, tones |
 | Opened | 2026-11-24 |
 | Verification | Documentation · 2026-11-24 · tokens and contrast computed and listed; Browser · 2026-11-24 · agent screenshots of the three states; Human · Pending |
 | Reviewed | 2026-11-24 |

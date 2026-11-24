@@ -1,10 +1,11 @@
+<p class="back" aria-hidden="true">{{ p().back }}</p>
+<p class="vert" aria-hidden="true">{{ p().vertical }}</p>
+
 <header class="poster__head">
-  <div>
-    <p class="kicker">{{ p().kicker }}</p>
-    <p class="display" aria-hidden="true">{{ p().headline }}</p>
-  </div>
-  <span class="kanji" lang="ja" aria-hidden="true">{{ p().kanji }}</span>
+  <p class="kicker">{{ p().kicker }}</p>
+  <p class="display" aria-hidden="true">{{ p().headline }}</p>
 </header>
+<span class="kanji" lang="ja" aria-hidden="true">{{ p().kanji }}</span>
 
 <section class="poster__left" aria-labelledby="poster-title">
   <h2 class="title" id="poster-title" tabindex="-1">{{ p().title }}</h2>
@@ -18,17 +19,6 @@
       <li>{{ tag }}</li>
     }
   </ul>
-  @switch (state()) {
-    @case ('work') {
-      <vb-calendar-strip caption="CAL_SHIFT" />
-    }
-    @case ('play') {
-      <vb-signal-chart [seed]="9" caption="VTX_CH5" />
-    }
-    @case ('sleep') {
-      <vb-terminal-log [seed]="77" caption="DREAM.LOG" [size]="5" />
-    }
-  }
 </section>
 
 <section class="poster__right" [attr.aria-label]="p().title + ': timeline and links'">
@@ -52,35 +42,48 @@
       </li>
     }
   </ul>
-  <div class="hud-row">
-    @switch (state()) {
-      @case ('work') {
-        <vb-signal-chart [seed]="3" caption="CPU_SIM" />
-        <vb-terminal-log [seed]="12" caption="BUILD.LOG" />
-      }
-      @case ('play') {
-        <vb-wire-sphere caption="GYRO_SIM" />
-        <vb-terminal-log [seed]="5" caption="OSD.LOG" [size]="5" />
-      }
-      @case ('sleep') {
-        <vb-fake-qr [seed]="42" />
-        <vb-signal-chart [seed]="17" caption="REM_SIM" />
-      }
-    }
-  </div>
 </section>
+
+<div class="hud-row">
+  @switch (state()) {
+    @case ('work') {
+      <vb-wire-cube caption="CUBE_00" />
+      <vb-signal-chart [seed]="3" caption="CPU_SIM" />
+      <vb-terminal-log [seed]="12" caption="BUILD.LOG" [size]="5" />
+    }
+    @case ('play') {
+      <vb-game-of-life [seed]="7" caption="LIFE_SIM" />
+      <vb-height-map [seed]="11" caption="TERRAIN" />
+      <vb-radar [seed]="9" caption="VTX_SCAN" />
+    }
+    @case ('sleep') {
+      <vb-fake-qr [seed]="42" />
+      <vb-signal-chart [seed]="17" caption="REM_SIM" />
+      <vb-terminal-log [seed]="77" caption="DREAM.LOG" [size]="4" />
+    }
+  }
+</div>
 
 <footer class="poster__foot">
   <p class="display display--foot" aria-hidden="true">{{ p().footline }}</p>
   @switch (state()) {
     @case ('work') {
-      <vb-glyph-matrix [seed]="4" caption="MTX_WORK" [lines]="4" [cols]="10" />
+      <vb-glyph-matrix [seed]="4" caption="MTX_WORK" [lines]="3" [cols]="10" />
     }
     @case ('play') {
-      <vb-glyph-matrix [seed]="8" caption="MTX_PLAY" [lines]="4" [cols]="10" />
+      <vb-wire-sphere caption="GYRO_SIM" />
     }
     @case ('sleep') {
       <vb-wire-sphere caption="MOON_00" />
     }
   }
 </footer>
+
+<div class="marks" aria-hidden="true">
+  @for (m of p().marks; track $index) {
+    <span class="mark" [class.mark--big]="m.big" [style.left.%]="m.x" [style.top.%]="m.y">{{
+      m.text
+    }}</span>
+  }
+  <span class="barcode"></span>
+</div>

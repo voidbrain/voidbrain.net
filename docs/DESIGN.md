@@ -16,24 +16,26 @@ How the site works, for someone changing it. The rules live in code; this docume
 
 voidbrain.net is **one static page** (Angular, built to plain files) that replaces the old PHP site at the same host. The page has **three states**, each a full-screen poster in the anti-design / cyberpunk style of the reference posters (see [style guide](STYLE-GUIDE.md), "Art direction"). The pairing of state and palette was left to the agent by the owner on 2026-11-24 (F-003):
 
-| State | What it shows | Ground | Self-model pose |
-|---|---|---|---|
-| **work** | the developer: about, career timeline, stack | acid green | head tilted towards a screen, glasses |
-| **play** | FPV freestyle, maker projects, sports | safety orange (the visor poster) | FPV goggles with an antenna, follows the pointer |
-| **sleep** | quiet: the Douglas Adams quote, where, links, the old site | paper white, lime accent | asleep, head tilted, sleep mask |
+| State | What it shows | Ground | Display face | Figure | Self-model pose |
+|---|---|---|---|---|---|
+| **work** | the developer: about, career timeline, stack | acid green | Anton (condensed) | right, middle | head tilted towards a screen, glasses |
+| **play** | FPV freestyle, maker projects, sports | safety orange (the visor poster) | Rubik Glitch | left, high | FPV goggles with an antenna, follows the pointer |
+| **sleep** | quiet: the Douglas Adams quote, links, the old site | paper white, green slab and marks | Major Mono Display (thin) | left, low | asleep, head tilted, sleep mask |
 
-The text comes from the 2012 site, the earlier Angular attempt and Daniele's CV; decorative fillers (logs, lorem) are generated. Contact and personal details beyond the public links stay out ([AGENTS](../AGENTS.md), "Privacy"; a spec checks it).
+The text comes from the 2012 site, the earlier Angular attempt and Daniele's CV, **made fuzzy** on the owner's request (2026-11-24): no employer or client names, no exact dates, no town ("now →", "~10 yrs", "R&D lab", "Agency", "PRJ_01"). Decorative fillers (logs, lorem) are generated. Contact and personal details beyond the public links stay out ([AGENTS](../AGENTS.md), "Privacy"; a spec checks it).
+
+Each state is a **portrait poster sheet**, in the manner of a film poster (locandina), dense and overlapping (owner, 2026-11-24): a giant word behind the figure (outlined FULL STACK, a faint FPV, a green slab with zzz), the headline over the figure or down the right edge, the text packed in a broken grid, the timeline on a black block that may cover the figure, and on top of everything a layer of small white marks and symbols (green on the white poster) with a barcode. On screens 1100 px and wider the sheet stands in the middle and the two neighbouring states peek in at the sides, as in the reference triptych; clicking one switches to it. Narrower screens show the sheet alone, stacked: figure, then text. The layouts are container queries on the sheet in [`src/styles.scss`](../src/styles.scss).
 
 How the page behaves:
 
 - One state is shown at a time. The current state is in the URL hash (`/#work`, `/#play`, `/#sleep`; no hash or an unknown one opens work), so it can be linked and the back button works.
 - Focus: the skip link focuses the poster heading without touching the hash; when the poster that holds focus is replaced, focus moves to the new heading. In-page anchors never change the state, only `#work`, `#play`, `#sleep` or no hash do.
-- Switching: the three buttons in the top bar, the ← → buttons in the bottom bar, the arrow keys anywhere (unless a focused HUD piece uses them), and a horizontal swipe on touch screens. The poster enters with a short stepped glitch, the ground colour steps to the new one, and the figure blends to its new pose. With `prefers-reduced-motion` all of this is a cut.
+- Switching: the three buttons in the top bar, the ← → buttons in the bottom bar, the side sheets on wide screens, the arrow keys anywhere (unless a focused HUD piece uses them), and a horizontal swipe on touch screens. The poster enters with a short stepped glitch, the ground colour steps to the new one, and the figure blends to its new pose. With `prefers-reduced-motion` all of this is a cut.
 - The self-model loads lazily (`@defer` on idle, or after 2.5 s at the latest), so the first paint never waits for three.js. Until then, or without WebGL, an ink silhouette stands in.
 
 ## HUD components
 
-Decided by the owner on 2026-11-24 (F-005): **the HUD pieces are animated, with no real data.** Charts, gauges, calendar strips and the terminal show generated values; nothing is fetched and no data source is connected.
+Decided by the owner on 2026-11-24 (F-005): **the HUD pieces are animated, with no real data.** Charts, the Game of Life, the terrain and the terminal show generated values; nothing is fetched and no data source is connected.
 
 - Values come from seeded generators in `src/app/core/hud.ts` (sine sums, random walks, glyph grids, a QR-shaped pattern, sphere wireframes, fake log lines), so the same seed gives the same motion and a spec can check it. One shared clock (`src/app/hud/clock.ts`, about 30 ticks a second) drives them; it stops while the tab is hidden and with reduced motion.
 - Labels never claim a real measurement: no "flights this year: 342" or "commits today". Captions are texture (`CPU_SIM`, `VTX_CH5`, `NULL_PAYLOAD`), not statistics.
@@ -41,7 +43,7 @@ Decided by the owner on 2026-11-24 (F-005): **the HUD pieces are animated, with 
 - For assistive technology each piece is one focusable group with `aria-roledescription="decorative animation"` and a label that names its keys ("CPU_SIM: animated signal chart, decorative. …"); the generated numbers are not read out. (A focusable `role="img"` with key actions was replaced after review: screen readers in browse mode swallow its keys.)
 - With `prefers-reduced-motion` each piece shows one still frame.
 
-The pieces: signal chart, wire sphere, glyph matrix, terminal log, fake QR, calendar strip (around today's real date, the only real value, and not a statistic).
+The pieces: signal chart, wire sphere, wire cube, height map (terrain flown over), Game of Life, radar, glyph matrix, terminal log, fake QR. The calendar strip of the first version was dropped on the owner's request (2026-11-24); the Game of Life took its place in the orange poster.
 
 ## Legacy paths
 

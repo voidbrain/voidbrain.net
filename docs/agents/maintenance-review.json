@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "reviewed": "2026-11-24T14:28:26.487Z",
+  "reviewed": "2026-11-24T17:21:05.059Z",
   "policy": "dabfdc5836dc54371c7b2580ddb32649ec147220eee6828cc16709d6c8363294",
   "inputs": {
-    "AGENTS.md": "17d5f1fed186ac152cd1f3762778b1ea5b28930e6a5c144d7a8e78a2852ca6c4",
+    "AGENTS.md": "6db9882faa3160f7698895125d8eb2e0d0885a4d80d7ae820e85c800b4c82b7a",
     "docs/BACKLOG-RULES.md": "bcde70273837df8dbb2835e92ba9e5a071b063200156f2e2f84219f7499c4146",
     "docs/agents/angular.md": "ce4a2b6fd81fd5eae723cf2d1eb42203e253ab5d08c13457d656814aeaf2448e",
     "docs/agents/architecture-review.md": "5d967314854912b1a5f1446aeab309763b14f9856bceb3c82df5c6c25c166526",
-    "docs/agents/areas.md": "0d3fb87101733a1b449fb00b09839bc0b762d1618ca17d2fa3f3b17c062e2dc2",
+    "docs/agents/areas.md": "cc3c3b6a8a95c7215aa798787f5b89595a967935305c23e3b600214bb3106ba0",
     "docs/agents/audit.md": "e58480c21e8afe9a825df4726fa93b8a7f841557f4267f1fc2c61ac3dac8f642",
     "docs/agents/change-impact.md": "dc1c473e274f76bd70a87ff57bbc53fc75dc75a35d121cf67baf163a2fd2e975",
     "docs/agents/coverage-guide.md": "3d539eb8beedfa101a5e47d9973cdf85dce197436fab2ab096f760e12d208106",

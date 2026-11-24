@@ -14,16 +14,41 @@
 <div class="hazard" aria-hidden="true"></div>
 
 <main class="stage" (pointerdown)="onPointerDown($event)" (pointerup)="onPointerUp($event)">
-  <div class="figure">
-    @defer (on idle; on timer(2500ms)) {
-      <vb-self-model [state]="state()" />
-    } @placeholder {
-      <div class="figure-placeholder" role="img" [attr.aria-label]="poster().figure"></div>
+  <!-- the neighbouring posters peek in on wide screens; the switcher above is the accessible way to them -->
+  <button
+    type="button"
+    class="side side--prev"
+    tabindex="-1"
+    aria-hidden="true"
+    [attr.data-tone]="neighbours()[0]"
+    (mousedown)="$event.preventDefault()"
+    (click)="go(neighbours()[0])"
+  >
+    <span class="side__word">{{ posters[neighbours()[0]].back }}</span>
+  </button>
+  <div class="sheet" [attr.data-tone]="state()">
+    <div class="figure">
+      @defer (on idle; on timer(2500ms)) {
+        <vb-self-model [state]="state()" />
+      } @placeholder {
+        <div class="figure-placeholder" role="img" [attr.aria-label]="poster().figure"></div>
+      }
+    </div>
+    @for (s of [state()]; track s) {
+      <vb-poster [state]="s" />
     }
   </div>
-  @for (s of [state()]; track s) {
-    <vb-poster [state]="s" />
-  }
+  <button
+    type="button"
+    class="side side--next"
+    tabindex="-1"
+    aria-hidden="true"
+    [attr.data-tone]="neighbours()[1]"
+    (mousedown)="$event.preventDefault()"
+    (click)="go(neighbours()[1])"
+  >
+    <span class="side__word">{{ posters[neighbours()[1]].back }}</span>
+  </button>
   <p class="visually-hidden" aria-live="polite">{{ announcement() }}</p>
 </main>
 
