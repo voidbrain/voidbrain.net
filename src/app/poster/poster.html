@@ -66,7 +66,9 @@
 
 <footer class="poster__foot">
   <p class="display display--foot" aria-hidden="true">
-    {{ p().footline }}
+    @for (word of p().footline; track $index) {
+      <span class="word">{{ word }}</span>
+    }
   </p>
   @switch (state()) {
     @case ('work') {

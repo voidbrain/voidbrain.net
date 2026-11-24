@@ -19,8 +19,8 @@ export interface Poster {
   readonly title: string;
   /** Big distorted headline at the top (decorative duplicate of the title's mood). */
   readonly headline: string;
-  /** Second headline at the bottom. */
-  readonly footline: string;
+  /** Second headline at the bottom, word by word: each word gets its own colour (owner, 2026-11-24). */
+  readonly footline: readonly string[];
   /** Japanese texture word for the state (aria-hidden; the meaning is in `title`). */
   readonly kanji: string;
   readonly kicker: string;
@@ -58,9 +58,9 @@ export const POSTERS: Record<StateId, Poster> = {
   work: {
     title: 'Work',
     headline: 'WORK',
-    footline: 'WEB · MOBILE · AI · INDUSTRIAL SOFTWARE',
+    footline: ['WEB', 'APP', 'AI', 'IOT'],
     kanji: '仕事',
-    kicker: 'full-stack developer // R&D // web, mobile, AI, industrial software',
+    kicker: 'full-stack developer // R&D // web, app, AI, IoT',
     paragraphs: [
       'I build reliable, fast software with a focus on usability and maintainability.',
       'Today: full-stack, industrial-grade systems. Smart dashboards, real-time data and interfaces that control and monitor automated production lines.',
@@ -122,7 +122,7 @@ export const POSTERS: Record<StateId, Poster> = {
   play: {
     title: 'Play',
     headline: 'FPV_FREESTYLE',
-    footline: 'FLY CRASH REPEAT',
+    footline: ['FLY', 'CRASH', 'REPEAT'],
     kanji: '遊び',
     kicker: 'quads // goggles on // maker mode',
     paragraphs: [
@@ -177,7 +177,7 @@ export const POSTERS: Record<StateId, Poster> = {
   sleep: {
     title: 'Sleep',
     headline: 'sleep_mode',
-    footline: 'offline',
+    footline: ['offline'],
     kanji: '睡眠',
     kicker: 'low power // do not disturb // dreaming in lorem ipsum',
     paragraphs: [
