@@ -20,6 +20,12 @@ export function hashFor(state: StateId): string {
 }
 
 /** The state `delta` steps away, wrapping around (work → play → sleep → work). */
+/** Which way a switch moves along the ring of states: 1 to the next one, -1 to the previous one, 0 for none. */
+export function directionTo(from: StateId, to: StateId): -1 | 0 | 1 {
+  if (from === to) return 0;
+  return stepState(from, 1) === to ? 1 : -1;
+}
+
 export function stepState(current: StateId, delta: number): StateId {
   const n = STATES.length;
   const i = STATES.indexOf(current);

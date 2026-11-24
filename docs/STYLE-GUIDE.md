@@ -62,7 +62,7 @@ Defined on `:root` in `src/styles.scss`. The palette is five print colours; each
 | `--accent` | black | black | black | tag chips, hover fill |
 | `--on-accent` | acid | orange | acid | text on `--accent` |
 | `--mark` | white | white | green | the decorative marks layer |
-| `--font-display` | Anton | Rubik Glitch | Major Mono Display | headlines and the giant back word |
+| `--font-display` | Black Ops One | Rubik Glitch | Major Mono Display | headlines and the giant back word |
 
 The roles come from one Sass mixin per state (`tone-work`, `tone-play`, `tone-sleep`), applied to `<html data-state>` and to every element with `data-tone` (the sheet and the side sheets). Behind the sheets the page is `--vb-black`; the sleep poster also uses `--vb-acid` as the slab behind its figure.
 
@@ -77,21 +77,22 @@ Self-hosted from `@fontsource` (SIL OFL 1.1), Latin subset only, registered in `
 
 | Token | Face | Use |
 |---|---|---|
-| `--font-display` | per state: Anton 400 (work), Rubik Glitch 400 (play), Major Mono Display 400 (sleep) | headlines, the back word and the side sheets (`.display`, `.back`); decorative, `aria-hidden`, except the sleep quote |
+| `--font-display` | per state: Black Ops One 400 (work), Rubik Glitch 400 (play), Major Mono Display 400 (sleep; its thin letters are the lowercase ones) | headlines, the back word and the side sheets (`.display`, `.back`); decorative, `aria-hidden`, except the sleep quote |
 | `--font-mono` | JetBrains Mono 400 and 700 | everything else: body, labels, HUD captions, terminal |
+| — | Audiowide 400 | the play poster's foot line only, extruded and glitching |
 
-Sizes: `--text-xs` 0.6875rem (labels, captions), `--text-s` 0.8125rem (body; 0.75rem on wide sheets), `--text-m` 1rem (state title), `--text-l` 1.375rem. Display sizes are in `cqw` (per cent of the sheet width) and set per state in the layout, from 9cqw (foot lines) to 46cqw (the back word). Labels and titles are uppercase with 0.08–0.12em tracking, from CSS. The Japanese state word (仕事, 遊び, 睡眠) is vertical texture, `lang="ja"` and `aria-hidden`.
+Sizes: `--text-xs` 0.6875rem (labels, captions), `--text-s` 0.8125rem (body; 0.75rem on wide sheets), `--text-m` 1rem (state title), `--text-l` 1.375rem. On sheets 440 px and wider the text and space tokens are redefined on `.poster` in `cqw` (per cent of the sheet width: `--text-s` 1.55cqw, `--space-4` 2.05cqw…), so the whole poster scales with the sheet. Display sizes are in `cqw` too and set per state in the layout, from 9cqw (foot lines) to 46cqw (the back word). Labels and titles are uppercase with 0.08–0.12em tracking, from CSS. The Japanese state word (仕事, 遊び, 睡眠) is vertical texture, `lang="ja"` and `aria-hidden`.
 
 ### Spacing and layout
 
 Spacing: `--space-1` 4px, `--space-2` 8px, `--space-3` 12px, `--space-4` 16px, `--space-5` 24px, `--space-6` 40px; `--gutter` `clamp(12px, 2.4vw, 28px)`; `--line` 2px (every rule and frame); `--bar` 52px (top and bottom bars); `--figure-h` `min(40dvh, 340px)` (the figure on narrow sheets).
 
-Layout: top bar, hazard stripe, the stage, hazard stripe, bottom bar. The stage holds the portrait sheet (from 1100 px: `min(860px, max(620px, 84dvh))` wide, the neighbouring states at its sides). On a sheet 600 px or wider, a grid per state (six columns for work, five plus the vertical headline for play and sleep) places the text and HUD around a smaller figure in a different place for each state; items overlap the figure on purpose, on solid fills (black timeline block, HUD frames on the ground colour, headlines with a ground-coloured outline). Narrower sheets stack: figure, headline, text, timeline, HUD, foot. No horizontal scroll from 360 px up (checked at 390 px).
+Layout: top bar, hazard stripe, the stage, hazard stripe, bottom bar. The stage holds the portrait sheet; from 1100 px wide and 600 px high the page is exactly one screen (no page scrollbar) and the sheet is 0.8 times the stage height wide, 440–900 px, the neighbouring states at its sides. On a sheet 440 px or wider, a grid per state (six columns for work, five plus the vertical headline for play and sleep) places the text and HUD around a smaller figure in a different place for each state; items overlap the figure on purpose, on solid fills (black timeline block, HUD frames on the ground colour, headlines with a ground-coloured outline). Narrower sheets stack: figure, headline, text, timeline, HUD, foot. No horizontal scroll from 360 px up (checked at 390 px).
 
 ### States and motion
 
 - Hover, active, selected, disabled and focus each have one treatment. Focus is always visible on every ground colour.
-- Switching state: each poster layer enters with a stepped glitch (`poster-in`, `--switch-time` 420ms, `steps()`), the bars step to the new colour, the figure blends its pose.
+- Switching state: the sheet slides in from the side it comes from (420 ms, ease-out, Web Animations in `app.ts`), the bars step to the new colour, the figure blends its pose. Glitches are kept for texture: the play foot line, and the manga figure test.
 - Respect `prefers-reduced-motion`: the state switch becomes a cut, the model stops idling, the HUD shows still frames, the terminal cursor stops blinking.
 
 ## Components
@@ -100,7 +101,7 @@ Layout: top bar, hazard stripe, the stage, hazard stripe, bottom bar. The stage 
 |---|---|---|
 | Shell | `src/app/app.ts` | Bars, switcher (`.switch`, `aria-pressed`), stage, live announcement of the state. |
 | Poster | `src/app/poster/` | One state's headlines, back word (`.back`), vertical line (`.vert`), text, tags (`.tags`), timeline (`.entries`), links (`.links`), HUD pieces and the marks layer (`.marks`, `.barcode`). |
-| Side sheets | `src/app/app.html` (`.side`) | The neighbouring states at the sides from 1100 px: their ground and back word. Click switches; out of the tab order and hidden from assistive technology, since the switcher does the same. |
+| Side sheets | `src/app/app.html` (`.side`) | The neighbouring states at the sides from 1100 px: their ground, a big arrow and their name in their own face. Click switches; out of the tab order and hidden from assistive technology, since the switcher does the same. |
 | Self-model | `src/app/figure/self-model.ts` | three.js figure (F-004), lazy. Colours from `--ink`/`--ground`. |
 | Signal chart | `src/app/hud/signal-chart.ts` | Animated line. Hover or Space freezes, drag or ← → scrubs. |
 | Wire sphere | `src/app/hud/wire-sphere.ts` | Turning wireframe globe. Drag or arrow keys turn it. |

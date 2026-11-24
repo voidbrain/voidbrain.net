@@ -10,9 +10,11 @@ import {
   signal,
 } from '@angular/core';
 import {
+  BackSide,
   BoxGeometry,
   BufferGeometry,
   CapsuleGeometry,
+  Color,
   CylinderGeometry,
   EdgesGeometry,
   Group,
@@ -25,7 +27,9 @@ import {
   Object3D,
   PerspectiveCamera,
   Scene,
+  ShaderMaterial,
   SphereGeometry,
+  Vector3,
   TorusGeometry,
   WebGLRenderer,
 } from 'three';
@@ -40,6 +44,7 @@ import { StateId } from '../core/states';
   selector: 'vb-self-model',
   host: {
     class: 'self-model',
+    '[class.self-model--manga]': 'manga',
     role: 'img',
     '[attr.aria-label]': 'label()',
   },
@@ -68,6 +73,9 @@ import { StateId } from '../core/states';
 })
 export class SelfModel {
   readonly state = input.required<StateId>();
+  /** Style test (owner, 2026-11-24): `?figure=manga` draws the figure as a screentoned, hatched, outlined manga
+   *  ink drawing that glitches now and then. Off by default; the flat figure stays the shipped one. */
+  protected readonly manga = /[?&]figure=manga\b/.test(inject(DOCUMENT).location?.search ?? '');
   protected readonly failed = signal(false);
   protected readonly label = computed(() => POSTERS[this.state()].figure);
 
@@ -104,13 +112,23 @@ export class SelfModel {
     camera.position.set(0, 0.35, 6.2);
     camera.lookAt(0, 0.2, 0);
 
-    const ink = new MeshBasicMaterial();
+    const manga = this.manga;
+    const toned = manga ? mangaMaterial() : null;
+    const ink: MeshBasicMaterial | ShaderMaterial = toned ?? new MeshBasicMaterial();
     const ground = new MeshBasicMaterial();
     const lineMat = new LineBasicMaterial();
-    const owned: (BufferGeometry | Material)[] = [ink, ground, lineMat];
+    const hull = new MeshBasicMaterial({ side: BackSide });
+    const owned: (BufferGeometry | Material)[] = [ink, ground, lineMat, hull];
     const solid = (geo: BufferGeometry, mat: Material = ink, edges = true): Object3D => {
       owned.push(geo);
       const mesh = new Mesh(geo, mat);
+      if (manga) {
+        // manga: a thick ink outline (the back faces, slightly bigger) instead of the facet lines
+        const outline = new Mesh(geo, hull);
+        outline.scale.setScalar(1.045);
+        mesh.add(outline);
+        return mesh;
+      }
       if (edges) {
         const e = new EdgesGeometry(geo, 18);
         owned.push(e);
@@ -188,7 +206,11 @@ export class SelfModel {
       const css = win.getComputedStyle(this.host);
       const inkColour = css.getPropertyValue('--ink').trim() || '#0a0a0a';
       const groundColour = css.getPropertyValue('--ground').trim() || '#a6ff00';
-      ink.color.set(inkColour);
+      if (ink instanceof ShaderMaterial) {
+        ink.uniforms['uInk'].value.set(inkColour);
+        ink.uniforms['uGround'].value.set(groundColour);
+      } else ink.color.set(inkColour);
+      hull.color.set(inkColour);
       ground.color.set(groundColour);
       lineMat.color.set(groundColour);
     };
@@ -289,4 +311,44 @@ export class SelfModel {
       renderer.domElement.remove();
     };
   }
+}
+
+/** Manga ink shading: lit faces stay paper, mid tones get a halftone screen, shadows get hatching, the darkest
+ *  parts solid ink. Screen-space patterns, so the dots stay the same size as the figure moves. */
+function mangaMaterial(): ShaderMaterial {
+  return new ShaderMaterial({
+    uniforms: {
+      uInk: { value: new Color('#0a0a0a') },
+      uGround: { value: new Color('#ff5a1f') },
+      uLight: { value: new Vector3(-0.55, 0.6, 0.75).normalize() },
+      uDot: { value: 5.0 },
+    },
+    vertexShader: `
+      varying vec3 vNormal;
+      void main() {
+        vNormal = normalize(normalMatrix * normal);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform vec3 uInk;
+      uniform vec3 uGround;
+      uniform vec3 uLight;
+      uniform float uDot;
+      varying vec3 vNormal;
+      void main() {
+        float light = clamp(dot(normalize(vNormal), uLight) * 0.5 + 0.5, 0.0, 1.0);
+        // halftone: a 45° grid of dots that grow as the light falls
+        vec2 p = mat2(0.7071, -0.7071, 0.7071, 0.7071) * gl_FragCoord.xy / uDot;
+        float dotR = smoothstep(0.85, 0.25, light) * 0.62;
+        bool dots = length(fract(p) - 0.5) < dotR;
+        // hatching in the shadows, cross-hatching in the deeper ones
+        float h1 = step(fract((gl_FragCoord.x + gl_FragCoord.y) / 5.0), 0.38);
+        float h2 = step(fract((gl_FragCoord.x - gl_FragCoord.y) / 5.0), 0.38);
+        bool hatch = (light < 0.42 && h1 > 0.5) || (light < 0.3 && h2 > 0.5);
+        bool solidInk = light < 0.18;
+        gl_FragColor = vec4((dots || hatch || solidInk) ? uInk : uGround, 1.0);
+      }
+    `,
+  });
 }

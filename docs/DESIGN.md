@@ -18,19 +18,20 @@ voidbrain.net is **one static page** (Angular, built to plain files) that replac
 
 | State | What it shows | Ground | Display face | Figure | Self-model pose |
 |---|---|---|---|---|---|
-| **work** | the developer: about, career timeline, stack | acid green | Anton (condensed) | right, middle | head tilted towards a screen, glasses |
+| **work** | the developer: about, career timeline, stack | acid green | Black Ops One (stencil) | right, middle | head tilted towards a screen, glasses |
 | **play** | FPV freestyle, maker projects, sports | safety orange (the visor poster) | Rubik Glitch | left, high | FPV goggles with an antenna, follows the pointer |
 | **sleep** | quiet: the Douglas Adams quote, links, the old site | paper white, green slab and marks | Major Mono Display (thin) | left, low | asleep, head tilted, sleep mask |
 
 The text comes from the 2012 site, the earlier Angular attempt and Daniele's CV, **made fuzzy** on the owner's request (2026-11-24): no employer or client names, no exact dates, no town ("now →", "~10 yrs", "R&D lab", "Agency", "PRJ_01"). Decorative fillers (logs, lorem) are generated. Contact and personal details beyond the public links stay out ([AGENTS](../AGENTS.md), "Privacy"; a spec checks it).
 
-Each state is a **portrait poster sheet**, in the manner of a film poster (locandina), dense and overlapping (owner, 2026-11-24): a giant word behind the figure (outlined FULL STACK, a faint FPV, a green slab with zzz), the headline over the figure or down the right edge, the text packed in a broken grid, the timeline on a black block that may cover the figure, and on top of everything a layer of small white marks and symbols (green on the white poster) with a barcode. On screens 1100 px and wider the sheet stands in the middle and the two neighbouring states peek in at the sides, as in the reference triptych; clicking one switches to it. Narrower screens show the sheet alone, stacked: figure, then text. The layouts are container queries on the sheet in [`src/styles.scss`](../src/styles.scss).
+Each state is a **portrait poster sheet**, in the manner of a film poster (locandina), dense and overlapping (owner, 2026-11-24): a giant word behind the figure (outlined FULL STACK, a faint FPV, a green slab with zzz), the headline over the figure or down the right edge, the text packed in a broken grid, the timeline on a black block that may cover the figure, and on top of everything a layer of small white marks and symbols (green on the white poster) with a barcode. On screens 1100 px and wider the whole page is one screen with no page scrollbar: the sheet takes the height left by the bars, its width is 0.8 of that height, and every size inside it follows its width (`cqw`), so the poster scales as one picture. The two neighbouring states stand at the sides, as in the reference triptych, each with a big arrow and its name (◀ WORK, PLAY ▶); clicking one switches to it. The play poster's foot line, FUTURE IS NOW, is extruded 80s type (Audiowide) that glitches every few seconds. Narrower screens show the sheet alone, stacked: figure, then text. The layouts are container queries on the sheet in [`src/styles.scss`](../src/styles.scss).
 
 How the page behaves:
 
 - One state is shown at a time. The current state is in the URL hash (`/#work`, `/#play`, `/#sleep`; no hash or an unknown one opens work), so it can be linked and the back button works.
 - Focus: the skip link focuses the poster heading without touching the hash; when the poster that holds focus is replaced, focus moves to the new heading. In-page anchors never change the state, only `#work`, `#play`, `#sleep` or no hash do.
-- Switching: the three buttons in the top bar, the ← → buttons in the bottom bar, the side sheets on wide screens, the arrow keys anywhere (unless a focused HUD piece uses them), and a horizontal swipe on touch screens. The poster enters with a short stepped glitch, the ground colour steps to the new one, and the figure blends to its new pose. With `prefers-reduced-motion` all of this is a cut.
+- Switching slides the sheet in from the side it comes from (from the right going forward, from the left going back).
+- Switching: the three buttons in the top bar, the ← → buttons in the bottom bar, the side sheets on wide screens, the arrow keys anywhere (unless a focused HUD piece uses them), and a horizontal swipe on touch screens. The figure blends to its new pose. With `prefers-reduced-motion` all of this is a cut.
 - The self-model loads lazily (`@defer` on idle, or after 2.5 s at the latest), so the first paint never waits for three.js. Until then, or without WebGL, an ink silhouette stands in.
 
 ## HUD components
@@ -70,7 +71,7 @@ Constraints this places on the build (also in [AGENTS.md](../AGENTS.md), "Known 
 
 ## Self-model asset
 
-The figure is a procedural placeholder built in code (F-004): a faceted head, neck and shoulders, and one prop per state. The real 3D model of Daniele is the owner's to make. The steps:
+The figure is a procedural placeholder built in code (F-004): a faceted head, neck and shoulders, and one prop per state. A style test, off by default, draws it as a manga ink drawing (halftone screentone, hatching in the shadows, a thick outline, a glitch every few seconds): open the page with `?figure=manga`, for example `/?figure=manga#play`. The real 3D model of Daniele is the owner's to make. The steps:
 
 1. **Capture.** Make a head-and-shoulders scan, for example with a phone photogrammetry or LiDAR app (Polycam, Scaniverse, RealityScan), about 60–100 photos all around in soft, even light, a neutral expression. Or commission or sculpt a stylised model from photos.
 2. **Clean up** in Blender: remove the background, close holes, reduce to about 50–80 k triangles, one material. Add the props as separate objects: glasses (work), FPV goggles (play), a sleep mask (sleep).
