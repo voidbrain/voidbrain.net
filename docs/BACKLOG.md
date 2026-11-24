@@ -14,7 +14,7 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 |:---:|---|---|---|
 | 🟡 | 🔶 P2 | Implemented | 🟢 Small |
 
-🧑 **→ Human action required: Procedure**<br />Review the `harness/agent-harness` branch and its [baseline audit](audits/2026-11-24-harness-baseline.md), then commit and merge it.
+🧑 **→ Human action required: Procedure**<br />Review the `harness/agent-harness` branch and its [baseline audit](audits/2026-11-24-harness-baseline.md), then merge it into `main`.
 
 | | |
 |---|---|
@@ -25,13 +25,13 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 <details>
 <summary>Next action, estimates and PR history</summary>
 
-**Next action / closure evidence:** applied on 2026-11-24 to a fresh Angular 22.3 scaffold from template v10.9.0 (`75d59b9`); local checks recorded in the baseline audit. After the first commit: write `docs/audits/2026-11-24-harness-baseline.audit.json` with that commit's SHA as baseline and set the header's `main` SHA. Verified when the owner has merged it and the first CI run on GitHub (F-007) is green.
+**Next action / closure evidence:** applied on 2026-11-24 to a fresh Angular 22.3 scaffold from template v10.9.0 (`75d59b9`); local checks recorded in the baseline audit. Committed on `harness/agent-harness` as `ea46ffa` on top of the empty `main` root `0aa5941`; the audit manifest names `ea46ffa` as its baseline. Copied files match v10.9.0 (`check-harness`). Before the merge, the adapted files get an independent fresh-context review (`design-reviewer`), as `check:freshness` asks for a branch that changes harness files; impact row `style-tokens` is satisfied (no tokens yet, the style guide says so) and the legacy-folder coupling is owned by F-002. Verified when the owner has merged it and the first CI run on GitHub (F-007) is green.
 
-**Estimates:** Small remaining effort: owner review, then one CI run. Estimated 2026-11-24; not acceptance evidence.
+**Estimates:** Small remaining effort: owner review and merge, then one CI run. Estimated 2026-11-24; not acceptance evidence.
 
 | Field | Value |
 |---|---|
-| PR / evidence | Branch `harness/agent-harness` (not committed yet); [baseline audit](audits/2026-11-24-harness-baseline.md) |
+| PR / evidence | Branch `harness/agent-harness` (`ea46ffa`, manifest commit after it); [baseline audit](audits/2026-11-24-harness-baseline.md) |
 | Opened | 2026-11-24 |
 | Verification | Unit + lint + build · 2026-11-24 · local run passed (audit); CI · Pending (F-007) |
 | Reviewed | 2026-11-24 |
