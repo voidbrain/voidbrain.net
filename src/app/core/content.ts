@@ -131,7 +131,7 @@ export const POSTERS: Record<StateId, Poster> = {
     paragraphs: [
       'Out of office I fly FPV freestyle: goggles on, the world seen from a drone a few metres above the grass.',
       'I build things with Raspberry Pi and Arduino, print parts in 3D, and play with machine learning, AR, mesh networks and edge computing.',
-      'Clear sky: a camera pointed at it, waiting for the stars.',
+      'Clear sky: a camera pointed at it, staring at the stars.',
     ],
     tags: [
       'FPV freestyle',
