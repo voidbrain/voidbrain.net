@@ -1,6 +1,6 @@
 # voidbrain.net
 
-Daniele's personal site, rebuilt as one static page. It has three states, **work**, **play** and **sleep**, each a full-screen cyberpunk poster with a 3D model of Daniele at its centre and animated, interactive HUD pieces around it: charts, calendar strips, a terminal (decorative, no real data). It replaces the 2012 PHP site at the same address and keeps every old folder and URL working. How it works: [docs/DESIGN.md](docs/DESIGN.md).
+Daniele's personal site, rebuilt as one static page. It has three states, **work**, **play** and **sleep**, each a full-screen cyberpunk poster with a 3D model of Daniele at its centre and animated, interactive HUD pieces around it: charts, a Game of Life, a height map, a wire cube, a terminal (decorative, no real data). It replaces the 2012 PHP site at the same address and keeps every old folder and URL working. How it works: [docs/DESIGN.md](docs/DESIGN.md).
 
 Status (2026-11-24): the three posters, the animated HUD pieces, a placeholder 3D figure and the legacy path rules are built and tested locally. Waiting on the owner: the real 3D model (F-004) and how the site is deployed (F-007); see the [backlog](docs/BACKLOG.md). Code: <https://github.com/voidbrain/voidbrain.net>.
 

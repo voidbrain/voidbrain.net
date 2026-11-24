@@ -16,7 +16,7 @@ The project is **voidbrain.net**, Daniele's personal site: one static page with 
 ### Adding things
 
 - **A state**: add it to `STATES` in `src/app/core/states.ts`, its text in `content.ts`, its pose in `pose.ts` (specs cover all three), its `@case` blocks in `poster/poster.html`, its palette roles in `src/styles.scss` and [STYLE-GUIDE](docs/STYLE-GUIDE.md), and its row in [DESIGN](docs/DESIGN.md).
-- **A HUD component** (chart, calendar strip, QR, terminal): its value generator in `src/app/core/` with a spec (animated, no real data: [design](docs/DESIGN.md#hud-components)); the component with keyboard and screen-reader support; an entry under Components in the style guide.
+- **A HUD component** (chart, Game of Life, QR, terminal): its value generator in `src/app/core/` with a spec (animated, no real data: [design](docs/DESIGN.md#hud-components)); the component with keyboard and screen-reader support; an entry under Components in the style guide.
 - **A legacy path**: the rule in `public/.htaccess` (or `public/old/.htaccess`), a case in `tools/test-legacy-paths.mjs`, the text in DESIGN "Legacy paths"; run `npm run build && npm run test:legacy`.
 - **A 3D model or font**: under `public/models/` or `public/assets/fonts/`, within the size and licence rules of the style guide, "Assets".
 

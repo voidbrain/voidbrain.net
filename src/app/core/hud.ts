@@ -171,3 +171,109 @@ export function logLine(seed: number, index: number): string {
 function round(n: number): number {
   return Math.round(n * 10) / 10;
 }
+
+export interface Blip {
+  /** Bearing in radians, [0, 2π). */
+  readonly angle: number;
+  /** Distance from the centre, (0, 1]. */
+  readonly dist: number;
+}
+
+/** `count` seeded radar contacts. */
+export function radarBlips(seed: number, count: number): Blip[] {
+  const rnd = seededRandom(seed);
+  return Array.from({ length: count }, () => ({
+    angle: rnd() * Math.PI * 2,
+    dist: 0.15 + rnd() * 0.85,
+  }));
+}
+
+/** How lit a contact at `angle` is when the sweep points at `sweep` (radians): 1 just swept, fading to 0 after one
+ *  turn. A contact the sweep has not reached yet is dark. */
+export function sweepFade(angle: number, sweep: number): number {
+  const turn = Math.PI * 2;
+  const behind = (((sweep - angle) % turn) + turn) % turn;
+  return 1 - behind / turn;
+}
+
+/** A seeded Game of Life board: `rows` × `cols` cells, about a third alive. */
+export function lifeSeed(seed: number, rows: number, cols: number): boolean[][] {
+  const rnd = seededRandom(seed);
+  return Array.from({ length: rows }, () => Array.from({ length: cols }, () => rnd() < 0.33));
+}
+
+/** One Game of Life generation (B3/S23) on a board whose edges wrap around. */
+export function lifeStep(board: readonly (readonly boolean[])[]): boolean[][] {
+  const rows = board.length;
+  return board.map((row, r) =>
+    row.map((alive, c) => {
+      const cols = row.length;
+      let n = 0;
+      for (let dr = -1; dr <= 1; dr++)
+        for (let dc = -1; dc <= 1; dc++)
+          if ((dr || dc) && board[(r + dr + rows) % rows][(c + dc + cols) % cols]) n++;
+      return n === 3 || (alive && n === 2);
+    }),
+  );
+}
+
+/** Ridge lines of a generated terrain seen from above and behind, flying forward by `travel` (rows) and drifting
+ *  sideways by `drift`, in a `width` × `height` box: `rows` polylines from the far ridge to the near one. Peaks
+ *  grow with `amp`. */
+export function heightLines(
+  seed: number,
+  travel: number,
+  drift: number,
+  amp: number,
+  rows: number,
+  cols: number,
+  width: number,
+  height: number,
+): string[] {
+  const rnd = seededRandom(seed);
+  const waves = [0, 1, 2, 3].map((k) => ({
+    fx: (0.6 + rnd() * 1.4) * (k + 1),
+    fz: (0.4 + rnd() * 1.2) * (k + 1),
+    phase: rnd() * Math.PI * 2,
+    a: 1 / (k + 1),
+  }));
+  const total = waves.reduce((s, w) => s + w.a, 0);
+  const ground = (x: number, z: number) =>
+    (waves.reduce((s, w) => s + w.a * Math.sin(x * w.fx + z * w.fz * 0.35 + w.phase), 0) / total +
+      1) /
+    2;
+  const step = height / (rows + 2);
+  const frac = travel - Math.floor(travel);
+  return Array.from({ length: rows }, (_, i) => {
+    const near = (i + frac) / rows; // 0 far .. 1 near
+    const spread = 0.45 + 0.55 * near;
+    const z = Math.floor(travel) + rows - i;
+    const base = step * (2 + i + frac);
+    return Array.from({ length: cols }, (_, j) => {
+      const u = cols > 1 ? j / (cols - 1) : 0;
+      const h = ground(u * 6 + drift, z);
+      const x = width / 2 + (u - 0.5) * width * spread;
+      const y = base - h * h * amp * step * (1 + 2 * near);
+      return `${round(x)},${round(y)}`;
+    }).join(' ');
+  });
+}
+
+/** The 12 edges of a cube of half-size `scale` (in [0, 1]) rotated by `yaw`/`pitch`, with a light perspective,
+ *  as [x1, y1, x2, y2] in a box of `size`. */
+export function cubeEdges(yaw: number, pitch: number, scale: number, size: number): number[][] {
+  const r = size / 2;
+  const corners = [0, 1, 2, 3, 4, 5, 6, 7].map((k) => {
+    let x = k & 1 ? scale : -scale;
+    let y = k & 2 ? scale : -scale;
+    let z = k & 4 ? scale : -scale;
+    [x, z] = [x * Math.cos(yaw) + z * Math.sin(yaw), -x * Math.sin(yaw) + z * Math.cos(yaw)];
+    [y, z] = [y * Math.cos(pitch) - z * Math.sin(pitch), y * Math.sin(pitch) + z * Math.cos(pitch)];
+    const p = 1 / (1 + z * 0.2) / 2; // keeps every rotation inside the box
+    return [round(r + x * r * p), round(r - y * r * p)];
+  });
+  const edges: number[][] = [];
+  for (let a = 0; a < 8; a++)
+    for (const bit of [1, 2, 4]) if (!(a & bit)) edges.push([...corners[a], ...corners[a | bit]]);
+  return edges;
+}

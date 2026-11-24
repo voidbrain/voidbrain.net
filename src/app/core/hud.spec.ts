@@ -1,11 +1,17 @@
 import {
+  cubeEdges,
+  heightLines,
+  lifeSeed,
+  lifeStep,
   fakeQr,
   glyphGrid,
   logLine,
+  radarBlips,
   randomWalk,
   seededRandom,
   signalSeries,
   sphereLines,
+  sweepFade,
   toPolyline,
 } from './hud';
 
@@ -79,5 +85,62 @@ describe('hud generators', () => {
     expect(logLine(5, 3)).toBe(logLine(5, 3));
     expect(logLine(5, 3)).toMatch(/^\[\d{2}:\d{2}\] \S+ :: /);
     expect(logLine(5, 3)).not.toContain('{');
+  });
+
+  it('radarBlips repeats for a seed and keeps every contact inside the scope', () => {
+    const blips = radarBlips(5, 12);
+    expect(blips).toHaveLength(12);
+    expect(radarBlips(5, 12)).toEqual(blips);
+    expect(radarBlips(6, 12)).not.toEqual(blips);
+    expect(
+      blips.every((b) => b.dist > 0 && b.dist <= 1 && b.angle >= 0 && b.angle < Math.PI * 2),
+    ).toBe(true);
+  });
+
+  it('sweepFade lights a contact as the sweep passes and fades it over one turn', () => {
+    expect(sweepFade(1, 1)).toBeCloseTo(1);
+    expect(sweepFade(1, 1 + Math.PI)).toBeCloseTo(0.5);
+    expect(sweepFade(1, 1 - 0.01)).toBeLessThan(0.01); // just ahead of the sweep: dark
+    expect(sweepFade(1, 1 + Math.PI * 4)).toBeCloseTo(1); // whole turns change nothing
+  });
+
+  it('lifeStep follows B3/S23 and wraps around the edges', () => {
+    const blinker = lifeSeed(1, 5, 5).map((row) => row.map(() => false));
+    blinker[2][1] = blinker[2][2] = blinker[2][3] = true;
+    const next = lifeStep(blinker);
+    expect([next[1][2], next[2][2], next[3][2]]).toEqual([true, true, true]);
+    expect(next[2][1] || next[2][3]).toBe(false);
+    expect(lifeStep(next)).toEqual(blinker);
+    const edge = blinker.map((row) => row.map(() => false));
+    edge[0][0] = edge[0][4] = edge[4][0] = true; // three neighbours of [4][4] across the wrap
+    expect(lifeStep(edge)[4][4]).toBe(true);
+  });
+
+  it('lifeSeed repeats for a seed and has the asked size', () => {
+    const b = lifeSeed(3, 8, 12);
+    expect(b).toHaveLength(8);
+    expect(b[0]).toHaveLength(12);
+    expect(lifeSeed(3, 8, 12)).toEqual(b);
+  });
+
+  it('heightLines gives one ridge per row inside the box and moves as it flies', () => {
+    const a = heightLines(4, 0.3, 0, 1, 10, 24, 200, 100);
+    expect(a).toHaveLength(10);
+    const pts = a.flatMap((l) => l.split(' ').map((p) => p.split(',').map(Number)));
+    expect(pts.every(([x, y]) => x >= 0 && x <= 200 && y >= -20 && y <= 100)).toBe(true);
+    expect(heightLines(4, 0.6, 0, 1, 10, 24, 200, 100)).not.toEqual(a);
+    expect(heightLines(4, 0.3, 0, 1, 10, 24, 200, 100)).toEqual(a);
+  });
+
+  it('cubeEdges draws twelve edges that stay in the box at any rotation', () => {
+    for (const [yaw, pitch] of [
+      [0, 0],
+      [0.7, 0.4],
+      [2.1, -1.2],
+    ]) {
+      const edges = cubeEdges(yaw, pitch, 1, 100);
+      expect(edges).toHaveLength(12);
+      expect(edges.flat().every((v) => v >= 0 && v <= 100)).toBe(true);
+    }
   });
 });

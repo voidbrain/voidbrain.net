@@ -10,10 +10,11 @@ voidbrain.net is Daniele's personal site: a developer who flies FPV. The look is
 
 What makes the posters (from the owner's reference board, three cyberpunk posters):
 
-- **One flat, loud ground per poster**: safety orange, acid green, or paper white. Black does all the drawing on top of it; one accent at most (lime on the white poster).
-- **A central figure**, here the 3D self-model, cropped at the shoulders, with a prop that tells the state (FPV goggles in play).
-- **Distorted display type**: a wide, glitchy, stretched or blackletter-tech headline at the top, a second one at the bottom, often running past the edge.
-- **HUD furniture around the figure**: date strips, numbered calendar boxes, wireframe spheres and grids, a QR code, arrows, hazard stripes, barcodes, small monospaced captions, a terminal snippet, a pixel smiley. Each piece here is an animated, interactive component (F-005), not decoration baked into an image. Its values are generated, never real data ([design](DESIGN.md#hud-components)).
+- **One flat, loud ground per poster**: safety orange, acid green, or paper white. Black does all the drawing on top of it; one accent at most (green on the white poster).
+- **A top layer of small white text and symbols** (green on the white poster) over everything, the figure included: crosshairs, arrows, stars, short codes, a barcode.
+- **A figure placed differently on each poster**, not too big, here the 3D self-model cropped at the shoulders, with a prop that tells the state (FPV goggles in play).
+- **A different display face per poster**, dense, overlapping and often vertical: a headline over the figure or down the edge, a second one at the bottom, a giant word behind the figure.
+- **HUD furniture around the figure**: height maps, a wire cube, a Game of Life, wireframe spheres and grids, a QR code, arrows, hazard stripes, barcodes, small monospaced captions, a terminal snippet, a pixel smiley. Each piece here is an animated, interactive component (F-005), not decoration baked into an image. Its values are generated, never real data ([design](DESIGN.md#hud-components)).
 - **Japanese / tech micro-copy** in small sizes as texture, never as the only carrier of meaning.
 
 Do:
@@ -52,16 +53,20 @@ Defined on `:root` in `src/styles.scss`. The palette is five print colours; each
 | `--vb-acid` | `#a6ff00` | work ground |
 | `--vb-orange` | `#ff5a1f` | play ground |
 | `--vb-paper` | `#f2f0ea` | sleep ground |
-| `--vb-lime` | `#c6ff00` | sleep accent (fills only) |
+| `--vb-green` | `#2fbf00` | sleep marks layer (decorative symbols only) |
 
 | Role | work | play | sleep | Use |
 |---|---|---|---|---|
-| `--ground` | acid | orange | paper | page background, canvas lines, text on ink |
+| `--ground` | acid | orange | paper | poster and bar background, canvas lines, text on ink |
 | `--ink` | black | black | black | text, borders, the figure, pressed buttons |
-| `--accent` | black | black | lime | tag chips, hover fill |
-| `--on-accent` | acid | orange | black | text on `--accent` |
+| `--accent` | black | black | black | tag chips, hover fill |
+| `--on-accent` | acid | orange | acid | text on `--accent` |
+| `--mark` | white | white | green | the decorative marks layer |
+| `--font-display` | Anton | Rubik Glitch | Major Mono Display | headlines and the giant back word |
 
-Contrast (WCAG 2): black on acid 16.0:1, on orange 6.3:1, on paper 17.4:1, on lime 16.7:1; the reverse pairs are the same. Lime on paper is 1.04:1: lime is a fill behind black text, never a text or line colour on paper.
+The roles come from one Sass mixin per state (`tone-work`, `tone-play`, `tone-sleep`), applied to `<html data-state>` and to every element with `data-tone` (the sheet and the side sheets). Behind the sheets the page is `--vb-black`; the sleep poster also uses `--vb-acid` as the slab behind its figure.
+
+Contrast (WCAG 2): black on acid 16.0:1, on orange 6.3:1, on paper 17.4:1; the reverse pairs are the same. The marks layer is decorative (`aria-hidden`) and below text contrast on purpose (white on acid, green on paper): it never carries text a visitor needs, and on narrow screens it covers only the figure.
 
 - Use tokens (`var(--…)`), never a new literal colour. A new colour is a new token, added here in the same change.
 - Change fill and foreground as a pair, and check contrast (WCAG AA: 4.5:1 for text, 3:1 for large text and UI parts).
@@ -72,21 +77,21 @@ Self-hosted from `@fontsource` (SIL OFL 1.1), Latin subset only, registered in `
 
 | Token | Face | Use |
 |---|---|---|
-| `--font-display` | Rubik Glitch 400 | the distorted top and bottom headlines (`.display`), stretched 108 % wide; decorative, `aria-hidden` |
+| `--font-display` | per state: Anton 400 (work), Rubik Glitch 400 (play), Major Mono Display 400 (sleep) | headlines, the back word and the side sheets (`.display`, `.back`); decorative, `aria-hidden`, except the sleep quote |
 | `--font-mono` | JetBrains Mono 400 and 700 | everything else: body, labels, HUD captions, terminal |
 
-Sizes: `--text-xs` 0.75rem (labels, captions), `--text-s` 0.875rem (body), `--text-m` 1rem, `--text-l` 1.375rem (state title), `--text-display` `clamp(2.75rem, 11vw, 9.5rem)` (headline; the bottom one is 62 % of it). Labels and titles are uppercase with 0.08–0.12em tracking, from CSS. The Japanese state word (仕事, 遊び, 睡眠) is vertical texture, `lang="ja"` and `aria-hidden`.
+Sizes: `--text-xs` 0.6875rem (labels, captions), `--text-s` 0.8125rem (body; 0.75rem on wide sheets), `--text-m` 1rem (state title), `--text-l` 1.375rem. Display sizes are in `cqw` (per cent of the sheet width) and set per state in the layout, from 9cqw (foot lines) to 46cqw (the back word). Labels and titles are uppercase with 0.08–0.12em tracking, from CSS. The Japanese state word (仕事, 遊び, 睡眠) is vertical texture, `lang="ja"` and `aria-hidden`.
 
 ### Spacing and layout
 
-Spacing: `--space-1` 4px, `--space-2` 8px, `--space-3` 12px, `--space-4` 16px, `--space-5` 24px, `--space-6` 40px; `--gutter` `clamp(16px, 3vw, 40px)`; `--line` 2px (every rule and frame); `--bar` 52px (top and bottom bars).
+Spacing: `--space-1` 4px, `--space-2` 8px, `--space-3` 12px, `--space-4` 16px, `--space-5` 24px, `--space-6` 40px; `--gutter` `clamp(12px, 2.4vw, 28px)`; `--line` 2px (every rule and frame); `--bar` 52px (top and bottom bars); `--figure-h` `min(40dvh, 340px)` (the figure on narrow sheets).
 
-Layout: top bar, hazard stripe, the stage, hazard stripe, bottom bar. On the stage the figure sits behind a three-column poster grid (head; left text, empty centre, right timeline and HUD; foot). Below 800 px wide it becomes one column with the figure on top, at most 460px high. No horizontal scroll from 360 px up (checked at 390 px).
+Layout: top bar, hazard stripe, the stage, hazard stripe, bottom bar. The stage holds the portrait sheet (from 1100 px: `min(860px, max(620px, 84dvh))` wide, the neighbouring states at its sides). On a sheet 600 px or wider, a six-column grid per state places the text and HUD around a smaller figure in a different place for each state; items overlap the figure on purpose, on solid fills (black timeline block, HUD frames on the ground colour, headlines with a ground-coloured outline). Narrower sheets stack: figure, headline, text, timeline, HUD, foot. No horizontal scroll from 360 px up (checked at 390 px).
 
 ### States and motion
 
 - Hover, active, selected, disabled and focus each have one treatment. Focus is always visible on every ground colour.
-- Switching state: the poster enters with a stepped glitch (`poster-in`, `--switch-time` 420ms, `steps()`), the ground steps to the new colour, the figure blends its pose.
+- Switching state: each poster layer enters with a stepped glitch (`poster-in`, `--switch-time` 420ms, `steps()`), the bars step to the new colour, the figure blends its pose.
 - Respect `prefers-reduced-motion`: the state switch becomes a cut, the model stops idling, the HUD shows still frames, the terminal cursor stops blinking.
 
 ## Components
@@ -94,14 +99,18 @@ Layout: top bar, hazard stripe, the stage, hazard stripe, bottom bar. On the sta
 | Component | Source | What it is, and its interactions |
 |---|---|---|
 | Shell | `src/app/app.ts` | Bars, switcher (`.switch`, `aria-pressed`), stage, live announcement of the state. |
-| Poster | `src/app/poster/` | One state's headlines, text, tags (`.tags`), timeline (`.entries`), links (`.links`) and HUD pieces. |
+| Poster | `src/app/poster/` | One state's headlines, back word (`.back`), vertical line (`.vert`), text, tags (`.tags`), timeline (`.entries`), links (`.links`), HUD pieces and the marks layer (`.marks`, `.barcode`). |
+| Side sheets | `src/app/app.html` (`.side`) | The neighbouring states at the sides from 1100 px: their ground and back word. Click switches; out of the tab order and hidden from assistive technology, since the switcher does the same. |
 | Self-model | `src/app/figure/self-model.ts` | three.js figure (F-004), lazy. Colours from `--ink`/`--ground`. |
 | Signal chart | `src/app/hud/signal-chart.ts` | Animated line. Hover or Space freezes, drag or ← → scrubs. |
 | Wire sphere | `src/app/hud/wire-sphere.ts` | Turning wireframe globe. Drag or arrow keys turn it. |
+| Wire cube | `src/app/hud/wire-cube.ts` | Two nested cubes turning against each other. Drag or arrow keys turn them, Enter or click swaps the bold one. |
+| Height map | `src/app/hud/height-map.ts` | Terrain ridge lines flowing towards the viewer. Hover or Space freezes, drag or ← → steers, ↑ ↓ change the peaks. |
+| Game of Life | `src/app/hud/game-of-life.ts` | Conway's Life on a wrapping 20 × 12 board, 6 generations a second. Hover or Space freezes, click flips a cell, Enter (or a dead board) starts a new one. |
+| Radar | `src/app/hud/radar.ts` | Turning sweep lighting generated contacts. Hover or Space freezes, ↑ ↓ change the range, Enter or click finds new contacts. |
 | Glyph matrix | `src/app/hud/glyph-matrix.ts` | Flickering glyph block. Hover or Space freezes, Enter or click reshuffles. |
 | Terminal log | `src/app/hud/terminal-log.ts` | Fake scrolling log with a blinking cursor. Hover pauses, Enter or click prints a line. |
 | Fake QR | `src/app/hud/fake-qr.ts` | QR-shaped pattern that encodes nothing. Enter or click redraws. |
-| Calendar strip | `src/app/hud/calendar-strip.ts` | Five day boxes around today, one lit. Hover or ← → moves the light. |
 
 Every HUD piece is a `.hud` frame (2px ink border, caption row) with `role="group"`, `aria-roledescription="decorative animation"`, `tabindex="0"` and a label saying "decorative" plus its keys; its own arrow keys do not switch the state. Decorative only: see [design](DESIGN.md#hud-components).
 
