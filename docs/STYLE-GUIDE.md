@@ -125,7 +125,7 @@ Every HUD piece is a `.hud` frame (2px ink border, caption row) with `role="grou
 
 - Everything in `public/` is copied to the server's docroot. Never name a file or folder there like a legacy folder (`img`, `js`, `fonts`, `style`, …): see [design](DESIGN.md), "Legacy paths"; `npm run test:legacy` fails on one. Use `public/assets/` and `public/models/`.
 - Fonts come from npm (`@fontsource`, OFL), not from `public/`; the favicon is the old site's.
-- 3D models: glTF binary (`.glb`), Draco-compressed, under 3 MB in total (F-004). The test head scan `public/models/lee-perry-smith.glb` (405 kB, CC BY 3.0, credited in `public/models/CREDITS.txt` and on the figure) is the three.js file unchanged, without Draco.
+- 3D models: glTF binary (`.glb`), Draco-compressed, under 3 MB in total (F-004). The test head scan `public/models/lee-perry-smith.glb` (405 kB, CC BY 3.0, credited in `public/models/CREDITS.txt` and by a link on the figure; Apache serves it as `model/gltf-binary`) is the three.js file unchanged, without Draco.
 - Strip location metadata from any photo before it is committed. Raw scan photos never enter the repository.
 - Fonts and images need a licence that allows web use; record the source next to the file.
 

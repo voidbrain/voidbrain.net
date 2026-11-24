@@ -1,5 +1,8 @@
 lee-perry-smith.glb
   "Infinite, 3D Head Scan" by Lee Perry-Smith, licensed under Creative Commons Attribution 3.0 Unported
   (https://creativecommons.org/licenses/by/3.0/). Based on a work at www.triplegangers.com.
-  Source: three.js examples (examples/models/gltf/LeePerrySmith/LeePerrySmith.glb, release r170), unchanged.
-  Used only by the figure style test ?figure=human.
+  Permissions beyond the scope of this license may be available at http://www.ir-ltd.net/
+  Source: three.js examples (examples/models/gltf/LeePerrySmith/LeePerrySmith.glb, release r170). The file is
+  unchanged; the page changes how it looks: rescaled, re-shaded in black and white ink with hatching, outlined,
+  with glasses, goggles or a sleep mask on it. Used only by the figure style test ?figure=human.
+  sha1: c87f56b86fbe751ce5f1ab591d21627ed07ceac0

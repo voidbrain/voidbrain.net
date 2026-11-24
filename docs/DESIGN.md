@@ -56,7 +56,7 @@ The new page is deployed into the **same Apache docroot** as the old site. Decid
 4. `/api/…` and `/old/api/…` answer `410 Gone`; a missing file with an extension gets the new [404 page](../public/404.html); dotfiles (`.git`, `.env`, …) are refused everywhere, inside legacy folders and `/old/` too (the dotfile rule runs before the pass-through).
 5. Directory listing is left as the host has it today: `Options -Indexes` can answer 500 on hosts that do not allow `Options` in `.htaccess`, so it is checked on the live host first (F-007).
 
-`npm run build && npm run test:legacy` checks all of it on a real Apache (macOS `httpd` locally, `apache2` in CI): 122 requests against the build, stub copies of every legacy folder, and a stub old site under `/old/`. The legacy folder list in the test is an outside fact (the server's listing on 2026-11-24): update it when the server changes.
+`npm run build && npm run test:legacy` checks all of it on a real Apache (macOS `httpd` locally, `apache2` in CI): 124 requests against the build, stub copies of every legacy folder, and a stub old site under `/old/`. The legacy folder list in the test is an outside fact (the server's listing on 2026-11-24): update it when the server changes.
 
 ### Deploy steps
 
@@ -71,7 +71,7 @@ Constraints this places on the build (also in [AGENTS.md](../AGENTS.md), "Known 
 
 ## Self-model asset
 
-The figure is a procedural placeholder built in code (F-004): a faceted head, neck and shoulders, and one prop per state. Two style tests, off by default (owner, 2026-11-24): `?figure=manga` draws the placeholder as a manga ink drawing (halftone screentone, hatching, a thick outline); `?figure=human` replaces the faceted head with a real human head scan, inked in monochrome (black on paper white, hard side light, rough hatching), for example `/?figure=human#play`. The scan is "Infinite, 3D Head Scan" by Lee Perry-Smith, CC BY 3.0, from the three.js examples ([`public/models/CREDITS.txt`](../public/models/CREDITS.txt)); the figure shows the credit while the test is on. The reference posters are not used as a source: they are a licensed stock image. The real 3D model of Daniele is the owner's to make. The steps:
+The figure is a procedural placeholder built in code (F-004): a faceted head, neck and shoulders, and one prop per state. Two style tests, off by default (owner, 2026-11-24): `?figure=manga` draws the placeholder as a manga ink drawing (halftone screentone, hatching, a thick outline); `?figure=human` replaces the faceted head with a real human head scan, inked in monochrome (black on paper white, hard side light, rough hatching), for example `/?figure=human#play`. The scan is "Infinite, 3D Head Scan" by Lee Perry-Smith, CC BY 3.0, from the three.js examples ([`public/models/CREDITS.txt`](../public/models/CREDITS.txt)); while the test is on, the figure carries a credit link to that file (outside the figure's image role, so screen readers read it). The reference posters are not used as a source: they are a licensed stock image. The real 3D model of Daniele is the owner's to make. The steps:
 
 1. **Capture.** Make a head-and-shoulders scan, for example with a phone photogrammetry or LiDAR app (Polycam, Scaniverse, RealityScan), about 60–100 photos all around in soft, even light, a neutral expression. Or commission or sculpt a stylised model from photos.
 2. **Clean up** in Blender: remove the background, close holes, reduce to about 50–80 k triangles, one material. Add the props as separate objects: glasses (work), FPV goggles (play), a sleep mask (sleep).

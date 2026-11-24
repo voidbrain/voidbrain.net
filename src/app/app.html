@@ -34,6 +34,11 @@
       } @placeholder {
         <div class="figure-placeholder" role="img" [attr.aria-label]="poster().figure"></div>
       }
+      @if (figureStyle === 'human') {
+        <a class="figure-credit" href="models/CREDITS.txt"
+          >Head: “Infinite, 3D Head Scan” by Lee Perry-Smith, CC BY 3.0, inked</a
+        >
+      }
     </div>
     @for (s of [state()]; track s) {
       <vb-poster [state]="s" />

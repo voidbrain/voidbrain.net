@@ -325,6 +325,17 @@ a {
   }
 }
 
+.figure-credit {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: 1px 4px;
+  background: var(--ground);
+  font-size: var(--text-xs);
+  pointer-events: auto;
+}
+
 .figure-placeholder {
   width: min(60%, 260px);
   aspect-ratio: 3 / 4;

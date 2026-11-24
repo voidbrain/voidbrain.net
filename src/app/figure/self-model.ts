@@ -35,6 +35,7 @@ import {
 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { POSTERS } from '../core/content';
+import { figureStyle } from '../core/figure-style';
 import { POSES, Pose, blendPose, easeStep, lookAt } from '../core/pose';
 import { StateId } from '../core/states';
 
@@ -57,17 +58,6 @@ import { StateId } from '../core/states';
       overflow: hidden;
     }
 
-    .credit {
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      font-size: 0.5625rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      background: var(--ground);
-      padding: 1px 4px;
-    }
-
     .fallback {
       width: min(60%, 320px);
       aspect-ratio: 3 / 4;
@@ -80,9 +70,7 @@ import { StateId } from '../core/states';
     @if (failed()) {
       <div class="fallback"></div>
     }
-    @if (style === 'human') {
-      <span class="credit">Head: Lee Perry-Smith scan, CC BY 3.0</span>
-    }
+
   `,
 })
 export class SelfModel {
@@ -220,16 +208,19 @@ export class SelfModel {
 
     // human test: the scanned head replaces the faceted skull and the dot eyes once it has loaded
     let scanned = false;
+    let alive = true; // the scan can arrive after the figure is gone
     if (human) {
       new GLTFLoader().load(
         'models/lee-perry-smith.glb',
         (gltf) => {
+          if (!alive) return;
           let source: Mesh | null = null;
           gltf.scene.traverse((o) => {
             if (!source && o instanceof Mesh) source = o;
           });
           if (!source) return;
           const geo = (source as Mesh).geometry.clone();
+          (source as Mesh).geometry.dispose();
           geo.center();
           geo.computeBoundingBox();
           const box = geo.boundingBox!;
@@ -353,6 +344,7 @@ export class SelfModel {
     frame = win.requestAnimationFrame(render);
 
     return () => {
+      alive = false;
       win.cancelAnimationFrame(frame);
       win.removeEventListener('pointermove', onPointer);
       renderer.domElement.removeEventListener('webglcontextlost', onContextLost);
@@ -367,13 +359,6 @@ export class SelfModel {
 
 /** Manga ink shading: lit faces stay paper, mid tones get a halftone screen, shadows get hatching, the darkest
  *  parts solid ink. Screen-space patterns, so the dots stay the same size as the figure moves. */
-type FigureStyle = 'flat' | 'manga' | 'human';
-
-function figureStyle(search: string): FigureStyle {
-  const m = /[?&]figure=(manga|human)\b/.exec(search);
-  return m ? (m[1] as FigureStyle) : 'flat';
-}
-
 function mangaMaterial(rough = false): ShaderMaterial {
   return new ShaderMaterial({
     uniforms: {
@@ -412,7 +397,8 @@ function mangaMaterial(rough = false): ShaderMaterial {
         bool dots = length(fract(p) - 0.5) < dotR;
         // hatching in the shadows, cross-hatching in the deeper ones
         // rough: brush-like hatching, the line width jittered in small cells
-        float n = fract(sin(dot(floor(frag / 3.0), vec2(12.9898, 78.233))) * 43758.5453);
+        // the cell index is wrapped first, so the hash stays stable on mediump-only GPUs
+        float n = fract(sin(dot(mod(floor(frag / 3.0), 256.0), vec2(12.9898, 78.233))) * 43758.5453);
         float w = 0.38 + uRough * (n - 0.5) * 0.3;
         float period = mix(5.0, 4.0, uRough);
         float h1 = step(fract((frag.x + frag.y) / period), w);
