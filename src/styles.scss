@@ -574,7 +574,7 @@ a {
   user-select: none;
   touch-action: pan-y; // pieces without a drag gesture still let the page scroll
 
-  &:is(vb-signal-chart, vb-wire-sphere, vb-wire-cube, vb-height-map) {
+  &:is(vb-signal-chart, vb-wire-sphere, vb-wire-cube, vb-topo-map, vb-attitude) {
     touch-action: none;
   }
 

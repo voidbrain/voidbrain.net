@@ -14,7 +14,7 @@ What makes the posters (from the owner's reference board, three cyberpunk poster
 - **A top layer of small white text and symbols** (green on the white poster) over everything, the figure included: crosshairs, arrows, stars, short codes, a barcode.
 - **A figure placed differently on each poster**, not too big, here the 3D self-model cropped at the shoulders, with a prop that tells the state (FPV goggles in play).
 - **A different display face per poster**, dense, overlapping and often vertical: a headline over the figure or down the edge, a second one at the bottom, a giant word behind the figure.
-- **HUD furniture around the figure**: height maps, a wire cube, a Game of Life, wireframe spheres and grids, a QR code, arrows, hazard stripes, barcodes, small monospaced captions, a terminal snippet, a pixel smiley. Each piece here is an animated, interactive component (F-005), not decoration baked into an image. Its values are generated, never real data ([design](DESIGN.md#hud-components)).
+- **HUD furniture around the figure**: topographic maps, an artificial horizon, a wire cube, a Game of Life, wireframe spheres and grids, a QR code, arrows, hazard stripes, barcodes, small monospaced captions, a terminal snippet, a pixel smiley. Each piece here is an animated, interactive component (F-005), not decoration baked into an image. Its values are generated, never real data ([design](DESIGN.md#hud-components)).
 - **Japanese / tech micro-copy** in small sizes as texture, never as the only carrier of meaning.
 
 Do:
@@ -106,7 +106,8 @@ Layout: top bar, hazard stripe, the stage, hazard stripe, bottom bar. The stage 
 | Signal chart | `src/app/hud/signal-chart.ts` | Animated line. Hover or Space freezes, drag or ← → scrubs. |
 | Wire sphere | `src/app/hud/wire-sphere.ts` | Turning wireframe globe. Drag or arrow keys turn it. |
 | Wire cube | `src/app/hud/wire-cube.ts` | Two nested cubes turning against each other. Drag or arrow keys turn them, Enter or click swaps the bold one. |
-| Height map | `src/app/hud/height-map.ts` | Terrain ridge lines flowing towards the viewer. Hover or Space freezes, drag or ← → steers, ↑ ↓ change the peaks. |
+| Topo map | `src/app/hud/topo-map.ts` | Contour lines of a terrain seen from above (marching squares), every third one heavier; the ground breathes so the lines drift and swell. Hover or Space freezes, drag or ← → slides the map, ↑ ↓ change the number of levels. |
+| Artificial horizon | `src/app/hud/attitude.ts` | FPV attitude indicator: ground banks and pitches behind a fixed crosshair, pitch ladder, heading. Space holds it, drag or arrow keys bank and pitch it. |
 | Game of Life | `src/app/hud/game-of-life.ts` | Conway's Life on a wrapping 20 × 12 board, 6 generations a second. Hover or Space freezes, click flips a cell, Enter (or a dead board) starts a new one. |
 | Radar | `src/app/hud/radar.ts` | Turning sweep lighting generated contacts. Hover or Space freezes, ↑ ↓ change the range, Enter or click finds new contacts. |
 | Glyph matrix | `src/app/hud/glyph-matrix.ts` | Flickering glyph block. Hover or Space freezes, Enter or click reshuffles. |

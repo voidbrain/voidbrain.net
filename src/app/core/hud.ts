@@ -217,46 +217,123 @@ export function lifeStep(board: readonly (readonly boolean[])[]): boolean[][] {
   );
 }
 
-/** Ridge lines of a generated terrain seen from above and behind, flying forward by `travel` (rows) and drifting
- *  sideways by `drift`, in a `width` × `height` box: `rows` polylines from the far ridge to the near one. Peaks
- *  grow with `amp`. */
-export function heightLines(
+/** Contour lines of a generated terrain seen from straight above, in a `width` × `height` box: one SVG path per
+ *  level, from the lowest to the highest. The ground breathes with time `t` (seconds), so the lines drift and swell
+ *  like something alive; `drift` slides the map sideways. Marching squares on a `cols` × `rows` grid. */
+export function topoContours(
   seed: number,
-  travel: number,
+  t: number,
   drift: number,
-  amp: number,
-  rows: number,
+  levels: number,
   cols: number,
+  rows: number,
   width: number,
   height: number,
 ): string[] {
   const rnd = seededRandom(seed);
-  const waves = [0, 1, 2, 3].map((k) => ({
-    fx: (0.6 + rnd() * 1.4) * (k + 1),
-    fz: (0.4 + rnd() * 1.2) * (k + 1),
+  // hills and hollows (negative heights), spread over a map a bit wider than the box so sliding finds more
+  const hills = Array.from({ length: 11 }, (_, k) => ({
+    x: rnd() * 1.6 - 0.3,
+    y: rnd() * 1.2 - 0.1,
+    r: 0.1 + rnd() * 0.18,
+    a: (k % 4 === 3 ? -0.6 : 1) * (0.5 + rnd() * 0.6),
+    speed: 0.3 + rnd() * 0.6,
     phase: rnd() * Math.PI * 2,
-    a: 1 / (k + 1),
   }));
-  const total = waves.reduce((s, w) => s + w.a, 0);
-  const ground = (x: number, z: number) =>
-    (waves.reduce((s, w) => s + w.a * Math.sin(x * w.fx + z * w.fz * 0.35 + w.phase), 0) / total +
-      1) /
-    2;
-  const step = height / (rows + 2);
-  const frac = travel - Math.floor(travel);
-  return Array.from({ length: rows }, (_, i) => {
-    const near = (i + frac) / rows; // 0 far .. 1 near
-    const spread = 0.45 + 0.55 * near;
-    const z = Math.floor(travel) + rows - i;
-    const base = step * (2 + i + frac);
-    return Array.from({ length: cols }, (_, j) => {
-      const u = cols > 1 ? j / (cols - 1) : 0;
-      const h = ground(u * 6 + drift, z);
-      const x = width / 2 + (u - 0.5) * width * spread;
-      const y = base - h * h * amp * step * (1 + 2 * near);
-      return `${round(x)},${round(y)}`;
-    }).join(' ');
-  });
+  // heights in about [0, 1]: a few hills whose size pulses, plus a slow ripple
+  const field = (u: number, v: number) => {
+    let h = 0;
+    for (const k of hills) {
+      const pulse = 1 + 0.25 * Math.sin(t * k.speed + k.phase);
+      const dx = u + drift - k.x;
+      const dy = v - k.y;
+      h += k.a * pulse * Math.exp(-(dx * dx + dy * dy) / (k.r * k.r));
+    }
+    h += 0.12 * Math.sin(u * 9 + t * 0.7) * Math.cos(v * 7 - t * 0.5);
+    return 0.35 + h * 0.55;
+  };
+  const grid: number[][] = [];
+  for (let r = 0; r <= rows; r++) {
+    const row: number[] = [];
+    for (let c = 0; c <= cols; c++) row.push(field(c / cols, r / rows));
+    grid.push(row);
+  }
+  const sx = width / cols;
+  const sy = height / rows;
+  const paths: string[] = [];
+  for (let l = 1; l <= levels; l++) {
+    const iso = l / (levels + 1);
+    let d = '';
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const a = grid[r][c];
+        const b = grid[r][c + 1];
+        const cc = grid[r + 1][c + 1];
+        const dd = grid[r + 1][c];
+        const idx = (a > iso ? 8 : 0) | (b > iso ? 4 : 0) | (cc > iso ? 2 : 0) | (dd > iso ? 1 : 0);
+        if (idx === 0 || idx === 15) continue;
+        // where the level crosses each side of the cell
+        const lerp = (p: number, q: number) => (iso - p) / (q - p);
+        const top = [(c + lerp(a, b)) * sx, r * sy];
+        const right = [(c + 1) * sx, (r + lerp(b, cc)) * sy];
+        const bottom = [(c + lerp(dd, cc)) * sx, (r + 1) * sy];
+        const left = [c * sx, (r + lerp(a, dd)) * sy];
+        const seg = (p: number[], q: number[]) => {
+          d += `M${round(p[0])} ${round(p[1])}L${round(q[0])} ${round(q[1])}`;
+        };
+        switch (idx) {
+          case 1:
+          case 14:
+            seg(left, bottom);
+            break;
+          case 2:
+          case 13:
+            seg(bottom, right);
+            break;
+          case 3:
+          case 12:
+            seg(left, right);
+            break;
+          case 4:
+          case 11:
+            seg(top, right);
+            break;
+          case 6:
+          case 9:
+            seg(top, bottom);
+            break;
+          case 7:
+          case 8:
+            seg(left, top);
+            break;
+          case 5:
+            seg(left, top);
+            seg(bottom, right);
+            break;
+          case 10:
+            seg(top, right);
+            seg(left, bottom);
+            break;
+        }
+      }
+    }
+    paths.push(d);
+  }
+  return paths;
+}
+
+/** A smooth, generated flight attitude at time `t` (seconds): roll and pitch in degrees, heading in [0, 360). Roll
+ *  stays within ±35°, pitch within ±20°. */
+export function attitude(
+  seed: number,
+  t: number,
+): { roll: number; pitch: number; heading: number } {
+  const rnd = seededRandom(seed);
+  const w = Array.from({ length: 6 }, () => ({ f: 0.15 + rnd() * 0.5, p: rnd() * Math.PI * 2 }));
+  const roll = 22 * Math.sin(t * w[0].f + w[0].p) + 13 * Math.sin(t * w[1].f * 2.3 + w[1].p);
+  const pitch = 12 * Math.sin(t * w[2].f + w[2].p) + 8 * Math.sin(t * w[3].f * 1.7 + w[3].p);
+  const heading = (((t * 9 + 40 * Math.sin(t * w[4].f + w[4].p)) % 360) + 360) % 360;
+  return { roll: round(roll), pitch: round(pitch), heading: Math.floor(heading) };
 }
 
 /** The 12 edges of a cube of half-size `scale` (in [0, 1]) rotated by `yaw`/`pitch`, with a light perspective,
