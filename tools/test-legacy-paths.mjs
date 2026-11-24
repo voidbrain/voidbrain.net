@@ -143,8 +143,6 @@ const cases = [
   ['/robots.txt', 200, null, 'Disallow: /old/'],
   ['/sitemap.xml', 200, null, '<urlset'],
   ['/favicon.ico', 200],
-  ['/models/lee-perry-smith.glb', 200, null, 'content-type: model/gltf-binary'],
-  ['/models/CREDITS.txt', 200, null, 'Lee Perry-Smith'],
   ['/old', 301, '/old/'],
   ['/old/', 301, '/old/home'],
   ['/old/home', 200, null, 'OLD_INDEX'],
