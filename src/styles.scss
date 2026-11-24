@@ -652,6 +652,57 @@ a {
   }
 }
 
+// foot lines: one colour per word (sleep has a single word and keeps its ink)
+.display--foot .word {
+  display: inline-block; // a word wraps as a whole, never inside
+}
+
+.display--foot .word + .word {
+  margin-left: 0.22em;
+}
+
+[data-tone='work'] .display--foot .word {
+  &:nth-child(2) {
+    color: #fff;
+  }
+  &:nth-child(3) {
+    color: var(--vb-orange);
+  }
+  &:nth-child(4) {
+    color: transparent;
+    -webkit-text-stroke-color: var(--ink);
+  }
+  + .word::before {
+    content: '·';
+    margin-right: 0.22em;
+    color: var(--ink);
+    -webkit-text-stroke-color: var(--ground);
+  }
+}
+
+[data-tone='play'] .display--foot .word {
+  &:nth-child(2) {
+    color: #fff;
+  }
+  &:nth-child(3) {
+    color: var(--vb-acid);
+  }
+}
+
+// the bottom bar names the gesture the device has: keys with a mouse, swipe on touch screens
+.hint--touch {
+  display: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .hint--keys {
+    display: none;
+  }
+  .hint--touch {
+    display: inline;
+  }
+}
+
 // sleep keeps its earlier, fixed sizes: the scaling tokens above do not apply to it
 @container sheet (min-width: 560px) {
   [data-tone='sleep'] .poster {
@@ -709,7 +760,7 @@ a {
     }
 
     .display--foot {
-      font-size: 4.8cqw;
+      font-size: 6.2cqw;
       line-height: 1;
     }
 

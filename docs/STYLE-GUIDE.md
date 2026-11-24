@@ -100,6 +100,7 @@ Layout: top bar, hazard stripe, the stage, hazard stripe, bottom bar. The stage 
 |---|---|---|
 | Shell | `src/app/app.ts` | Bars, switcher (`.switch`, `aria-pressed`), stage, live announcement of the state. |
 | Poster | `src/app/poster/` | One state's headlines, back word (`.back`), vertical line (`.vert`), text, tags (`.tags`), timeline (`.entries`), links (`.links`), HUD pieces and the marks layer (`.marks`, `.barcode`). |
+| Foot line | `src/app/poster/poster.html` (`.display--foot .word`) | `POSTERS[state].footline` word by word, one colour per word from the palette (and `#fff`); words never break inside. |
 | Side sheets | `src/app/app.html` (`.side`) | The neighbouring states at the sides from 1100 px: their ground, a big arrow and `POSTERS[state].side` in their own face (WORK, PLAY, and ZZZ symbols for sleep). Click switches; out of the tab order and hidden from assistive technology, since the switcher does the same. |
 | Self-model | `src/app/figure/self-model.ts` | three.js figure (F-004), lazy. Colours from `--ink`/`--ground`. |
 | Signal chart | `src/app/hud/signal-chart.ts` | Animated line. Hover or Space freezes, drag or ← → scrubs. |

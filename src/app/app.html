@@ -59,7 +59,10 @@
   <button type="button" class="switch" (click)="step(-1)">
     <span aria-hidden="true">←</span> <span class="visually-hidden">Previous poster</span>
   </button>
-  <span>← → or swipe to switch // {{ owner.place }}</span>
+  <span
+    ><span class="hint hint--keys">← → to switch</span
+    ><span class="hint hint--touch">swipe to switch</span> // {{ owner.place }}</span
+  >
   <button type="button" class="switch" (click)="step(1)">
     <span class="visually-hidden">Next poster</span> <span aria-hidden="true">→</span>
   </button>
