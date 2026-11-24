@@ -102,6 +102,7 @@ Layout: top bar, hazard stripe, the stage, hazard stripe, bottom bar. The stage 
 | Poster | `src/app/poster/` | One state's headlines, back word (`.back`), vertical line (`.vert`), text, tags (`.tags`), timeline (`.entries`), links (`.links`), HUD pieces and the marks layer (`.marks`, `.barcode`). |
 | Foot line | `src/app/poster/poster.html` (`.display--foot .word`) | `POSTERS[state].footline` word by word, one muted colour per word (ink, `color-mix` of ink and ground, or an ink outline); words never break inside. |
 | Side sheets | `src/app/app.html` (`.side`) | The neighbouring states at the sides from 1100 px: their ground, a big arrow and `POSTERS[state].side` in their own face (WORK, PLAY, and ZZZ symbols for sleep). Click switches; out of the tab order and hidden from assistive technology, since the switcher does the same. |
+| Drawn figure | `src/app/figure/drawn-figure.ts` | Test behind `?figure=drawn`: SVG ink drawing in `--ink` / `--ground`, hatch and halftone patterns (referenced with the page path and query, so they survive the base href), one prop per state. |
 | Self-model | `src/app/figure/self-model.ts` | three.js figure (F-004), lazy. Colours from `--ink`/`--ground`. |
 | Signal chart | `src/app/hud/signal-chart.ts` | Animated line. Hover or Space freezes, drag or ← → scrubs. |
 | Wire sphere | `src/app/hud/wire-sphere.ts` | Turning wireframe globe. Drag or arrow keys turn it. |

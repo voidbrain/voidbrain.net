@@ -21,6 +21,7 @@ import {
   stepState,
   swipeDelta,
 } from './core/states';
+import { DrawnFigure } from './figure/drawn-figure';
 import { SelfModel } from './figure/self-model';
 import { Poster } from './poster/poster';
 
@@ -28,7 +29,7 @@ import { Poster } from './poster/poster';
  *  persistent self-model behind the poster. */
 @Component({
   selector: 'vb-root',
-  imports: [Poster, SelfModel],
+  imports: [DrawnFigure, Poster, SelfModel],
   host: {
     '(window:hashchange)': 'fromHash()',
     '(document:keydown)': 'onKey($event)',
@@ -46,6 +47,8 @@ export class App {
   ) as Record<StateId, string>;
   protected readonly state = signal<StateId>(stateFromHash(this.doc.location.hash));
   protected readonly posters = POSTERS;
+  /** Style test (owner, 2026-11-24): `?figure=drawn` shows the SVG ink drawing instead of the 3D figure. */
+  protected readonly drawnFigure = /[?&]figure=drawn\b/.test(this.doc.location.search ?? '');
   protected readonly poster = computed(() => POSTERS[this.state()]);
   /** The previous and the next state, shown at the sides on wide screens. */
   protected readonly neighbours = computed(
