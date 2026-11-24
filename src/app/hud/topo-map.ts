@@ -1,18 +1,18 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
-import { heightLines } from '../core/hud';
+import { topoContours } from '../core/hud';
 import { HudClock } from './clock';
 
-/** Ridge lines of a generated terrain flowing towards the viewer, like flying low over it (decorative). Hover or
- *  Space freezes it, drag or ← → steers, ↑ ↓ change the height of the peaks. */
+/** A topographic map seen from above whose ground breathes, so the contour lines drift and swell (decorative).
+ *  Hover or Space freezes it, drag or ← → slides the map, ↑ ↓ change the number of contour levels. */
 @Component({
-  selector: 'vb-height-map',
+  selector: 'vb-topo-map',
   host: {
     class: 'hud',
     role: 'group',
     'aria-roledescription': 'decorative animation',
     tabindex: '0',
     '[attr.aria-label]':
-      "caption() + ': terrain height map, decorative. Space freezes, arrow keys steer and change the peaks.'",
+      "caption() + ': topographic contour map, decorative. Space freezes, arrow keys slide it and change the levels.'",
     '(pointerenter)': 'freezeNow(); hovering.set(true)',
     '(pointerleave)': 'hovering.set(false); dragX = null',
     '(pointerdown)': 'onDown($event)',
@@ -22,36 +22,38 @@ import { HudClock } from './clock';
     '(keydown)': 'onKey($event)',
   },
   template: `
-    <svg viewBox="0 0 200 110" aria-hidden="true">
-      @for (line of lines(); track $index) {
-        <polyline [attr.points]="line" fill="none" stroke="currentColor" [attr.stroke-width]="0.5 + $index * 0.12" stroke-linejoin="round" />
+    <svg viewBox="0 0 200 120" aria-hidden="true">
+      @for (d of paths(); track $index) {
+        <!-- every third line is an index contour, drawn heavier, as on a survey map -->
+        <path [attr.d]="d" fill="none" stroke="currentColor" [attr.stroke-width]="($index + 1) % 3 === 0 ? 1.6 : 0.6" stroke-linecap="round" />
       }
+      <path d="M96 60h8M100 56v8" stroke="currentColor" stroke-width="1" />
     </svg>
     <div class="hud__caption" aria-hidden="true">
-      <span>{{ caption() }}</span><span>{{ frozen() ? 'HOLD' : 'ALT_' + peaks() }}</span>
+      <span>{{ caption() }}</span><span>{{ frozen() ? 'HOLD' : 'LVL_' + levels() }}</span>
     </div>
   `,
 })
-export class HeightMap {
+export class TopoMap {
   private readonly clock = inject(HudClock);
   readonly seed = input(1);
-  readonly caption = input('DEM_01');
+  readonly caption = input('TOPO_01');
 
   protected readonly hovering = signal(false);
   private readonly held = signal(false);
   private readonly frozenAt = signal<number | null>(null);
   private readonly drift = signal(0);
-  /** Peak height step 1–5. */
-  protected readonly peaks = signal(3);
+  /** Number of contour levels, 4–10. */
+  protected readonly levels = signal(7);
   protected dragX: number | null = null;
 
   protected readonly frozen = computed(() => this.hovering() || this.held());
-  private readonly travel = computed(() => {
+  private readonly time = computed(() => {
     const now = this.clock.seconds();
-    return (this.frozen() ? (this.frozenAt() ?? now) : now) * 2.2;
+    return this.frozen() ? (this.frozenAt() ?? now) : now;
   });
-  protected readonly lines = computed(() =>
-    heightLines(this.seed(), this.travel(), this.drift(), this.peaks() / 3, 14, 40, 200, 110),
+  protected readonly paths = computed(() =>
+    topoContours(this.seed(), this.time(), this.drift(), this.levels(), 40, 24, 200, 120),
   );
 
   protected onDown(e: PointerEvent): void {
@@ -62,7 +64,7 @@ export class HeightMap {
 
   protected onMove(e: PointerEvent): void {
     if (this.dragX === null) return;
-    this.drift.update((d) => d + (e.clientX - this.dragX!) * 0.02);
+    this.drift.update((d) => d - (e.clientX - this.dragX!) * 0.004);
     this.dragX = e.clientX;
   }
 
@@ -71,9 +73,9 @@ export class HeightMap {
       this.freezeNow();
       this.held.update((h) => !h);
     } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-      this.drift.update((d) => d + (e.key === 'ArrowLeft' ? -0.4 : 0.4));
+      this.drift.update((d) => d + (e.key === 'ArrowLeft' ? -0.05 : 0.05));
     } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-      this.peaks.update((p) => Math.max(1, Math.min(5, p + (e.key === 'ArrowUp' ? 1 : -1))));
+      this.levels.update((l) => Math.max(4, Math.min(10, l + (e.key === 'ArrowUp' ? 1 : -1))));
     } else return;
     e.preventDefault();
     e.stopPropagation();

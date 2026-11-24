@@ -1,6 +1,6 @@
 import {
   cubeEdges,
-  heightLines,
+  attitude,
   lifeSeed,
   lifeStep,
   fakeQr,
@@ -13,6 +13,7 @@ import {
   sphereLines,
   sweepFade,
   toPolyline,
+  topoContours,
 } from './hud';
 
 describe('hud generators', () => {
@@ -123,13 +124,29 @@ describe('hud generators', () => {
     expect(lifeSeed(3, 8, 12)).toEqual(b);
   });
 
-  it('heightLines gives one ridge per row inside the box and moves as it flies', () => {
-    const a = heightLines(4, 0.3, 0, 1, 10, 24, 200, 100);
-    expect(a).toHaveLength(10);
-    const pts = a.flatMap((l) => l.split(' ').map((p) => p.split(',').map(Number)));
-    expect(pts.every(([x, y]) => x >= 0 && x <= 200 && y >= -20 && y <= 100)).toBe(true);
-    expect(heightLines(4, 0.6, 0, 1, 10, 24, 200, 100)).not.toEqual(a);
-    expect(heightLines(4, 0.3, 0, 1, 10, 24, 200, 100)).toEqual(a);
+  it('topoContours draws one path per level inside the box, and the ground breathes', () => {
+    const a = topoContours(4, 0, 0, 6, 32, 20, 200, 120);
+    expect(a).toHaveLength(6);
+    expect(a.some((d) => d.length > 0)).toBe(true);
+    const nums = a
+      .join(' ')
+      .match(/-?\d+(\.\d+)?/g)!
+      .map(Number);
+    expect(nums.every((v) => v >= 0 && v <= 200)).toBe(true);
+    expect(topoContours(4, 2, 0, 6, 32, 20, 200, 120)).not.toEqual(a);
+    expect(topoContours(4, 0, 0, 6, 32, 20, 200, 120)).toEqual(a);
+  });
+
+  it('attitude stays within its limits and moves smoothly', () => {
+    for (let t = 0; t < 120; t += 0.7) {
+      const a = attitude(3, t);
+      expect(Math.abs(a.roll)).toBeLessThanOrEqual(35);
+      expect(Math.abs(a.pitch)).toBeLessThanOrEqual(20);
+      expect(a.heading >= 0 && a.heading < 360).toBe(true);
+      const b = attitude(3, t + 1 / 30);
+      expect(Math.abs(b.roll - a.roll)).toBeLessThan(3);
+    }
+    expect(attitude(3, 5)).toEqual(attitude(3, 5));
   });
 
   it('cubeEdges draws twelve edges that stay in the box at any rotation', () => {

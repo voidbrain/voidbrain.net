@@ -44,7 +44,7 @@ Decided by the owner on 2026-11-24 (F-005): **the HUD pieces are animated, with 
 - For assistive technology each piece is one focusable group with `aria-roledescription="decorative animation"` and a label that names its keys ("CPU_SIM: animated signal chart, decorative. …"); the generated numbers are not read out. (A focusable `role="img"` with key actions was replaced after review: screen readers in browse mode swallow its keys.)
 - With `prefers-reduced-motion` each piece shows one still frame.
 
-The pieces: signal chart, wire sphere, wire cube, height map (terrain flown over), Game of Life, radar, glyph matrix, terminal log, fake QR. The calendar strip of the first version was dropped on the owner's request (2026-11-24); the Game of Life took its place in the orange poster.
+The pieces: signal chart, wire sphere (sleep only), wire cube, topographic map (contour lines seen from above, the ground breathing so the lines drift and swell), FPV artificial horizon (play), Game of Life, radar, glyph matrix, terminal log, fake QR. The calendar strip of the first version was dropped on the owner's request (2026-11-24); the Game of Life took its place in the orange poster.
 
 ## Legacy paths
 
