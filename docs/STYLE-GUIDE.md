@@ -66,7 +66,7 @@ Defined on `:root` in `src/styles.scss`. The palette is five print colours; each
 
 The roles come from one Sass mixin per state (`tone-work`, `tone-play`, `tone-sleep`), applied to `<html data-state>` and to every element with `data-tone` (the sheet and the side sheets). Behind the sheets the page is `--vb-black`; the sleep poster also uses `--vb-acid` as the slab behind its figure.
 
-Contrast (WCAG 2): black on acid 16.0:1, on orange 6.3:1, on paper 17.4:1; the reverse pairs are the same. The marks layer is decorative (`aria-hidden`) and below text contrast on purpose (white on acid, green on paper): it never carries text a visitor needs, and on narrow screens it covers only the figure.
+Contrast (WCAG 2): black on acid 16.0:1, on orange 6.3:1, on paper 17.4:1; the reverse pairs are the same. The marks layer is decorative (`aria-hidden`) and below text contrast on purpose (white on acid, green on paper): it never carries text a visitor needs, it sits below every text and HUD block (and above the figure), and on narrow screens it covers only the figure. Focus shows as an ink outline with a ground-coloured ring, so it stays visible over the figure.
 
 - Use tokens (`var(--…)`), never a new literal colour. A new colour is a new token, added here in the same change.
 - Change fill and foreground as a pair, and check contrast (WCAG AA: 4.5:1 for text, 3:1 for large text and UI parts).
@@ -86,7 +86,7 @@ Sizes: `--text-xs` 0.6875rem (labels, captions), `--text-s` 0.8125rem (body; 0.7
 
 Spacing: `--space-1` 4px, `--space-2` 8px, `--space-3` 12px, `--space-4` 16px, `--space-5` 24px, `--space-6` 40px; `--gutter` `clamp(12px, 2.4vw, 28px)`; `--line` 2px (every rule and frame); `--bar` 52px (top and bottom bars); `--figure-h` `min(40dvh, 340px)` (the figure on narrow sheets).
 
-Layout: top bar, hazard stripe, the stage, hazard stripe, bottom bar. The stage holds the portrait sheet (from 1100 px: `min(860px, max(620px, 84dvh))` wide, the neighbouring states at its sides). On a sheet 600 px or wider, a six-column grid per state places the text and HUD around a smaller figure in a different place for each state; items overlap the figure on purpose, on solid fills (black timeline block, HUD frames on the ground colour, headlines with a ground-coloured outline). Narrower sheets stack: figure, headline, text, timeline, HUD, foot. No horizontal scroll from 360 px up (checked at 390 px).
+Layout: top bar, hazard stripe, the stage, hazard stripe, bottom bar. The stage holds the portrait sheet (from 1100 px: `min(860px, max(620px, 84dvh))` wide, the neighbouring states at its sides). On a sheet 600 px or wider, a grid per state (six columns for work, five plus the vertical headline for play and sleep) places the text and HUD around a smaller figure in a different place for each state; items overlap the figure on purpose, on solid fills (black timeline block, HUD frames on the ground colour, headlines with a ground-coloured outline). Narrower sheets stack: figure, headline, text, timeline, HUD, foot. No horizontal scroll from 360 px up (checked at 390 px).
 
 ### States and motion
 

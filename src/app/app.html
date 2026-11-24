@@ -21,6 +21,7 @@
     tabindex="-1"
     aria-hidden="true"
     [attr.data-tone]="neighbours()[0]"
+    (mousedown)="$event.preventDefault()"
     (click)="go(neighbours()[0])"
   >
     <span class="side__word">{{ posters[neighbours()[0]].back }}</span>
@@ -43,6 +44,7 @@
     tabindex="-1"
     aria-hidden="true"
     [attr.data-tone]="neighbours()[1]"
+    (mousedown)="$event.preventDefault()"
     (click)="go(neighbours()[1])"
   >
     <span class="side__word">{{ posters[neighbours()[1]].back }}</span>

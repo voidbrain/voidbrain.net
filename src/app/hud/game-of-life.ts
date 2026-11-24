@@ -1,4 +1,13 @@
-import { Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  linkedSignal,
+  signal,
+  untracked,
+} from '@angular/core';
 import { lifeSeed, lifeStep } from '../core/hud';
 import { HudClock } from './clock';
 
@@ -44,7 +53,7 @@ export class GameOfLife {
   protected readonly cols = COLS;
   protected readonly hovering = signal(false);
   private readonly held = signal(false);
-  private readonly board = signal<boolean[][]>(lifeSeed(1, ROWS, COLS));
+  private readonly board = linkedSignal(() => lifeSeed(this.seed(), ROWS, COLS));
   protected readonly generation = signal(0);
   private restarts = 0;
   private lastStep: number | null = null;
@@ -55,10 +64,12 @@ export class GameOfLife {
   );
 
   constructor() {
-    effect(() => this.board.set(lifeSeed(this.seed(), ROWS, COLS)));
     effect(() => {
       const step = Math.floor(this.clock.seconds() * RATE);
-      if (this.frozen()) return;
+      if (this.frozen()) {
+        this.lastStep = step; // no catch-up burst when it unfreezes
+        return;
+      }
       untracked(() => {
         if (this.lastStep === null || step < this.lastStep) this.lastStep = step;
         // catch up at most a few generations after a pause instead of jumping

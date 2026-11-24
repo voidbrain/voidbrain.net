@@ -53,6 +53,7 @@ export class WireCube {
   );
 
   protected onDown(e: PointerEvent): void {
+    this.dragged = false; // a click lost outside the piece must not swallow the next one
     this.drag = { x: e.clientX, y: e.clientY, moved: false };
     (e.currentTarget as Element).setPointerCapture?.(e.pointerId);
     e.stopPropagation();
@@ -60,8 +61,11 @@ export class WireCube {
 
   protected onMove(e: PointerEvent): void {
     if (!this.drag) return;
-    this.yaw.update((v) => v + (e.clientX - this.drag!.x) * 0.012);
-    this.pitch.update((v) => Math.max(-1.4, Math.min(1.4, v + (e.clientY - this.drag!.y) * 0.012)));
+    const dx = e.clientX - this.drag.x;
+    const dy = e.clientY - this.drag.y;
+    if (!this.drag.moved && Math.hypot(dx, dy) < 4) return; // touch jitter is still a tap
+    this.yaw.update((v) => v + dx * 0.012);
+    this.pitch.update((v) => Math.max(-1.4, Math.min(1.4, v + dy * 0.012)));
     this.drag = { x: e.clientX, y: e.clientY, moved: true };
   }
 

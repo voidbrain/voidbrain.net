@@ -178,7 +178,7 @@ export const POSTERS: Record<StateId, Poster> = {
     kicker: 'low power // do not disturb // dreaming in lorem ipsum',
     paragraphs: [
       'We will be restoring normality as soon as we are sure what is normal anyway. (Douglas Adams, The Hitchhiker’s Guide to the Galaxy)',
-      'Somewhere between the lagoon and the mountains. Reading, travelling, music, nature.',
+      'Reading, travelling, music, mountains and nature.',
       'Leave a message after the beep: I will answer when I wake up.',
     ],
     tags: ['Reading', 'Travelling', 'Music', 'Mountains', 'Science'],

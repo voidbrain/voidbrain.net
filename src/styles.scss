@@ -102,6 +102,8 @@ a {
 :focus-visible {
   outline: 3px solid var(--ink);
   outline-offset: 3px;
+  // a ground-coloured ring keeps the focus visible where it is drawn over the black figure
+  box-shadow: 0 0 0 6px var(--ground);
 }
 
 .visually-hidden {
@@ -335,7 +337,8 @@ a {
 
 .poster > .marks {
   position: absolute;
-  z-index: 4;
+  // above the figure (later in paint order at the same level), below every text and HUD block (z-index 2)
+  z-index: 1;
   inset: 0;
   overflow: hidden;
   color: var(--mark);
@@ -536,7 +539,11 @@ a {
   background: var(--ground);
   cursor: crosshair;
   user-select: none;
-  touch-action: none;
+  touch-action: pan-y; // pieces without a drag gesture still let the page scroll
+
+  &:is(vb-signal-chart, vb-wire-sphere, vb-wire-cube, vb-height-map) {
+    touch-action: none;
+  }
 
   &__caption {
     display: flex;
