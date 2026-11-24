@@ -11,6 +11,7 @@ import {
   signal,
 } from '@angular/core';
 import { OWNER, POSTERS } from './core/content';
+import { figureStyle } from './core/figure-style';
 import {
   STATES,
   StateId,
@@ -46,6 +47,8 @@ export class App {
   ) as Record<StateId, string>;
   protected readonly state = signal<StateId>(stateFromHash(this.doc.location.hash));
   protected readonly posters = POSTERS;
+  /** The figure style test from the query (`?figure=human` needs the scan's credit on the page). */
+  protected readonly figureStyle = figureStyle(this.doc.location.search ?? '');
   protected readonly poster = computed(() => POSTERS[this.state()]);
   /** The previous and the next state, shown at the sides on wide screens. */
   protected readonly neighbours = computed(

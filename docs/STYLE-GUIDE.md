@@ -79,7 +79,6 @@ Self-hosted from `@fontsource` (SIL OFL 1.1), Latin subset only, registered in `
 |---|---|---|
 | `--font-display` | per state: Black Ops One 400 (work), Rubik Glitch 400 (play), Major Mono Display 400 (sleep; its thin letters are the lowercase ones) | headlines, the back word and the side sheets (`.display`, `.back`); decorative, `aria-hidden`, except the sleep quote |
 | `--font-mono` | JetBrains Mono 400 and 700 | everything else: body, labels, HUD captions, terminal |
-| — | Audiowide 400 | the play poster's foot line only, extruded and glitching |
 
 Sizes: `--text-xs` 0.6875rem (labels, captions), `--text-s` 0.8125rem (body), `--text-m` 1rem (state title), `--text-l` 1.375rem. On sheets 440 px and wider the text and space tokens are redefined on `.poster` in `cqw` (per cent of the sheet width: `--text-s` 1.55cqw, `--space-4` 2.05cqw…), so the whole poster scales with the sheet; text keeps a floor in rem (`--text-s` never below 0.6875rem, `--text-xs` 0.625rem), so it stays readable and follows the visitor's font-size setting. When the floor makes a poster taller than the screen, the sheet scrolls inside (no page scrollbar). The sleep poster keeps its earlier fixed sizes and width (owner, 2026-11-24). Display sizes are in `cqw` too and set per state in the layout, from about 5cqw (the work foot line) to 46cqw (the back word). Labels and titles are uppercase with 0.08–0.12em tracking, from CSS. The Japanese state word (仕事, 遊び, 睡眠) is vertical texture, `lang="ja"` and `aria-hidden`.
 
@@ -92,7 +91,7 @@ Layout: top bar, hazard stripe, the stage, hazard stripe, bottom bar. The stage 
 ### States and motion
 
 - Hover, active, selected, disabled and focus each have one treatment. Focus is always visible on every ground colour.
-- Switching state: the sheet slides in from the side it comes from (420 ms, ease-out, Web Animations in `app.ts`), the bars step to the new colour, the figure blends its pose. Glitches are kept for texture: the play foot line, and the manga figure test.
+- Switching state: the sheet slides in from the side it comes from (420 ms, ease-out, Web Animations in `app.ts`), the bars step to the new colour, the figure blends its pose. Glitches are kept for texture: the play foot line (every 1.8 s).
 - Respect `prefers-reduced-motion`: the state switch becomes a cut, the model stops idling, the HUD shows still frames, the terminal cursor stops blinking.
 
 ## Components
@@ -126,7 +125,7 @@ Every HUD piece is a `.hud` frame (2px ink border, caption row) with `role="grou
 
 - Everything in `public/` is copied to the server's docroot. Never name a file or folder there like a legacy folder (`img`, `js`, `fonts`, `style`, …): see [design](DESIGN.md), "Legacy paths"; `npm run test:legacy` fails on one. Use `public/assets/` and `public/models/`.
 - Fonts come from npm (`@fontsource`, OFL), not from `public/`; the favicon is the old site's.
-- 3D models: glTF binary (`.glb`), Draco-compressed, under 3 MB in total (F-004).
+- 3D models: glTF binary (`.glb`), Draco-compressed, under 3 MB in total (F-004). The test head scan `public/models/lee-perry-smith.glb` (405 kB, CC BY 3.0, credited in `public/models/CREDITS.txt` and by a link on the figure; Apache serves it as `model/gltf-binary`) is the three.js file unchanged, without Draco.
 - Strip location metadata from any photo before it is committed. Raw scan photos never enter the repository.
 - Fonts and images need a licence that allows web use; record the source next to the file.
 
