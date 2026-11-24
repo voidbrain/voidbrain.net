@@ -288,6 +288,7 @@ a {
   container: sheet / inline-size;
   position: relative;
   isolation: isolate;
+  z-index: 1; // above the side strips while it slides
   flex: 0 0 auto;
   width: 100%;
   overflow: hidden;
@@ -300,7 +301,14 @@ a {
 
   // as tall as the stage, as wide as a portrait poster of that height
   @media (min-width: 1100px) and (min-height: 600px) {
-    width: clamp(440px, calc((100dvh - 2 * var(--bar) - 28px - 2 * var(--space-3)) * 0.8), 900px);
+    width: clamp(560px, calc((100dvh - 2 * var(--bar) - 28px - 2 * var(--space-3)) * 0.84), 900px);
+    overflow-y: auto; // reachable when the poster is taller than the screen; no page scrollbar either way
+    scrollbar-width: none;
+
+    // sleep keeps the size it had before the fit-to-screen change (owner: sleep stays as it was)
+    &[data-tone='sleep'] {
+      width: min(860px, max(620px, 84dvh));
+    }
   }
 }
 
@@ -594,7 +602,7 @@ a {
 
 // ---- wide sheets: one dense, overlapping layout per state, the figure smaller and in a different place
 
-@container sheet (min-width: 440px) {
+@container sheet (min-width: 560px) {
   .figure {
     position: absolute;
     height: auto;
@@ -607,10 +615,11 @@ a {
     gap: var(--space-2) var(--space-3);
     min-height: calc(100dvh - 2 * var(--bar) - 28px - 24px); // 24px: the stage padding
     // every size inside a wide sheet follows the sheet's width, and the sheet's width follows the screen's
-    // height: the poster scales as one picture and always fits
-    --text-xs: 1.3cqw;
-    --text-s: 1.55cqw;
-    --text-m: 2.05cqw;
+    // height, so the poster scales as one picture; text never goes below a readable size in rem (which also
+    // follows the visitor's font-size setting), and when that no longer fits, the sheet scrolls inside
+    --text-xs: max(0.625rem, 1.3cqw);
+    --text-s: max(0.6875rem, 1.55cqw);
+    --text-m: max(0.875rem, 2.05cqw);
     --space-1: 0.5cqw;
     --space-2: 1cqw;
     --space-3: 1.55cqw;
@@ -648,8 +657,39 @@ a {
   }
 }
 
+// sleep keeps its earlier, fixed sizes: the scaling tokens above do not apply to it
+@container sheet (min-width: 560px) {
+  [data-tone='sleep'] .poster {
+    --text-xs: 0.6875rem;
+    --text-s: 0.8125rem;
+    --text-m: 1rem;
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 40px;
+    --line: 2px;
+    font-size: 0.75rem;
+
+    > .vert,
+    .mark {
+      font-size: 0.625rem;
+    }
+    .mark--big {
+      font-size: 1.75rem;
+    }
+    .hud__caption {
+      font-size: 0.5625rem;
+    }
+    vb-terminal-log {
+      font-size: 0.795rem; // its log text is 0.88em: 0.7rem, as before
+    }
+  }
+}
+
 // work: a huge condensed WORK over the top, the figure low on the right behind an outlined FULL STACK
-@container sheet (min-width: 440px) {
+@container sheet (min-width: 560px) {
   [data-tone='work'] {
     .figure {
       right: 6%;
@@ -690,7 +730,7 @@ a {
 }
 
 // play: the figure high on the left over a giant FPV, the glitched headline running down the right edge
-@container sheet (min-width: 440px) {
+@container sheet (min-width: 560px) {
   [data-tone='play'] {
     .figure {
       left: 8%;
@@ -739,7 +779,7 @@ a {
 }
 
 // play extras: a big 遊び with noise around it, and FUTURE IS NOW as extruded 80s chrome that glitches now and then
-@container sheet (min-width: 440px) {
+@container sheet (min-width: 560px) {
   [data-tone='play'] {
     .kanji {
       font-size: 15cqw;
@@ -821,7 +861,7 @@ a {
 }
 
 // sleep: quiet paper, the figure low on the left on a green slab, a thin vertical sleep_mode on the right
-@container sheet (min-width: 440px) {
+@container sheet (min-width: 560px) {
   [data-tone='sleep'] {
     .figure {
       left: 6%;
@@ -882,7 +922,7 @@ a {
 }
 
 // play and sleep: the headline runs down the right edge, outside the grid
-@container sheet (min-width: 440px) {
+@container sheet (min-width: 560px) {
   [data-tone='play'],
   [data-tone='sleep'] {
     .poster__head {
@@ -896,7 +936,7 @@ a {
 }
 
 // narrow sheets: the stacked layout keeps the big words, just smaller
-@container sheet (max-width: 439px) {
+@container sheet (max-width: 559px) {
   .poster > .back {
     top: 0;
     right: 0;
@@ -967,10 +1007,8 @@ a {
     animation: none;
   }
   .bar,
-  .side {
+  .side,
+  .side__arrow {
     transition: none;
-  }
-  .poster > * {
-    animation: none;
   }
 }

@@ -114,6 +114,7 @@ export class SelfModel {
 
     const manga = this.manga;
     const toned = manga ? mangaMaterial() : null;
+    if (toned) toned.uniforms['uPx'].value = renderer.getPixelRatio();
     const ink: MeshBasicMaterial | ShaderMaterial = toned ?? new MeshBasicMaterial();
     const ground = new MeshBasicMaterial();
     const lineMat = new LineBasicMaterial();
@@ -122,7 +123,7 @@ export class SelfModel {
     const solid = (geo: BufferGeometry, mat: Material = ink, edges = true): Object3D => {
       owned.push(geo);
       const mesh = new Mesh(geo, mat);
-      if (manga) {
+      if (manga && edges) {
         // manga: a thick ink outline (the back faces, slightly bigger) instead of the facet lines
         const outline = new Mesh(geo, hull);
         outline.scale.setScalar(1.045);
@@ -322,6 +323,7 @@ function mangaMaterial(): ShaderMaterial {
       uGround: { value: new Color('#ff5a1f') },
       uLight: { value: new Vector3(-0.55, 0.6, 0.75).normalize() },
       uDot: { value: 5.0 },
+      uPx: { value: 1.0 },
     },
     vertexShader: `
       varying vec3 vNormal;
@@ -335,19 +337,24 @@ function mangaMaterial(): ShaderMaterial {
       uniform vec3 uGround;
       uniform vec3 uLight;
       uniform float uDot;
+      uniform float uPx;
       varying vec3 vNormal;
       void main() {
         float light = clamp(dot(normalize(vNormal), uLight) * 0.5 + 0.5, 0.0, 1.0);
         // halftone: a 45° grid of dots that grow as the light falls
-        vec2 p = mat2(0.7071, -0.7071, 0.7071, 0.7071) * gl_FragCoord.xy / uDot;
+        // patterns in CSS pixels, so they keep their size on high-density screens
+        vec2 frag = gl_FragCoord.xy / uPx;
+        vec2 p = mat2(0.7071, -0.7071, 0.7071, 0.7071) * frag / uDot;
         float dotR = smoothstep(0.85, 0.25, light) * 0.62;
         bool dots = length(fract(p) - 0.5) < dotR;
         // hatching in the shadows, cross-hatching in the deeper ones
-        float h1 = step(fract((gl_FragCoord.x + gl_FragCoord.y) / 5.0), 0.38);
-        float h2 = step(fract((gl_FragCoord.x - gl_FragCoord.y) / 5.0), 0.38);
+        float h1 = step(fract((frag.x + frag.y) / 5.0), 0.38);
+        float h2 = step(fract((frag.x - frag.y) / 5.0), 0.38);
         bool hatch = (light < 0.42 && h1 > 0.5) || (light < 0.3 && h2 > 0.5);
         bool solidInk = light < 0.18;
         gl_FragColor = vec4((dots || hatch || solidInk) ? uInk : uGround, 1.0);
+        // the colours are linear (Color.set converts the CSS sRGB); back to the renderer's output space
+        #include <colorspace_fragment>
       }
     `,
   });
