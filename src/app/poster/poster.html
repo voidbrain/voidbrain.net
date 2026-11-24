@@ -59,7 +59,7 @@
     }
     @case ('play') {
       <vb-game-of-life [seed]="7" caption="LIFE_SIM" />
-      <vb-topo-map [seed]="11" caption="TOPO_SIM" />
+      <vb-attitude [seed]="5" caption="ATT_SIM" />
       <vb-radar [seed]="9" caption="VTX_SCAN" />
     }
     @case ('sleep') {
@@ -81,7 +81,7 @@
       <vb-glyph-matrix [seed]="4" caption="MTX_WORK" [lines]="3" [cols]="10" />
     }
     @case ('play') {
-      <vb-attitude [seed]="5" caption="ATT_SIM" />
+      <vb-topo-map [seed]="11" caption="TOPO_SIM" />
     }
     @case ('sleep') {
       <vb-wire-sphere caption="MOON_00" />
