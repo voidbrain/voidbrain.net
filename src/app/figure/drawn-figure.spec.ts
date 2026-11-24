@@ -31,6 +31,50 @@ describe('DrawnFigure', () => {
   it('points its patterns at the page itself, query included, so they survive the base href', async () => {
     const el = await render('work');
     const fill = el.querySelector('circle[opacity]')?.getAttribute('fill') ?? '';
-    expect(fill).toMatch(/^url\(\/.*#vb-dots-\d+\)$/);
+    expect(fill).toMatch(/^url\("\/.*#vb-dots-\d+"\)$/);
+  });
+
+  it('gives every instance its own pattern ids', async () => {
+    const a = await render('work');
+    const b = await render('work');
+    const id = (el: HTMLElement) => el.querySelector('pattern')?.id;
+    expect(id(a)).toBeTruthy();
+    expect(id(a)).not.toBe(id(b));
+  });
+
+  it('poses the head per state and turns it towards the pointer', async () => {
+    const fixture = TestBed.createComponent(DrawnFigure);
+    fixture.componentRef.setInput('state', 'play');
+    await fixture.whenStable();
+    const head = () =>
+      (fixture.nativeElement as HTMLElement).querySelector<SVGGElement>('.head')!.style.transform;
+    expect(head()).toContain('rotate(0deg)');
+    window.dispatchEvent(
+      new PointerEvent('pointermove', { clientX: window.innerWidth, clientY: 0 }),
+    );
+    await fixture.whenStable();
+    expect(head()).toContain('rotate(3deg)');
+    fixture.componentRef.setInput('state', 'sleep');
+    await fixture.whenStable();
+    expect(head()).toContain('rotate(-11deg)'); // asleep: the pose only, no pointer
+  });
+
+  it('ignores the pointer with reduced motion', async () => {
+    const real = window.matchMedia;
+    // the test DOM has no matchMedia: a stub that always reports reduced motion
+    window.matchMedia = (() => ({ matches: true })) as unknown as typeof window.matchMedia;
+    try {
+      const fixture = TestBed.createComponent(DrawnFigure);
+      fixture.componentRef.setInput('state', 'play');
+      await fixture.whenStable();
+      window.dispatchEvent(
+        new PointerEvent('pointermove', { clientX: window.innerWidth, clientY: 0 }),
+      );
+      await fixture.whenStable();
+      const head = (fixture.nativeElement as HTMLElement).querySelector<SVGGElement>('.head')!;
+      expect(head.style.transform).toContain('rotate(0deg)');
+    } finally {
+      window.matchMedia = real;
+    }
   });
 });

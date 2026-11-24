@@ -49,6 +49,8 @@ let nextId = 0;
       animation: breathe 4.2s ease-in-out infinite;
     }
     .head {
+      /* CSS transform (not the SVG attribute), so the turn animates in every browser; the pivot is the neck */
+      transform-origin: 200px 300px;
       transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
     .eyes {
@@ -110,7 +112,7 @@ let nextId = 0;
         <!-- earpiece cable down the neck -->
         <path class="line" stroke-width="2.5" d="M268 236 C272 270 270 320 244 356" />
 
-        <g class="head" [attr.transform]="headTransform()">
+        <g class="head" [style.transform]="headTransform()">
           <!-- ears -->
           <path class="g line" stroke-width="4" d="M141 204 C125 198 122 234 139 242" />
           <path class="g line" stroke-width="4" d="M259 204 C275 198 278 234 261 242" />
@@ -191,32 +193,36 @@ export class DrawnFigure {
   private readonly n = nextId++;
   protected readonly ids = { hatch: `vb-hatch-${this.n}`, dots: `vb-dots-${this.n}` };
   private readonly pointer = signal({ x: 0, y: 0 });
-  private readonly reduced =
-    this.doc.defaultView?.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+  private readonly motionQuery = this.doc.defaultView?.matchMedia?.(
+    '(prefers-reduced-motion: reduce)',
+  );
+  private readonly reduced = signal(this.motionQuery?.matches ?? false);
 
   protected readonly label = computed(() =>
     POSTERS[this.state()].figure.replace('Placeholder 3D figure', 'Drawn figure'),
   );
   /** Where the eyes look, from the pointer: x and y in [-1, 1]; still with reduced motion or asleep. */
   protected readonly look = computed(() =>
-    this.reduced || this.state() === 'sleep' ? { x: 0, y: 0 } : this.pointer(),
+    this.reduced() || this.state() === 'sleep' ? { x: 0, y: 0 } : this.pointer(),
   );
   /** Pose per state (work looks down at a screen, sleep droops), plus a small turn towards the pointer. */
   protected readonly headTransform = computed(() => {
     const pose = { work: [5, 0, 6], play: [0, 0, 0], sleep: [-11, 4, 10] }[this.state()];
     const l = this.look();
-    return `translate(${pose[1] + l.x * 5} ${pose[2] + l.y * 3}) rotate(${pose[0] + l.x * 3} 200 300)`;
+    return `translate(${pose[1] + l.x * 5}px, ${pose[2] + l.y * 3}px) rotate(${pose[0] + l.x * 3}deg)`;
   });
 
   /** A url(#id) that keeps working with <base href="/"> and a query string in the page URL. */
   protected ref(id: string): string {
     const loc = this.doc.location;
-    return `url(${loc.pathname}${loc.search}#${id})`;
+    return `url("${loc.pathname}${loc.search}#${id}")`;
   }
 
   protected onPointer(e: PointerEvent): void {
     const win = this.doc.defaultView;
-    if (!win || this.reduced) return;
+    // read live: the setting can change during the visit
+    this.reduced.set(this.motionQuery?.matches ?? false);
+    if (!win || this.reduced()) return;
     this.pointer.set({
       x: Math.max(-1, Math.min(1, (e.clientX / win.innerWidth) * 2 - 1)),
       y: Math.max(-1, Math.min(1, (e.clientY / win.innerHeight) * 2 - 1)),

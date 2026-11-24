@@ -48,7 +48,7 @@ export class App {
   protected readonly state = signal<StateId>(stateFromHash(this.doc.location.hash));
   protected readonly posters = POSTERS;
   /** Style test (owner, 2026-11-24): `?figure=drawn` shows the SVG ink drawing instead of the 3D figure. */
-  protected readonly drawnFigure = /[?&]figure=drawn\b/.test(this.doc.location.search ?? '');
+  protected readonly drawnFigure = /[?&]figure=drawn(&|$)/.test(this.doc.location.search ?? '');
   protected readonly poster = computed(() => POSTERS[this.state()]);
   /** The previous and the next state, shown at the sides on wide screens. */
   protected readonly neighbours = computed(
