@@ -14,6 +14,9 @@ export interface LinkItem {
   readonly href: string;
 }
 
+/** A paragraph: plain text, or a link followed by text. */
+export type Paragraph = string | { readonly link: LinkItem; readonly after: string };
+
 export interface Poster {
   /** Accessible heading and switcher label. */
   readonly title: string;
@@ -24,7 +27,7 @@ export interface Poster {
   /** Japanese texture word for the state (aria-hidden; the meaning is in `title`). */
   readonly kanji: string;
   readonly kicker: string;
-  readonly paragraphs: readonly string[];
+  readonly paragraphs: readonly Paragraph[];
   readonly tags: readonly string[];
   readonly entries: readonly Entry[];
   readonly links: readonly LinkItem[];
@@ -63,7 +66,7 @@ export const POSTERS: Record<StateId, Poster> = {
     kicker: 'full-stack developer // R&D // web, app, AI, IoT',
     paragraphs: [
       'I build reliable, fast software with a focus on usability and maintainability.',
-      'Today: full-stack, industrial-grade systems. Smart dashboards, real-time data and interfaces that control and monitor automated production lines.',
+      'Full-stack, industrial-grade systems. Smart dashboards, real-time data and interfaces that control and monitor automated production lines.',
       'Analytical, structured, solution-oriented. I take on complex projects alone and I like organising a team.',
     ],
     tags: [
@@ -98,7 +101,7 @@ export const POSTERS: Record<StateId, Poster> = {
     ],
     links: [
       { label: 'GitHub', href: 'https://github.com/voidbrain' },
-      { label: 'Stack Overflow', href: 'https://stackoverflow.com/users/1000137/voidbrain' },
+      { label: 'LinkedIn', href: 'https://www.linkedin.com/in/voidbrain/' },
     ],
     figure: 'Placeholder 3D figure of Daniele, head tilted down towards a screen, wearing glasses.',
     side: 'Work',
@@ -128,7 +131,7 @@ export const POSTERS: Record<StateId, Poster> = {
     paragraphs: [
       'Out of office I fly FPV freestyle: goggles on, the world seen from a drone a few metres above the grass.',
       'I build things with Raspberry Pi and Arduino, print parts in 3D, and play with machine learning, AR, mesh networks and edge computing.',
-      'Clear sky: a camera pointed at it. Cloudy: Ultimate Frisbee.',
+      'Clear sky: a camera pointed at it.',
     ],
     tags: [
       'FPV freestyle',
@@ -139,20 +142,23 @@ export const POSTERS: Record<StateId, Poster> = {
       'ML / AI / AR',
       'Mesh / edge',
       'Astrophotography',
-      'Ultimate Frisbee',
       'Hiking',
     ],
     entries: [
       {
-        when: 'PRJ_01',
-        what: '3D configurator',
-        detail: 'Drag catalogue items into a fitted wall, get the quote and the spec sheet.',
+        when: 'NN_01',
+        what: 'Latent drift',
+        detail: 'Weights wander at night. The loss curve hums back.',
       },
-      { when: 'PRJ_02', what: 'Product wizard', detail: 'Build and personalise a bag in 3D.' },
       {
-        when: 'PRJ_03',
-        what: 'Mobile app',
-        detail: 'Calendar, push, photos, geolocation, sync.',
+        when: 'NN_02',
+        what: 'Synth eye',
+        detail: 'A vision model that only sees drones, and pretends not to.',
+      },
+      {
+        when: 'NN_03',
+        what: 'Ghost mesh',
+        detail: 'An agent swarm on a mesh of tiny boards. Mostly harmless.',
       },
     ],
     links: [{ label: 'Instagram', href: 'https://www.instagram.com/il_bire/' }],
@@ -182,11 +188,16 @@ export const POSTERS: Record<StateId, Poster> = {
     kicker: 'low power // do not disturb // dreaming in lorem ipsum',
     paragraphs: [
       'We will be restoring normality as soon as we are sure what is normal anyway. (Douglas Adams, The Hitchhiker’s Guide to the Galaxy)',
-      'Reading, travelling, music, mountains and nature.',
-      'Leave a message after the beep: I will answer when I wake up.',
+      'Reading, travelling, music, mountains and nature. Ultimate Frisbee when I am awake.',
+      {
+        link: { label: 'Leave a message after the beep', href: 'mailto:info@voidbrain.net' },
+        after: ': I will answer when I wake up.',
+      },
     ],
-    tags: ['Reading', 'Travelling', 'Music', 'Mountains', 'Science'],
-    entries: [{ when: '2012', what: 'The old site', detail: 'Still running, under /old/.' }],
+    tags: ['Reading', 'Travelling', 'Music', 'Mountains', 'Science', 'Ultimate Frisbee'],
+    entries: [
+      { when: '03:12', what: 'REM log', detail: 'Dreaming in TypeScript, waking up in YAML.' },
+    ],
     links: [
       { label: 'LinkedIn', href: 'https://www.linkedin.com/in/voidbrain/' },
       { label: 'GitHub', href: 'https://github.com/voidbrain' },
