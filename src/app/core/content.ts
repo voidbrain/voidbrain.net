@@ -67,7 +67,7 @@ export const POSTERS: Record<StateId, Poster> = {
     paragraphs: [
       'I build reliable, fast software with a focus on usability and maintainability.',
       'Full-stack, industrial-grade systems. Smart dashboards, real-time data and interfaces that control and monitor automated production lines.',
-      'Analytical, structured, solution-oriented. I take on complex projects alone and I like organising a team.',
+      'Analytical, structured, solution-oriented. I take on complex projects, and I like challenges: the harder, the better.',
     ],
     tags: [
       'Angular',
