@@ -1,4 +1,5 @@
 import {
+  directionTo,
   DEFAULT_STATE,
   STATES,
   hashFor,
@@ -43,5 +44,13 @@ describe('states', () => {
     expect(swipeDelta(120, 10)).toBe(-1);
     expect(swipeDelta(-30, 0)).toBe(0);
     expect(swipeDelta(-90, 100)).toBe(0);
+  });
+
+  it('directionTo says whether the target is the next or the previous state', () => {
+    expect(directionTo('work', 'play')).toBe(1);
+    expect(directionTo('play', 'work')).toBe(-1);
+    expect(directionTo('sleep', 'work')).toBe(1);
+    expect(directionTo('work', 'sleep')).toBe(-1);
+    expect(directionTo('play', 'play')).toBe(0);
   });
 });

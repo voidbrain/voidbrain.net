@@ -20,7 +20,7 @@ import { HudClock } from './clock';
   styles: `
     pre {
       margin: 0;
-      font: 700 0.8rem / 1.15 var(--font-mono);
+      font: 700 1em / 1.15 var(--font-mono);
       letter-spacing: 0.25em;
       white-space: pre;
       overflow: hidden;

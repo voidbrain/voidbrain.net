@@ -65,7 +65,9 @@
 </div>
 
 <footer class="poster__foot">
-  <p class="display display--foot" aria-hidden="true">{{ p().footline }}</p>
+  <p class="display display--foot" aria-hidden="true" [attr.data-text]="p().footline">
+    {{ p().footline }}
+  </p>
   @switch (state()) {
     @case ('work') {
       <vb-glyph-matrix [seed]="4" caption="MTX_WORK" [lines]="3" [cols]="10" />

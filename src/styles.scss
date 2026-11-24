@@ -6,7 +6,7 @@
   --accent: var(--vb-black);
   --on-accent: var(--vb-acid);
   --mark: #fff;
-  --font-display: 'Anton', 'Impact', sans-serif;
+  --font-display: 'Black Ops One', 'Impact', sans-serif;
 }
 
 @mixin tone-play {
@@ -91,6 +91,20 @@ body {
   margin: 0;
   min-height: 100dvh;
   overflow-x: hidden;
+}
+
+// wide screens: the whole page is one screen, no page scrollbar; the sheet takes the height left by the bars
+@media (min-width: 1100px) and (min-height: 600px) {
+  body {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  vb-root {
+    display: contents;
+  }
 }
 
 a {
@@ -205,6 +219,11 @@ a {
   @media (min-width: 1100px) {
     padding: var(--space-3);
   }
+
+  @media (min-width: 1100px) and (min-height: 600px) {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
 }
 
 .side {
@@ -225,20 +244,43 @@ a {
   }
 
   @media (min-width: 1100px) {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+  }
+
+  // a big arrow and the state's name: the strip reads as a way to that poster, not as decoration
+  &__arrow {
+    font-size: clamp(3rem, 6vw, 6rem);
+    line-height: 1;
+    transition: translate 160ms;
+  }
+
+  &--prev:hover .side__arrow {
+    translate: -8px 0;
+  }
+
+  &--next:hover .side__arrow {
+    translate: 8px 0;
   }
 
   &__word {
     display: block;
-    font: 400 clamp(6rem, 13vw, 14rem) / 0.85 var(--font-display);
+    font: 400 clamp(4rem, 8vw, 9rem) / 0.85 var(--font-display);
     text-transform: uppercase;
     white-space: nowrap;
     writing-mode: vertical-rl;
   }
 
   &--prev .side__word {
-    margin-left: auto;
     transform: rotate(180deg);
+  }
+
+  // Major Mono Display draws its thin letters in lowercase; its capitals are heavy
+  &[data-tone='sleep'] .side__word {
+    text-transform: lowercase;
   }
 }
 
@@ -246,6 +288,7 @@ a {
   container: sheet / inline-size;
   position: relative;
   isolation: isolate;
+  z-index: 1; // above the side strips while it slides
   flex: 0 0 auto;
   width: 100%;
   overflow: hidden;
@@ -254,6 +297,18 @@ a {
 
   @media (min-width: 1100px) {
     width: min(860px, max(620px, 84dvh));
+  }
+
+  // as tall as the stage, as wide as a portrait poster of that height
+  @media (min-width: 1100px) and (min-height: 600px) {
+    width: clamp(560px, calc((100dvh - 2 * var(--bar) - 28px - 2 * var(--space-3)) * 0.84), 900px);
+    overflow-y: auto; // reachable when the poster is taller than the screen; no page scrollbar either way
+    scrollbar-width: none;
+
+    // sleep keeps the size it had before the fit-to-screen change (owner: sleep stays as it was)
+    &[data-tone='sleep'] {
+      width: min(860px, max(620px, 84dvh));
+    }
   }
 }
 
@@ -289,24 +344,6 @@ a {
   > * {
     position: relative;
     z-index: 2;
-    animation: poster-in var(--switch-time) steps(5, end);
-  }
-}
-
-@keyframes poster-in {
-  0% {
-    opacity: 0;
-    clip-path: inset(0 0 100% 0);
-    translate: -8px 0;
-  }
-  40% {
-    opacity: 1;
-    clip-path: inset(0 0 40% 0);
-    translate: 6px 0;
-  }
-  100% {
-    clip-path: inset(0 0 0 0);
-    translate: none;
   }
 }
 
@@ -326,7 +363,7 @@ a {
   top: var(--space-4);
   left: 2px;
   margin: 0;
-  font-size: 0.625rem;
+  font-size: 0.8em;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -347,14 +384,14 @@ a {
 
 .mark {
   position: absolute;
-  font-size: 0.625rem;
+  font-size: 0.8em;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   white-space: nowrap;
 
   &--big {
-    font-size: 1.75rem;
+    font-size: 2.2em;
     line-height: 1;
     font-weight: 400;
   }
@@ -550,7 +587,7 @@ a {
     justify-content: space-between;
     gap: var(--space-2);
     margin-top: var(--space-1);
-    font-size: 0.5625rem;
+    font-size: 0.72em;
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
@@ -565,7 +602,7 @@ a {
 
 // ---- wide sheets: one dense, overlapping layout per state, the figure smaller and in a different place
 
-@container sheet (min-width: 600px) {
+@container sheet (min-width: 560px) {
   .figure {
     position: absolute;
     height: auto;
@@ -576,8 +613,21 @@ a {
     grid-template-columns: repeat(6, minmax(0, 1fr));
     grid-template-rows: auto auto 1fr auto auto;
     gap: var(--space-2) var(--space-3);
-    min-height: calc(100dvh - 2 * var(--bar) - 28px - 2 * var(--space-3));
-    font-size: 0.75rem;
+    min-height: calc(100dvh - 2 * var(--bar) - 28px - 24px); // 24px: the stage padding
+    // every size inside a wide sheet follows the sheet's width, and the sheet's width follows the screen's
+    // height, so the poster scales as one picture; text never goes below a readable size in rem (which also
+    // follows the visitor's font-size setting), and when that no longer fits, the sheet scrolls inside
+    --text-xs: max(0.625rem, 1.3cqw);
+    --text-s: max(0.6875rem, 1.55cqw);
+    --text-m: max(0.875rem, 2.05cqw);
+    --space-1: 0.5cqw;
+    --space-2: 1cqw;
+    --space-3: 1.55cqw;
+    --space-4: 2.05cqw;
+    --space-5: 3.1cqw;
+    --space-6: 5.2cqw;
+    --line: max(1px, 0.26cqw);
+    font-size: var(--text-s);
     padding: var(--space-4) var(--space-5) var(--space-5) var(--space-6);
     pointer-events: none;
 
@@ -600,14 +650,46 @@ a {
   }
   .hud-row {
     grid-area: hud;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   .poster__foot {
     grid-area: foot;
   }
 }
 
+// sleep keeps its earlier, fixed sizes: the scaling tokens above do not apply to it
+@container sheet (min-width: 560px) {
+  [data-tone='sleep'] .poster {
+    --text-xs: 0.6875rem;
+    --text-s: 0.8125rem;
+    --text-m: 1rem;
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 40px;
+    --line: 2px;
+    font-size: 0.75rem;
+
+    > .vert,
+    .mark {
+      font-size: 0.625rem;
+    }
+    .mark--big {
+      font-size: 1.75rem;
+    }
+    .hud__caption {
+      font-size: 0.5625rem;
+    }
+    vb-terminal-log {
+      font-size: 0.795rem; // its log text is 0.88em: 0.7rem, as before
+    }
+  }
+}
+
 // work: a huge condensed WORK over the top, the figure low on the right behind an outlined FULL STACK
-@container sheet (min-width: 600px) {
+@container sheet (min-width: 560px) {
   [data-tone='work'] {
     .figure {
       right: 6%;
@@ -626,14 +708,14 @@ a {
     }
 
     .display {
-      font-size: 27cqw;
-      line-height: 0.78;
+      font-size: 21cqw;
+      line-height: 0.85;
       text-transform: uppercase;
-      letter-spacing: -0.01em;
     }
 
     .display--foot {
-      font-size: 8.5cqw;
+      font-size: 4.8cqw;
+      line-height: 1;
     }
 
     .back {
@@ -648,7 +730,7 @@ a {
 }
 
 // play: the figure high on the left over a giant FPV, the glitched headline running down the right edge
-@container sheet (min-width: 600px) {
+@container sheet (min-width: 560px) {
   [data-tone='play'] {
     .figure {
       left: 8%;
@@ -696,8 +778,90 @@ a {
   }
 }
 
+// play extras: a big 遊び with noise around it, and FUTURE IS NOW as extruded 80s chrome that glitches now and then
+@container sheet (min-width: 560px) {
+  [data-tone='play'] {
+    .kanji {
+      font-size: 15cqw;
+      line-height: 0.95;
+      padding: var(--space-2);
+      background:
+        repeating-linear-gradient(0deg, var(--ink) 0 1px, transparent 1px 5px),
+        radial-gradient(circle at 30% 40%, transparent 0 55%, var(--ground) 56%);
+      background-blend-mode: normal;
+      text-shadow:
+        3px 0 0 var(--mark),
+        -2px 0 0 var(--ground);
+    }
+  }
+}
+
+[data-tone='play'] .display--foot {
+  position: relative;
+  font-family: 'Audiowide', var(--font-display);
+  font-size: 8cqw;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--ground);
+  -webkit-text-stroke: 2px var(--ink);
+  text-shadow:
+    1px 1px 0 var(--ink),
+    2px 2px 0 var(--ink),
+    3px 3px 0 var(--ink),
+    4px 4px 0 var(--ink),
+    5px 5px 0 var(--ink),
+    6px 6px 0 var(--ink),
+    7px 7px 0 var(--ink),
+    8px 8px 0 var(--ink);
+  transform: perspective(500px) rotateX(18deg) skewX(-10deg);
+  transform-origin: left bottom;
+
+  // two copies of the text, sliced and shifted for a few frames every few seconds
+  &::before,
+  &::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    color: var(--mark);
+    -webkit-text-stroke: 0;
+    text-shadow: none;
+    opacity: 0;
+    animation: foot-glitch 3.2s steps(1, end) infinite;
+  }
+
+  &::after {
+    color: var(--ink);
+    animation-delay: 0.12s;
+  }
+}
+
+@keyframes foot-glitch {
+  0%,
+  86%,
+  100% {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+    translate: 0 0;
+  }
+  88% {
+    opacity: 1;
+    clip-path: inset(10% 0 62% 0);
+    translate: -10px 0;
+  }
+  91% {
+    opacity: 1;
+    clip-path: inset(55% 0 20% 0);
+    translate: 12px 0;
+  }
+  94% {
+    opacity: 1;
+    clip-path: inset(30% 0 45% 0);
+    translate: -5px 0;
+  }
+}
+
 // sleep: quiet paper, the figure low on the left on a green slab, a thin vertical sleep_mode on the right
-@container sheet (min-width: 600px) {
+@container sheet (min-width: 560px) {
   [data-tone='sleep'] {
     .figure {
       left: 6%;
@@ -758,7 +922,7 @@ a {
 }
 
 // play and sleep: the headline runs down the right edge, outside the grid
-@container sheet (min-width: 600px) {
+@container sheet (min-width: 560px) {
   [data-tone='play'],
   [data-tone='sleep'] {
     .poster__head {
@@ -772,7 +936,7 @@ a {
 }
 
 // narrow sheets: the stacked layout keeps the big words, just smaller
-@container sheet (max-width: 599px) {
+@container sheet (max-width: 559px) {
   .poster > .back {
     top: 0;
     right: 0;
@@ -806,12 +970,45 @@ a {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .bar,
-  .side {
-    transition: none;
+// the manga figure test (?figure=manga): every few seconds a few frames of sliced, shifted glitch
+.self-model--manga canvas {
+  animation: figure-glitch 4.6s steps(1, end) infinite;
+}
+
+@keyframes figure-glitch {
+  0%,
+  90%,
+  100% {
+    clip-path: none;
+    translate: 0 0;
+    filter: none;
   }
-  .poster > * {
+  91% {
+    clip-path: inset(18% 0 52% 0);
+    translate: -14px 0;
+  }
+  93% {
+    clip-path: inset(48% 0 22% 0);
+    translate: 10px 0;
+    filter: invert(1);
+  }
+  95% {
+    clip-path: inset(0 0 70% 0);
+    translate: 4px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .self-model--manga canvas {
     animation: none;
+  }
+  [data-tone='play'] .display--foot::before,
+  [data-tone='play'] .display--foot::after {
+    animation: none;
+  }
+  .bar,
+  .side,
+  .side__arrow {
+    transition: none;
   }
 }

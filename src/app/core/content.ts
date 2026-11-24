@@ -56,9 +56,9 @@ export const POSTERS: Record<StateId, Poster> = {
   work: {
     title: 'Work',
     headline: 'WORK',
-    footline: 'APP & WEB',
+    footline: 'WEB · MOBILE · AI · INDUSTRIAL SOFTWARE',
     kanji: '仕事',
-    kicker: 'app & web // full-stack developer // R&D',
+    kicker: 'full-stack developer // R&D // web, mobile, AI, industrial software',
     paragraphs: [
       'I build reliable, fast software with a focus on usability and maintainability.',
       'Today: full-stack, industrial-grade systems. Smart dashboards, real-time data and interfaces that control and monitor automated production lines.',

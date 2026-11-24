@@ -22,7 +22,7 @@ import { HudClock } from './clock';
       margin: 0;
       padding: 0;
       list-style: none;
-      font-size: 0.7rem;
+      font-size: 0.88em;
       line-height: 1.45;
     }
     li {

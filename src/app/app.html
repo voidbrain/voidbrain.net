@@ -24,9 +24,10 @@
     (mousedown)="$event.preventDefault()"
     (click)="go(neighbours()[0])"
   >
-    <span class="side__word">{{ posters[neighbours()[0]].back }}</span>
+    <span class="side__arrow">◀</span>
+    <span class="side__word">{{ posters[neighbours()[0]].title }}</span>
   </button>
-  <div class="sheet" [attr.data-tone]="state()">
+  <div class="sheet" #sheet [attr.data-tone]="state()">
     <div class="figure">
       @defer (on idle; on timer(2500ms)) {
         <vb-self-model [state]="state()" />
@@ -47,7 +48,8 @@
     (mousedown)="$event.preventDefault()"
     (click)="go(neighbours()[1])"
   >
-    <span class="side__word">{{ posters[neighbours()[1]].back }}</span>
+    <span class="side__arrow">▶</span>
+    <span class="side__word">{{ posters[neighbours()[1]].title }}</span>
   </button>
   <p class="visually-hidden" aria-live="polite">{{ announcement() }}</p>
 </main>

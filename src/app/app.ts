@@ -4,6 +4,8 @@ import {
   Injector,
   afterNextRender,
   computed,
+  ElementRef,
+  viewChild,
   effect,
   inject,
   signal,
@@ -12,6 +14,7 @@ import { OWNER, POSTERS } from './core/content';
 import {
   STATES,
   StateId,
+  directionTo,
   hashFor,
   isStateId,
   stateFromHash,
@@ -50,6 +53,8 @@ export class App {
   );
   protected readonly announcement = computed(() => `${this.poster().title} poster`);
 
+  private readonly sheet = viewChild<ElementRef<HTMLElement>>('sheet');
+
   private swipeStart: { x: number; y: number } | null = null;
 
   constructor() {
@@ -64,10 +69,27 @@ export class App {
     if (state === this.state()) return;
     // the poster is recreated: if focus was inside it, give it to the new heading instead of <body>
     const focusInPoster = !!this.doc.activeElement?.closest('vb-poster');
+    this.slide(directionTo(this.state(), state));
     this.state.set(state);
     if (focusInPoster) this.focusTitle();
     const hash = hashFor(state);
     if (this.doc.location.hash !== hash) this.doc.defaultView?.history.pushState(null, '', hash);
+  }
+
+  /** Slides the poster sheet in from the side it comes from: from the right going forward, from the left going
+   *  back. A cut with reduced motion. */
+  private slide(dir: -1 | 0 | 1): void {
+    const el = this.sheet()?.nativeElement;
+    const win = this.doc.defaultView;
+    if (!dir || !el || typeof el.animate !== 'function') return;
+    if (win?.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    el.animate(
+      [
+        { transform: `translateX(${dir * 18}%)`, opacity: 0.2 },
+        { transform: 'translateX(0)', opacity: 1 },
+      ],
+      { duration: 420, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' },
+    );
   }
 
   protected step(delta: number): void {
@@ -78,7 +100,9 @@ export class App {
   protected fromHash(): void {
     const id = this.doc.location.hash.replace(/^#/, '').toLowerCase();
     if (id && !isStateId(id)) return;
-    this.state.set(stateFromHash(this.doc.location.hash));
+    const next = stateFromHash(this.doc.location.hash);
+    this.slide(directionTo(this.state(), next));
+    this.state.set(next);
   }
 
   protected skipToContent(e: Event): void {
