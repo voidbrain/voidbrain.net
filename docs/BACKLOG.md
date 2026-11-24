@@ -218,24 +218,24 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 |:---:|---|---|---|
 | 🔴 | 🔺 P1 | Open | 🟡 Medium |
 
-🧑 **→ Human action required: Decision**<br />Choose the GitHub remote and the deploy method in [design](DESIGN.md#open-decisions).
+🧑 **→ Human action required: Decision**<br />Choose the upload method and the branch protection for `main`, in [design](DESIGN.md#open-decisions).
 
 | | |
 |---|---|
-| **Issue** | The repository is local only, so CI never runs, and there is no way yet to put the build on the voidbrain.net host. |
-| **Reproduce** | `git remote -v` prints nothing; README "Deploying" names no method. |
-| **Check** | The repository has a GitHub remote with `main` protected and the `CI` workflow required; a PR runs CI green; the deploy (manual script or CI job) uploads `dist/voidbrain-net/browser/` without deleting legacy folders, and the README says how. |
+| **Issue** | The code now lives on GitHub, but `main` has no protection or required checks, and there is no way yet to put the build on the voidbrain.net host. |
+| **Reproduce** | `gh api repos/voidbrain/voidbrain.net/branches/main --jq .protected` prints `false`; README "Deploying" names no upload method. |
+| **Check** | `main` is protected with the `CI` workflow required; a PR runs CI green; the upload (manual script or CI job) puts `dist/voidbrain-net/browser/` on the host without deleting legacy folders, following the [deploy steps](DESIGN.md#deploy-steps), and the README says how. |
 
 <details>
 <summary>Next action, estimates and PR history</summary>
 
-**Next action / closure evidence:** once the owner chooses, add the remote (for example the existing `voidbrain/voidbrain.net`, which holds the earlier Angular attempt, or a new repository), push, open the first PR so F-001 gets its CI run, and write the deploy (an upload that never uses a "delete extra files" mode). Branch protection and deploy secrets are the owner's settings.
+**Next action / closure evidence:** owner chose `https://github.com/voidbrain/voidbrain.net` on 2026-11-24. That repository held the earlier Angular attempt (`main` at `ca13761`, GitHub Pages from `gh-pages`), with history unrelated to this one; it is joined by a merge commit whose content is this project, opened as a PR, so nothing is force-pushed and the old history stays. Its old workflows (`gh-pages.yml`, `node.js.yml`) leave `main` with that merge; the `gh-pages` branch and its Pages site are untouched. Next: CI green on the PR, the owner merges, then the upload method and branch protection (owner settings).
 
-**Estimates:** Medium remaining effort, about 2–3 agent hours plus the owner's repository settings. Estimated 2026-11-24; not acceptance evidence.
+**Estimates:** Medium remaining effort, about 2–3 agent hours for the upload script or job, plus the owner's settings. Reassessed 2026-11-24; not acceptance evidence.
 
 | Field | Value |
 |---|---|
-| PR / evidence | — |
+| PR / evidence | Remote `origin` = `voidbrain/voidbrain.net` |
 | Opened | 2026-11-24 |
 | Verification | Pending |
 | Reviewed | 2026-11-24 |

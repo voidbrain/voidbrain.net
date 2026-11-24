@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "reviewed": "2026-11-24T13:25:10.483Z",
+  "reviewed": "2026-11-24T14:13:41.994Z",
   "policy": "dabfdc5836dc54371c7b2580ddb32649ec147220eee6828cc16709d6c8363294",
   "inputs": {
-    "AGENTS.md": "81a2a210dfdd69c963cebfb064e5f48c4fec4e26876f81de6fd638f019d1623c",
+    "AGENTS.md": "17d5f1fed186ac152cd1f3762778b1ea5b28930e6a5c144d7a8e78a2852ca6c4",
     "docs/BACKLOG-RULES.md": "bcde70273837df8dbb2835e92ba9e5a071b063200156f2e2f84219f7499c4146",
     "docs/agents/angular.md": "ce4a2b6fd81fd5eae723cf2d1eb42203e253ab5d08c13457d656814aeaf2448e",
     "docs/agents/architecture-review.md": "5d967314854912b1a5f1446aeab309763b14f9856bceb3c82df5c6c25c166526",
@@ -135,6 +135,12 @@
       "disposition": "implemented",
       "target": "tools/test-legacy-paths.mjs",
       "evidence": "Project-owned Apache test of public/.htaccess and public/old/.htaccess (119 requests) plus the public/ names check; npm run test:legacy, CI step on apache2; mutation check fails 11 cases."
+    },
+    {
+      "kind": "rule",
+      "disposition": "implemented",
+      "target": "AGENTS.md",
+      "evidence": "F-007: remote is voidbrain/voidbrain.net; the no-remote project line becomes: no branch protection yet, the agent opens PRs and runs checks, the owner merges."
     }
   ]
 }

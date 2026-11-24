@@ -80,7 +80,7 @@ Expected result: the model loads in <https://gltf-viewer.donmccurdy.com/> withou
 
 The owner decides these; each is a 🧑 Decision in [the backlog](BACKLOG.md).
 
-- **F-007**: how the build reaches the Apache host (FTP/SFTP upload by hand, a CI deploy with a secret, or another host), and whether the code gets a GitHub remote.
+- **F-007**: how the build reaches the Apache host (FTP/SFTP upload by hand, or a CI deploy with a secret), and whether `main` gets branch protection with the `CI` workflow required. The code is on GitHub at `voidbrain/voidbrain.net` (owner, 2026-11-24); its earlier Angular attempt stays in the history and on the `gh-pages` branch.
 
 ## Tests
 

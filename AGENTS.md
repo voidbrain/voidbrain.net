@@ -1,6 +1,6 @@
 ## Project conventions (voidbrain.net)
 
-The project is **voidbrain.net**, Daniele's personal site: one static page with three states (work, play, sleep) in a cyberpunk poster style, a 3D self-model and interactive HUD components ([design](docs/DESIGN.md)). The repository is local for now (branch `main`, no remote yet: F-007), the Angular project `voidbrain-net`; `npm run build` writes static files to `dist/voidbrain-net/browser/`, deployed with base href `/` into the Apache docroot of `voidbrain.net`, next to the old site's folders, which must keep working ([legacy paths](docs/DESIGN.md#legacy-paths)).
+The project is **voidbrain.net**, Daniele's personal site: one static page with three states (work, play, sleep) in a cyberpunk poster style, a 3D self-model and interactive HUD components ([design](docs/DESIGN.md)). The repository is `voidbrain/voidbrain.net` on GitHub (public), the Angular project `voidbrain-net`; `npm run build` writes static files to `dist/voidbrain-net/browser/`, deployed with base href `/` into the Apache docroot of `voidbrain.net`, next to the old site's folders, which must keep working ([legacy paths](docs/DESIGN.md#legacy-paths)).
 
 ### Architecture
 
@@ -22,7 +22,7 @@ The project is **voidbrain.net**, Daniele's personal site: one static page with 
 
 ### Checks before you finish
 
-No remote, CI or branch protection yet (F-007). Until there is one, the agent works on a branch, runs every check below locally, and leaves the merge into `main` to the owner. <!-- project -->
+No branch protection or required checks on `main` yet (F-007; repository settings are the owner's). Until they exist, the agent opens PRs and runs every check below, and the owner merges. <!-- project -->
 Use Node 24 (`.nvmrc`; `nvm use`): the Homebrew Node on the owner's Mac does not start. <!-- project -->
 
 Before you open, update or merge a PR, read [pull requests](docs/agents/pull-requests.md).
