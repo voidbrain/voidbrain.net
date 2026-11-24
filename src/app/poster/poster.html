@@ -11,7 +11,13 @@
   <h2 class="title" id="poster-title" tabindex="-1">{{ p().title }}</h2>
   <div class="copy">
     @for (para of p().paragraphs; track $index) {
-      <p>{{ para }}</p>
+      @if (isText(para)) {
+        <p>{{ para }}</p>
+      } @else {
+        <p>
+          <a [href]="para.link.href">{{ para.link.label }}</a>{{ para.after }}
+        </p>
+      }
     }
   </div>
   <ul class="tags" aria-label="Keywords">

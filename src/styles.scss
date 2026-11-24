@@ -662,12 +662,13 @@ a {
   margin-left: 0.22em;
 }
 
+// muted: shades of the ink mixed into the ground and an outline, no white or neon (owner, 2026-11-24)
 [data-tone='work'] .display--foot .word {
   &:nth-child(2) {
-    color: #fff;
+    color: color-mix(in srgb, var(--ink) 55%, var(--ground));
   }
   &:nth-child(3) {
-    color: var(--vb-orange);
+    color: color-mix(in srgb, var(--ink) 30%, var(--ground));
   }
   &:nth-child(4) {
     color: transparent;
@@ -684,10 +685,11 @@ a {
 
 [data-tone='play'] .display--foot .word {
   &:nth-child(2) {
-    color: #fff;
+    color: color-mix(in srgb, var(--ink) 50%, var(--ground));
   }
   &:nth-child(3) {
-    color: var(--vb-acid);
+    color: transparent;
+    -webkit-text-stroke-color: var(--ink);
   }
 }
 

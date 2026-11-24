@@ -1,5 +1,5 @@
 import { Component, computed, input } from '@angular/core';
-import { POSTERS } from '../core/content';
+import { POSTERS, Paragraph } from '../core/content';
 import { StateId } from '../core/states';
 import { FakeQr } from '../hud/fake-qr';
 import { GameOfLife } from '../hud/game-of-life';
@@ -31,4 +31,5 @@ import { WireSphere } from '../hud/wire-sphere';
 export class Poster {
   readonly state = input.required<StateId>();
   protected readonly p = computed(() => POSTERS[this.state()]);
+  protected readonly isText = (para: Paragraph): para is string => typeof para === 'string';
 }
