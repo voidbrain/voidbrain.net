@@ -107,4 +107,13 @@ describe('App shell', () => {
       }
     }
   });
+
+  it('links the sleep message to e-mail', async () => {
+    const { el } = await render('/#sleep');
+    const link = el.querySelector<HTMLAnchorElement>(
+      'vb-poster .copy a[href="mailto:info@voidbrain.net"]',
+    );
+    expect(link?.textContent?.trim()).toBe('Leave a message after the beep');
+    expect(link?.parentElement?.textContent).toContain('I will answer when I wake up.');
+  });
 });
