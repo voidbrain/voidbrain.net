@@ -277,11 +277,6 @@ a {
   &--prev .side__word {
     transform: rotate(180deg);
   }
-
-  // Major Mono Display draws its thin letters in lowercase; its capitals are heavy
-  &[data-tone='sleep'] .side__word {
-    text-transform: lowercase;
-  }
 }
 
 .sheet {
@@ -323,17 +318,6 @@ a {
   vb-self-model {
     pointer-events: auto;
   }
-}
-
-.figure-credit {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  z-index: 2;
-  padding: 1px 4px;
-  background: var(--ground);
-  font-size: var(--text-xs);
-  pointer-events: auto;
 }
 
 .figure-placeholder {
@@ -789,7 +773,7 @@ a {
   }
 }
 
-// play extras: a big 遊び with noise around it, and FUTURE IS NOW glitching now and then
+// play extras: a big 遊び with noise around it
 @container sheet (min-width: 560px) {
   [data-tone='play'] {
     .kanji {
@@ -804,51 +788,6 @@ a {
         3px 0 0 var(--mark),
         -2px 0 0 var(--ground);
     }
-  }
-}
-
-[data-tone='play'] .display--foot {
-  position: relative;
-
-  // two copies of the text, sliced and shifted for a few frames every few seconds
-  &::before,
-  &::after {
-    content: attr(data-text);
-    position: absolute;
-    inset: 0;
-    color: var(--mark);
-    opacity: 0;
-    animation: foot-glitch 1.8s steps(1, end) infinite;
-  }
-
-  &::after {
-    color: var(--ink);
-    animation-delay: 0.12s;
-  }
-}
-
-@keyframes foot-glitch {
-  0%,
-  86%,
-  100% {
-    opacity: 0;
-    clip-path: inset(0 0 100% 0);
-    translate: 0 0;
-  }
-  88% {
-    opacity: 1;
-    clip-path: inset(10% 0 62% 0);
-    translate: -10px 0;
-  }
-  91% {
-    opacity: 1;
-    clip-path: inset(55% 0 20% 0);
-    translate: 12px 0;
-  }
-  94% {
-    opacity: 1;
-    clip-path: inset(30% 0 45% 0);
-    translate: -5px 0;
   }
 }
 
@@ -963,10 +902,6 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-tone='play'] .display--foot::before,
-  [data-tone='play'] .display--foot::after {
-    animation: none;
-  }
   .bar,
   .side,
   .side__arrow {

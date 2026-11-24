@@ -5,9 +5,6 @@ AddDefaultCharset utf-8
 DirectoryIndex index.html
 ErrorDocument 404 /404.html
 
-# 3D models (the figure test's head scan)
-AddType model/gltf-binary .glb
-
 <IfModule mod_headers.c>
   Header unset X-Powered-By
   # Angular's hashed bundles and fonts never change (name-HASH.ext); legacy files keep the server default.

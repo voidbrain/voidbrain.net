@@ -30,6 +30,8 @@ export interface Poster {
   readonly links: readonly LinkItem[];
   /** Text alternative of the self-model in this state. */
   readonly figure: string;
+  /** What the side strip shows when this poster is a neighbour: the name, or for sleep its symbols (owner). */
+  readonly side: string;
   /** Giant word behind the figure (decorative). */
   readonly back: string;
   /** A line set vertically along the poster edge (decorative). */
@@ -99,6 +101,7 @@ export const POSTERS: Record<StateId, Poster> = {
       { label: 'Stack Overflow', href: 'https://stackoverflow.com/users/1000137/voidbrain' },
     ],
     figure: 'Placeholder 3D figure of Daniele, head tilted down towards a screen, wearing glasses.',
+    side: 'Work',
     back: 'FULL STACK',
     vertical: 'BUILD // TEST // SHIP // REPEAT // BUILD // TEST // SHIP',
     marks: [
@@ -119,7 +122,7 @@ export const POSTERS: Record<StateId, Poster> = {
   play: {
     title: 'Play',
     headline: 'FPV_FREESTYLE',
-    footline: 'FUTURE IS NOW',
+    footline: 'FLY CRASH REPEAT',
     kanji: '遊び',
     kicker: 'quads // goggles on // maker mode',
     paragraphs: [
@@ -154,6 +157,7 @@ export const POSTERS: Record<StateId, Poster> = {
     ],
     links: [{ label: 'Instagram', href: 'https://www.instagram.com/il_bire/' }],
     figure: 'Placeholder 3D figure of Daniele wearing FPV goggles with an antenna.',
+    side: 'Play',
     back: 'FPV',
     vertical: 'ARM // THROTTLE UP // DIVE // POWER LOOP // DISARM',
     marks: [
@@ -190,6 +194,7 @@ export const POSTERS: Record<StateId, Poster> = {
       { label: 'The 2012 site', href: '/old/' },
     ],
     figure: 'Placeholder 3D figure of Daniele asleep, head tilted, wearing a sleep mask.',
+    side: 'zzz',
     back: 'zzz',
     vertical: 'do not disturb // do not disturb // do not disturb',
     marks: [

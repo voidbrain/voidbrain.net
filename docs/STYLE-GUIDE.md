@@ -91,7 +91,7 @@ Layout: top bar, hazard stripe, the stage, hazard stripe, bottom bar. The stage 
 ### States and motion
 
 - Hover, active, selected, disabled and focus each have one treatment. Focus is always visible on every ground colour.
-- Switching state: the sheet slides in from the side it comes from (420 ms, ease-out, Web Animations in `app.ts`), the bars step to the new colour, the figure blends its pose. Glitches are kept for texture: the play foot line (every 1.8 s).
+- Switching state: the sheet slides in from the side it comes from (420 ms, ease-out, Web Animations in `app.ts`), the bars step to the new colour, the figure blends its pose. Glitch animations were tried on the play foot line and on the figure, and removed (owner: disturbing); the glitch lives in the type (Rubik Glitch) only.
 - Respect `prefers-reduced-motion`: the state switch becomes a cut, the model stops idling, the HUD shows still frames, the terminal cursor stops blinking.
 
 ## Components
@@ -100,7 +100,7 @@ Layout: top bar, hazard stripe, the stage, hazard stripe, bottom bar. The stage 
 |---|---|---|
 | Shell | `src/app/app.ts` | Bars, switcher (`.switch`, `aria-pressed`), stage, live announcement of the state. |
 | Poster | `src/app/poster/` | One state's headlines, back word (`.back`), vertical line (`.vert`), text, tags (`.tags`), timeline (`.entries`), links (`.links`), HUD pieces and the marks layer (`.marks`, `.barcode`). |
-| Side sheets | `src/app/app.html` (`.side`) | The neighbouring states at the sides from 1100 px: their ground, a big arrow and their name in their own face. Click switches; out of the tab order and hidden from assistive technology, since the switcher does the same. |
+| Side sheets | `src/app/app.html` (`.side`) | The neighbouring states at the sides from 1100 px: their ground, a big arrow and `POSTERS[state].side` in their own face (WORK, PLAY, and ZZZ symbols for sleep). Click switches; out of the tab order and hidden from assistive technology, since the switcher does the same. |
 | Self-model | `src/app/figure/self-model.ts` | three.js figure (F-004), lazy. Colours from `--ink`/`--ground`. |
 | Signal chart | `src/app/hud/signal-chart.ts` | Animated line. Hover or Space freezes, drag or ← → scrubs. |
 | Wire sphere | `src/app/hud/wire-sphere.ts` | Turning wireframe globe. Drag or arrow keys turn it. |
@@ -125,7 +125,7 @@ Every HUD piece is a `.hud` frame (2px ink border, caption row) with `role="grou
 
 - Everything in `public/` is copied to the server's docroot. Never name a file or folder there like a legacy folder (`img`, `js`, `fonts`, `style`, …): see [design](DESIGN.md), "Legacy paths"; `npm run test:legacy` fails on one. Use `public/assets/` and `public/models/`.
 - Fonts come from npm (`@fontsource`, OFL), not from `public/`; the favicon is the old site's.
-- 3D models: glTF binary (`.glb`), Draco-compressed, under 3 MB in total (F-004). The test head scan `public/models/lee-perry-smith.glb` (405 kB, CC BY 3.0, credited in `public/models/CREDITS.txt` and by a link on the figure; Apache serves it as `model/gltf-binary`) is the three.js file unchanged, without Draco.
+- 3D models: glTF binary (`.glb`), Draco-compressed, under 3 MB in total (F-004).
 - Strip location metadata from any photo before it is committed. Raw scan photos never enter the repository.
 - Fonts and images need a licence that allows web use; record the source next to the file.
 
