@@ -33,6 +33,7 @@ import {
   TorusGeometry,
   WebGLRenderer,
 } from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { POSTERS } from '../core/content';
 import { POSES, Pose, blendPose, easeStep, lookAt } from '../core/pose';
 import { StateId } from '../core/states';
@@ -44,7 +45,6 @@ import { StateId } from '../core/states';
   selector: 'vb-self-model',
   host: {
     class: 'self-model',
-    '[class.self-model--manga]': 'manga',
     role: 'img',
     '[attr.aria-label]': 'label()',
   },
@@ -55,6 +55,17 @@ import { StateId } from '../core/states';
       inset: 0;
       display: grid;
       overflow: hidden;
+    }
+
+    .credit {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      font-size: 0.5625rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--ground);
+      padding: 1px 4px;
     }
 
     .fallback {
@@ -69,13 +80,17 @@ import { StateId } from '../core/states';
     @if (failed()) {
       <div class="fallback"></div>
     }
+    @if (style === 'human') {
+      <span class="credit">Head: Lee Perry-Smith scan, CC BY 3.0</span>
+    }
   `,
 })
 export class SelfModel {
   readonly state = input.required<StateId>();
-  /** Style test (owner, 2026-11-24): `?figure=manga` draws the figure as a screentoned, hatched, outlined manga
-   *  ink drawing that glitches now and then. Off by default; the flat figure stays the shipped one. */
-  protected readonly manga = /[?&]figure=manga\b/.test(inject(DOCUMENT).location?.search ?? '');
+  /** Style tests (owner, 2026-11-24), off by default; the flat figure stays the shipped one.
+   *  `?figure=manga`: the placeholder as a screentoned, hatched, outlined manga ink drawing.
+   *  `?figure=human`: a real human head (a CC BY scan, public/models/CREDITS.txt) inked in monochrome, rougher. */
+  protected readonly style = figureStyle(inject(DOCUMENT).location?.search ?? '');
   protected readonly failed = signal(false);
   protected readonly label = computed(() => POSTERS[this.state()].figure);
 
@@ -112,8 +127,9 @@ export class SelfModel {
     camera.position.set(0, 0.35, 6.2);
     camera.lookAt(0, 0.2, 0);
 
-    const manga = this.manga;
-    const toned = manga ? mangaMaterial() : null;
+    const manga = this.style !== 'flat';
+    const human = this.style === 'human';
+    const toned = manga ? mangaMaterial(human) : null;
     if (toned) toned.uniforms['uPx'].value = renderer.getPixelRatio();
     const ink: MeshBasicMaterial | ShaderMaterial = toned ?? new MeshBasicMaterial();
     const ground = new MeshBasicMaterial();
@@ -202,6 +218,40 @@ export class SelfModel {
     figure.add(head);
     scene.add(figure);
 
+    // human test: the scanned head replaces the faceted skull and the dot eyes once it has loaded
+    let scanned = false;
+    if (human) {
+      new GLTFLoader().load(
+        'models/lee-perry-smith.glb',
+        (gltf) => {
+          let source: Mesh | null = null;
+          gltf.scene.traverse((o) => {
+            if (!source && o instanceof Mesh) source = o;
+          });
+          if (!source) return;
+          const geo = (source as Mesh).geometry.clone();
+          geo.center();
+          geo.computeBoundingBox();
+          const box = geo.boundingBox!;
+          // sized and placed so its eyes sit where the props expect them
+          const scale = 1.8 / (box.max.y - box.min.y);
+          const scan = new Mesh(geo, ink);
+          scan.scale.setScalar(scale);
+          scan.position.set(0, -0.36, 0.02);
+          const outline = new Mesh(geo, hull);
+          outline.scale.setScalar(1.025);
+          scan.add(outline);
+          owned.push(geo);
+          head.add(scan);
+          skull.visible = false;
+          scanned = true;
+          dirty = true;
+        },
+        undefined,
+        () => undefined, // the faceted head stays if the scan cannot load
+      );
+    }
+
     // colours follow the poster tokens of the current state
     const applyColours = () => {
       const css = win.getComputedStyle(this.host);
@@ -209,7 +259,8 @@ export class SelfModel {
       const groundColour = css.getPropertyValue('--ground').trim() || '#a6ff00';
       if (ink instanceof ShaderMaterial) {
         ink.uniforms['uInk'].value.set(inkColour);
-        ink.uniforms['uGround'].value.set(groundColour);
+        // the human test is monochrome: ink on white paper, whatever the poster colour
+        ink.uniforms['uGround'].value.set(human ? '#f2f0ea' : groundColour);
       } else ink.color.set(inkColour);
       hull.color.set(inkColour);
       ground.color.set(groundColour);
@@ -285,7 +336,7 @@ export class SelfModel {
       setProp(glasses, pose.glasses);
       setProp(goggles, pose.goggles);
       setProp(mask, pose.mask);
-      setProp(eyes, pose.eyes);
+      setProp(eyes, scanned ? 0 : pose.eyes);
       // idle: breathing, slower when asleep
       const breath = Math.sin(time * (state === 'sleep' ? 0.9 : 1.6));
       figure.position.y = breath * 0.03;
@@ -316,12 +367,23 @@ export class SelfModel {
 
 /** Manga ink shading: lit faces stay paper, mid tones get a halftone screen, shadows get hatching, the darkest
  *  parts solid ink. Screen-space patterns, so the dots stay the same size as the figure moves. */
-function mangaMaterial(): ShaderMaterial {
+type FigureStyle = 'flat' | 'manga' | 'human';
+
+function figureStyle(search: string): FigureStyle {
+  const m = /[?&]figure=(manga|human)\b/.exec(search);
+  return m ? (m[1] as FigureStyle) : 'flat';
+}
+
+function mangaMaterial(rough = false): ShaderMaterial {
   return new ShaderMaterial({
     uniforms: {
+      uRough: { value: rough ? 1.0 : 0.0 },
       uInk: { value: new Color('#0a0a0a') },
       uGround: { value: new Color('#ff5a1f') },
-      uLight: { value: new Vector3(-0.55, 0.6, 0.75).normalize() },
+      // rough: a hard light from the side, so half the face falls into ink
+      uLight: {
+        value: (rough ? new Vector3(-0.85, 0.4, 0.35) : new Vector3(-0.55, 0.6, 0.75)).normalize(),
+      },
       uDot: { value: 5.0 },
       uPx: { value: 1.0 },
     },
@@ -338,6 +400,7 @@ function mangaMaterial(): ShaderMaterial {
       uniform vec3 uLight;
       uniform float uDot;
       uniform float uPx;
+      uniform float uRough;
       varying vec3 vNormal;
       void main() {
         float light = clamp(dot(normalize(vNormal), uLight) * 0.5 + 0.5, 0.0, 1.0);
@@ -345,13 +408,17 @@ function mangaMaterial(): ShaderMaterial {
         // patterns in CSS pixels, so they keep their size on high-density screens
         vec2 frag = gl_FragCoord.xy / uPx;
         vec2 p = mat2(0.7071, -0.7071, 0.7071, 0.7071) * frag / uDot;
-        float dotR = smoothstep(0.85, 0.25, light) * 0.62;
+        float dotR = smoothstep(mix(0.85, 0.95, uRough), 0.25, light) * 0.62;
         bool dots = length(fract(p) - 0.5) < dotR;
         // hatching in the shadows, cross-hatching in the deeper ones
-        float h1 = step(fract((frag.x + frag.y) / 5.0), 0.38);
-        float h2 = step(fract((frag.x - frag.y) / 5.0), 0.38);
-        bool hatch = (light < 0.42 && h1 > 0.5) || (light < 0.3 && h2 > 0.5);
-        bool solidInk = light < 0.18;
+        // rough: brush-like hatching, the line width jittered in small cells
+        float n = fract(sin(dot(floor(frag / 3.0), vec2(12.9898, 78.233))) * 43758.5453);
+        float w = 0.38 + uRough * (n - 0.5) * 0.3;
+        float period = mix(5.0, 4.0, uRough);
+        float h1 = step(fract((frag.x + frag.y) / period), w);
+        float h2 = step(fract((frag.x - frag.y) / period), w);
+        bool hatch = (light < 0.42 + uRough * 0.08 && h1 > 0.5) || (light < 0.3 + uRough * 0.06 && h2 > 0.5);
+        bool solidInk = light < 0.18 + uRough * 0.07;
         gl_FragColor = vec4((dots || hatch || solidInk) ? uInk : uGround, 1.0);
         // the colours are linear (Color.set converts the CSS sRGB); back to the renderer's output space
         #include <colorspace_fragment>
