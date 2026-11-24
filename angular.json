@@ -3,11 +3,13 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "schematicCollections": ["@angular-eslint/schematics"]
+    "schematicCollections": [
+      "angular-eslint"
+    ]
   },
   "newProjectRoot": "projects",
   "projects": {
-    "voidbrain.net": {
+    "voidbrain-net": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -16,18 +18,11 @@
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "app",
-      "i18n": {
-        "sourceLocale": "en",
-        "locales": {
-          "it": "src/locale/messages.it.xlf"
-        }
-      },
+      "prefix": "vb",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/voidbrain.net",
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -37,13 +32,15 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"],
-            "polyfills": ["@angular/localize/init"]
+            "styles": [
+              "node_modules/@fontsource/rubik-glitch/latin-400.css",
+              "node_modules/@fontsource/jetbrains-mono/latin-400.css",
+              "node_modules/@fontsource/jetbrains-mono/latin-700.css",
+              "src/styles.scss"
+            ]
           },
           "configurations": {
             "production": {
-              "localize": ["en", "it"],
-              "baseHref": "/voidbrain.net/",
               "budgets": [
                 {
                   "type": "initial",
@@ -62,14 +59,6 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
-            },
-            "it": {
-              "localize": ["it"],
-              "outputPath": "dist/voidbrain.net/it"
-            },
-            "en": {
-              "localize": ["en"],
-              "outputPath": "dist/voidbrain.net/en"
             }
           },
           "defaultConfiguration": "production"
@@ -78,16 +67,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "voidbrain.net:build:production"
+              "buildTarget": "voidbrain-net:build:production"
             },
             "development": {
-              "buildTarget": "voidbrain.net:build:development"
-            },
-            "it": {
-              "buildTarget": "voidbrain.net:build:it"
-            },
-            "en": {
-              "buildTarget": "voidbrain.net:build:en"
+              "buildTarget": "voidbrain-net:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -98,17 +81,11 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
-        },
-        "extract-i18n": {
-          "builder": "@angular/build:extract-i18n",
-          "options": {
-            "buildTarget": "voidbrain.net:build"
-          }
-        },
-        "deploy": {
-          "builder": "angular-cli-ghpages:deploy"
         }
       }
     }

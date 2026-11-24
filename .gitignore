@@ -1,34 +1,8 @@
-# Specifies intentionally untracked files to ignore when using Git
-# http://git-scm.com/docs/gitignore
-
-*~
-*.sw[mnpcod]
-.tmp
-*.tmp
-*.tmp.*
-UserInterfaceState.xcuserstate
-$RECYCLE.BIN/
-
-*.log
-log.txt
-
-
-/.sourcemaps
-/.versions
-/coverage
-
-# Ionic
-/.ionic
-/www
-/1more
-/platforms
-/plugins
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
 # Compiled output
 /dist
-/docs
 /tmp
-/docs
 /out-tsc
 /bazel-out
 
@@ -44,7 +18,6 @@ yarn-error.log
 .c9/
 *.launch
 .settings/
-*.sublime-project
 *.sublime-workspace
 
 # Visual Studio Code
@@ -53,24 +26,35 @@ yarn-error.log
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+!.vscode/mcp.json
 .history/*
 
-
 # Miscellaneous
-/.angular
 /.angular/cache
 .sass-cache/
-/.nx
-/.nx/cache
 /connect.lock
 /coverage
 /libpeerconnection.log
 testem.log
 /typings
+__screenshots__/
 
 # System files
 .DS_Store
 Thumbs.db
-# package-lock.json
-.vscode/settings.json
-.env
+# Harness: shared agents and commands in .claude/ are versioned; only local state is ignored.
+.claude/settings.local.json
+.claude/worktrees/
+
+# Browser tests (when added)
+playwright-report/
+test-results/
+
+# Optional local friction measurements; never automatic telemetry.
+.harness/friction.jsonl
+
+.harness/friction-session.json
+.harness/review-outcomes.json
+
+# The complete test report the quiet reporter pairs with (tools/quiet-reporter.mjs).
+.test-report.txt

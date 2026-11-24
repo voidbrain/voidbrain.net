@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "kind": "full",
+  "reviewed": "2026-11-24T11:58:00.000Z",
+  "baseline": "ea46ffacf2d0d5f68e3a6ea9c81a2fce37437537",
+  "report": "docs/audits/2026-11-24-harness-baseline.md",
+  "areas": {
+    "code": {
+      "result": "checked",
+      "evidence": "Scaffold read in full; lint and strict type check clean.",
+      "limits": "Welcome-page code only; no site code exists yet."
+    },
+    "logic": {
+      "result": "checked",
+      "evidence": "No domain logic yet; legacy URL rules traced from the old .htaccess and pages table into DESIGN.",
+      "limits": "Redirect targets await the owner (F-002)."
+    },
+    "tests": {
+      "result": "checked",
+      "evidence": "2 Vitest tests pass; coverage table written (lines 50 %).",
+      "limits": "No browser suite; no e2e job in CI."
+    },
+    "documentation": {
+      "result": "checked",
+      "evidence": "README, AGENTS, areas, DESIGN, STYLE-GUIDE written against the scaffold; local links resolve.",
+      "limits": "Planned behaviour is marked planned with its record."
+    },
+    "harness": {
+      "result": "checked",
+      "evidence": "61 copied files match v10.9.0; adapted files have no placeholders; check:rules, check:backlog, check:maintenance pass.",
+      "limits": "Optional profiles not adopted (see .harness.json note)."
+    },
+    "security": {
+      "result": "checked",
+      "evidence": "No secrets in tree; npm audit clean; install scripts approved for 4 build deps only; push guard installed.",
+      "limits": "No deploy yet; .htaccess hardening reviewed with F-002."
+    },
+    "delivery": {
+      "result": "checked",
+      "evidence": "Production build passes (123.64 kB initial); CI workflow adapted for Node 24, PR and push to main.",
+      "limits": "No remote, so CI never ran; no deploy method (F-007)."
+    },
+    "backlog": {
+      "result": "checked",
+      "evidence": "F-001..F-007 own the harness, legacy paths, states, self-model, HUD, tokens, remote and deploy.",
+      "limits": "Four records wait on owner decisions."
+    }
+  }
+}

@@ -1,0 +1,21 @@
+import { Component, computed, input } from '@angular/core';
+import { POSTERS } from '../core/content';
+import { StateId } from '../core/states';
+import { CalendarStrip } from '../hud/calendar-strip';
+import { FakeQr } from '../hud/fake-qr';
+import { GlyphMatrix } from '../hud/glyph-matrix';
+import { SignalChart } from '../hud/signal-chart';
+import { TerminalLog } from '../hud/terminal-log';
+import { WireSphere } from '../hud/wire-sphere';
+
+/** One state's poster: headlines, text and the HUD pieces around the figure (layout in src/styles.scss). */
+@Component({
+  selector: 'vb-poster',
+  imports: [CalendarStrip, FakeQr, GlyphMatrix, SignalChart, TerminalLog, WireSphere],
+  host: { class: 'poster', '[attr.data-poster]': 'state()' },
+  templateUrl: './poster.html',
+})
+export class Poster {
+  readonly state = input.required<StateId>();
+  protected readonly p = computed(() => POSTERS[this.state()]);
+}

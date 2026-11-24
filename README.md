@@ -1,61 +1,42 @@
-# Voidbrain.Net
+# voidbrain.net
 
-Personal portfolio website featuring custom terminal interface, 3D graphics, and interactive elements.
+Daniele's personal site, rebuilt as one static page. It has three states, **work**, **play** and **sleep**, each a full-screen cyberpunk poster with a 3D model of Daniele at its centre and animated, interactive HUD pieces around it: charts, calendar strips, a terminal (decorative, no real data). It replaces the 2012 PHP site at the same address and keeps every old folder and URL working. How it works: [docs/DESIGN.md](docs/DESIGN.md).
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.0.
+Status (2026-11-24): the three posters, the animated HUD pieces, a placeholder 3D figure and the legacy path rules are built and tested locally. Waiting on the owner: the real 3D model (F-004) and how the site is deployed (F-007); see the [backlog](docs/BACKLOG.md). Code: <https://github.com/voidbrain/voidbrain.net>.
 
-## Development server
+## Run it
 
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Use Node 24 (`nvm use`, from `.nvmrc`).
 
 ```bash
-ng generate component component-name
+npm ci
+npm start                    # dev server at http://localhost:4200/
+npm test -- --watch=false    # unit tests (Vitest)
+npm run build                # static files in dist/voidbrain-net/browser/
+npm run test:legacy          # after the build: old URLs and folders on a real Apache
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Deploying
 
-```bash
-ng generate --help
+The build output goes into the Apache docroot of voidbrain.net, next to the old site's folders, which stay where they are. The upload method is not decided yet (F-007). Every old page redirects to `/`, the old site moves to `/old/`, and the old folders stay where they are: [legacy paths and deploy steps](docs/DESIGN.md#legacy-paths).
+
+## Where things are
+
+```
+src/app/          the shell (state, hash, switcher, keys, swipe)
+src/app/core/     framework-free logic: states, page text, poses, HUD value generators
+src/app/poster/   one state's poster
+src/app/hud/      the animated HUD pieces and their shared clock
+src/app/figure/   the three.js self-model (lazy)
+src/styles.scss   global styles and design tokens
+public/           copied as-is to the docroot: .htaccess, old/.htaccess, 404, robots, sitemap
+docs/             design, style guide, backlog, audits, agent procedures
+tools/            harness checks (copied; do not edit) and test-legacy-paths.mjs (ours)
 ```
 
-## Building
+## Working on it
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- [AGENTS.md](AGENTS.md): how to work in this repository (for people and coding agents), with per-area rules in [docs/agents/areas.md](docs/agents/areas.md).
+- [docs/BACKLOG.md](docs/BACKLOG.md): current bugs and features, with their status and next action ([rules](docs/BACKLOG-RULES.md)).
+- [docs/STYLE-GUIDE.md](docs/STYLE-GUIDE.md): how the site looks and talks.
+- [docs/DESIGN.md](docs/DESIGN.md): the three states, legacy paths, the self-model asset.

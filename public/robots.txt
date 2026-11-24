@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /old/
+Disallow: /wip/
+Sitemap: https://voidbrain.net/sitemap.xml

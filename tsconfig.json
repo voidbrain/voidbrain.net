@@ -3,13 +3,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "strict": true,
-    "baseUrl": "./",
-    "paths": {
-      "@services/*": ["src/app/services/*"],
-      "@assets/*": ["src/app/assets/*"],
-      "@node_modules/*": ["node_modules/*"]
-    },
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
@@ -24,8 +17,7 @@
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    "strictInputAccessModifiers": true
   },
   "files": [],
   "references": [
