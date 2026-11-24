@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "reviewed": "2026-11-24T11:58:15.364Z",
+  "reviewed": "2026-11-24T12:58:28.079Z",
   "policy": "dabfdc5836dc54371c7b2580ddb32649ec147220eee6828cc16709d6c8363294",
   "inputs": {
-    "AGENTS.md": "4636f898ad6811eaf9872c5aa4d24291853ebfcfe2c9683cf1474b4d45e91357",
+    "AGENTS.md": "5dba8bd80e67d30eeba2eb36f8ed68c20c23e5f2ae823efac3f0b405e8fbcaf6",
     "docs/BACKLOG-RULES.md": "bcde70273837df8dbb2835e92ba9e5a071b063200156f2e2f84219f7499c4146",
     "docs/agents/angular.md": "ce4a2b6fd81fd5eae723cf2d1eb42203e253ab5d08c13457d656814aeaf2448e",
     "docs/agents/architecture-review.md": "5d967314854912b1a5f1446aeab309763b14f9856bceb3c82df5c6c25c166526",
-    "docs/agents/areas.md": "ab8ba508b7ed6a4bee79faeebc7ae2a2824306653908b962000ea645149ebebf",
+    "docs/agents/areas.md": "c8a22d2e7ed3eb29cb401e91cfb8960b96ce570300b19f2d9b20fe3e5e8f6a65",
     "docs/agents/audit.md": "e58480c21e8afe9a825df4726fa93b8a7f841557f4267f1fc2c61ac3dac8f642",
     "docs/agents/change-impact.md": "dc1c473e274f76bd70a87ff57bbc53fc75dc75a35d121cf67baf163a2fd2e975",
     "docs/agents/coverage-guide.md": "3d539eb8beedfa101a5e47d9973cdf85dce197436fab2ab096f760e12d208106",
@@ -117,6 +117,12 @@
       "kind": "none",
       "disposition": "no-change",
       "evidence": "check:rule-load warns that the audit trigger reads 5,284 tokens (budget 5,000); the guides are copied template files, so any change belongs to the template, not this project."
+    },
+    {
+      "kind": "rule",
+      "disposition": "implemented",
+      "target": "AGENTS.md",
+      "evidence": "Owner decision 2026-11-24 (F-005): HUD values are generated, never real data; AGENTS 'Adding things' and areas.md now name seeded generators in src/app/core/ instead of chart data shaping."
     }
   ]
 }

@@ -6,7 +6,7 @@ Reviewers: `mechanical-reviewer` and `design-reviewer` (`.claude/agents/`) revie
 
 ## Core logic
 
-- Code: `src/app/core/` (planned contents: the state model, F-003; the legacy path map, F-002; chart data shaping, F-005).
+- Code: `src/app/core/` (planned contents: the state model, F-003; the legacy path map, F-002; seeded generators for the animated HUD values, F-005).
 - Plain TypeScript only: no `@angular/*` import (ESLint `no-restricted-imports` and `check:conventions`, `conventions.pureDirs` in `.harness.json`). Components call into it; it never calls into components.
 - Every exported function has a spec next to it (`*.spec.ts`), run by `npm test`.
 
@@ -14,7 +14,7 @@ Reviewers: `mechanical-reviewer` and `design-reviewer` (`.claude/agents/`) revie
 
 - Code: `src/app/` outside `core/`; global styles in `src/styles.scss`.
 - Read [docs/STYLE-GUIDE.md](../STYLE-GUIDE.md) first, and [Angular conventions](angular.md).
-- Components stay thin: state and values come from `src/app/core/`. One component per HUD element (chart, calendar strip, QR block, terminal), each keyboard-operable with an accessible name.
+- Components stay thin: state and generated values come from `src/app/core/`. Generators are seeded and pure (a seed and a time in, values out), so a spec can check them; the component owns only the animation clock. One component per HUD element (chart, calendar strip, QR block, terminal), each keyboard-operable with an accessible name.
 - three.js code (F-004) lives in its own component, created outside Angular's change detection (`afterNextRender`), disposed in `DestroyRef.onDestroy`, and pauses its render loop when the tab is hidden or the state is off-screen. three.js is imported only there and lazy-loaded (`@defer`), so the first paint does not wait for it.
 
 ## Legacy hosting

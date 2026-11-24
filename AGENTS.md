@@ -4,7 +4,7 @@ The project is **voidbrain.net**, Daniele's personal site: one static page with 
 
 ### Architecture
 
-- `src/app/core/` is plain TypeScript with no framework imports, so it stays unit-testable (enforced by ESLint `no-restricted-imports` and `npm run check:conventions`). Put logic there (state model, legacy path map, chart data) and keep components thin.
+- `src/app/core/` is plain TypeScript with no framework imports, so it stays unit-testable (enforced by ESLint `no-restricted-imports` and `npm run check:conventions`). Put logic there (state model, legacy path map, generators for the animated HUD values) and keep components thin.
 - Components in `src/app/`, one per HUD element; three.js only inside its own lazy-loaded component ([areas](docs/agents/areas.md#ui-shell-and-posters)).
 - `public/` is copied to the server's docroot as it is: never give an entry there the name of a legacy folder (`img`, `js`, `fonts`, `style`, …); use `public/assets/` and `public/models/`.
 - Old URLs are handled by `public/.htaccess` and the client-side map together: change both, and the table in DESIGN (impact row `legacy-paths`).
@@ -16,7 +16,7 @@ The project is **voidbrain.net**, Daniele's personal site: one static page with 
 ### Adding things
 
 - **A state**: add it to the state model in `src/app/core/` with its spec, its poster component, its palette tokens in `src/styles.scss` and [STYLE-GUIDE](docs/STYLE-GUIDE.md), its row in [DESIGN](docs/DESIGN.md), and its hash to the legacy map if an old URL should land there.
-- **A HUD component** (chart, calendar strip, QR, terminal): data shaping in `src/app/core/` with a spec; the component with keyboard and screen-reader support; an entry under Components in the style guide.
+- **A HUD component** (chart, calendar strip, QR, terminal): its value generator in `src/app/core/` with a spec (animated, no real data: [design](docs/DESIGN.md#hud-components)); the component with keyboard and screen-reader support; an entry under Components in the style guide.
 - **A legacy path**: the rule in `public/.htaccess`, the entry in `src/app/core/legacy-paths.ts` with a spec case, the row in DESIGN.
 - **A 3D model or font**: under `public/models/` or `public/assets/fonts/`, within the size and licence rules of the style guide, "Assets".
 
@@ -103,7 +103,7 @@ Before changing an area, read its section in [docs/agents/areas.md](docs/agents/
 
 | Area | Covers |
 |---|---|
-| Core logic | `src/app/core/`: state model, legacy path map, chart data (plain TypeScript) |
+| Core logic | `src/app/core/`: state model, legacy path map, HUD value generators (plain TypeScript) |
 | UI shell and posters | components, global styles, the three.js self-model |
 | Legacy hosting | `public/` and `public/.htaccess`: what the docroot serves next to the old site |
 

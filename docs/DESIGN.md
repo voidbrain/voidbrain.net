@@ -26,7 +26,7 @@ Planned behaviour (F-003):
 
 - One state is shown at a time; switching animates between them (the model turns or morphs, the poster palette and type swap). The current state is in the URL hash (`/#work`, `/#play`, `/#sleep`), so it can be linked and the back button works.
 - Switching works by pointer, keyboard (arrow keys and the three state buttons) and touch swipe. With `prefers-reduced-motion` the switch is a cut, not an animation.
-- Every chart, gauge, calendar strip, QR block and terminal in a poster is a live component, not a picture: it reacts to hover, focus and drag, and shows real values where a source exists (F-005).
+- Every chart, gauge, calendar strip, QR block and terminal in a poster is a live component, not a picture: it animates and reacts to hover, focus and drag (F-005). Its values are generated, not real data: see [HUD components](#hud-components).
 - The self-model is a 3D model of Daniele (F-004), rendered with three.js, one pose per state. Without WebGL, the page shows a still render of the same pose.
 
 ## Legacy paths
@@ -58,6 +58,17 @@ Constraints this places on the build (also in [AGENTS.md](../AGENTS.md), "Known 
 - Angular copies `public/` to the docroot. A file or folder in `public/` must never have the name of a legacy folder (`img`, `js`, `fonts`, `style`, …), or the deploy overwrites it. New assets go under names the old site never used (`assets/`, `models/`).
 - The old `index.php` and `sitemap.php` stay on the server until the switch-over; `DirectoryIndex index.html index.php` makes the new page win at `/`.
 
+## HUD components
+
+Decided by the owner on 2026-11-24 (F-005): **the HUD pieces are animated, with no real data.** Charts, gauges, calendar strips and the terminal show generated values; nothing is fetched and no data source is connected.
+
+- Values come from seeded generators in `src/app/core/` (noise, sine sums, random walks, scrolling glyphs), so the same seed gives the same motion and a spec can check it. Components only advance the clock.
+- Labels never claim a real measurement: no "flights this year: 342" or "commits today". Captions are texture (`SIG_07`, `FUTURE IS NOW`, coordinates), not statistics.
+- Interaction changes the animation (hover speeds up or freezes, drag scrubs, focus highlights), not information.
+- For assistive technology each piece is one labelled, decorative element ("animated signal chart, decorative"); the generated numbers are not read out.
+- With `prefers-reduced-motion` each piece shows one still frame.
+- Candidates to port from the earlier Angular attempt: `sinusoid-graph`, `random-flash-matrix`, `terminal`, `wireframe-sphere`, `wireframe-room`, `wireframe-fpv-plane`.
+
 ## Self-model asset
 
 The 3D model of Daniele is the owner's to make (F-004). The steps:
@@ -76,7 +87,6 @@ The owner decides these; each is a 🧑 Decision in [the backlog](BACKLOG.md).
 
 - **F-002**: confirm the legacy redirect targets above, and whether `/api/…` really has no remaining caller.
 - **F-003**: which palette goes with which state; the page's text (the old site's copy is from 2012 and names a former employer).
-- **F-005**: which charts show real data, and from where (for example FPV flight logs, GitHub activity, a sleep tracker), and which are decorative.
 - **F-007**: how the build reaches the Apache host (FTP/SFTP upload by hand, a CI deploy with a secret, or another host), and whether the code gets a GitHub remote.
 
 ## Tests

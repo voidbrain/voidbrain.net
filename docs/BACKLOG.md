@@ -150,20 +150,20 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 |:---:|---|---|---|
 | 🔴 | 🔶 P2 | Open | 🟣 Very large |
 
-🧑 **→ Human action required: Decision**<br />Say which charts show real data and from where, in [design](DESIGN.md#open-decisions).
+💻 **→ Human action required: No**<br />Port the reusable components from the earlier attempt and add seeded value generators in `src/app/core/`.
 
 | | |
 |---|---|
-| **Issue** | The posters' furniture (calendar strips, wireframe spheres and grids, charts, QR code, terminal, arrows, hazard stripes) must be live components, not pictures. |
+| **Issue** | The posters' furniture (calendar strips, wireframe spheres and grids, charts, QR code, terminal, arrows, hazard stripes) must be animated, interactive components, not pictures; their values are generated, with no real data (owner decision 2026-11-24). |
 | **Reproduce** | `npm start`, in each state hover, focus (Tab) and drag every HUD piece. |
-| **Check** | Every piece reacts to pointer and keyboard and has an accessible name; charts expose their values as text; real-data charts show current values from their agreed source; nothing blocks the first paint; reduced motion stops decorative animation. |
+| **Check** | Every piece animates and reacts to pointer and keyboard, with one accessible name marking it decorative; no label presents a generated number as a real statistic; nothing is fetched; generators have specs; nothing blocks the first paint; reduced motion shows a still frame. |
 
 <details>
 <summary>Next action, estimates and PR history</summary>
 
-**Next action / closure evidence:** list the pieces per poster, port the reusable ones from the earlier attempt (`sinusoid-graph`, `random-flash-matrix`, `terminal`, `wireframe-sphere`, `wireframe-room`, `wireframe-fpv-plane`) to Angular 22 signals and the new tokens, and add data shaping in `src/app/core/` with specs. Real-data sources wait for the owner's choice.
+**Next action / closure evidence:** list the pieces per poster, port the reusable ones from the earlier attempt (`sinusoid-graph`, `random-flash-matrix`, `terminal`, `wireframe-sphere`, `wireframe-room`, `wireframe-fpv-plane`) to Angular 22 signals and the new tokens, and add seeded value generators in `src/app/core/` with specs. Owner decision 2026-11-24: animated only, no real data ([HUD components](DESIGN.md#hud-components)).
 
-**Estimates:** Very large remaining effort, about 10–14 agent hours across roughly a dozen components. Estimated 2026-11-24; not acceptance evidence.
+**Estimates:** Very large remaining effort, about 9–12 agent hours across roughly a dozen components; reassessed 2026-11-24 after the no-real-data decision removed data sources and their shaping. Estimated 2026-11-24; not acceptance evidence.
 
 | Field | Value |
 |---|---|

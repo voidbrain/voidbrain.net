@@ -13,7 +13,7 @@ What makes the posters (from the owner's reference board, three cyberpunk poster
 - **One flat, loud ground per poster**: safety orange, acid green, or paper white. Black does all the drawing on top of it; one accent at most (lime on the white poster).
 - **A central figure**, here the 3D self-model, cropped at the shoulders, with a prop that tells the state (FPV goggles in play).
 - **Distorted display type**: a wide, glitchy, stretched or blackletter-tech headline at the top, a second one at the bottom, often running past the edge.
-- **HUD furniture around the figure**: date strips, numbered calendar boxes, wireframe spheres and grids, a QR code, arrows, hazard stripes, barcodes, small monospaced captions, a terminal snippet, a pixel smiley. Each piece here is an interactive component (F-005), not decoration baked into an image.
+- **HUD furniture around the figure**: date strips, numbered calendar boxes, wireframe spheres and grids, a QR code, arrows, hazard stripes, barcodes, small monospaced captions, a terminal snippet, a pixel smiley. Each piece here is an animated, interactive component (F-005), not decoration baked into an image. Its values are generated, never real data ([design](DESIGN.md#hud-components)).
 - **Japanese / tech micro-copy** in small sizes as texture, never as the only carrier of meaning.
 
 Do:
@@ -27,6 +27,7 @@ Don't:
 - Copy the reference posters, their characters or their artwork. They are a watermarked stock image (Adobe Stock 623907234): mood reference only, never shipped or committed.
 - Use gradients, glows or neon-on-dark "generic cyberpunk". The references are flat print colours.
 - Put meaning only in Japanese text, colour or a QR code.
+- Label generated HUD numbers as if they were real statistics.
 
 ## Documentation ownership
 
@@ -73,7 +74,7 @@ None yet beyond the scaffolded root component. Each shared component (state swit
 
 - Every interactive element is reachable and operable by keyboard, with a visible focus and an accessible name.
 - Colour never carries meaning alone. Text meets WCAG AA contrast on its real background.
-- The 3D model has a text alternative describing the pose; charts expose their values as text.
+- The 3D model has a text alternative describing the pose; HUD charts are decorative: one accessible name each ("animated signal chart, decorative"), their generated values are not read out.
 - Images that carry meaning have alt text; decorative ones have `alt=""`.
 
 ## Assets

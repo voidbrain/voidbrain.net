@@ -1,6 +1,6 @@
 # voidbrain.net
 
-Daniele's personal site, rebuilt as one static page. It has three states, **work**, **play** and **sleep**, each a full-screen cyberpunk poster with a 3D model of Daniele at its centre and interactive HUD pieces around it: charts, calendar strips, a terminal. It replaces the 2012 PHP site at the same address and keeps every old folder and URL working. How it works: [docs/DESIGN.md](docs/DESIGN.md).
+Daniele's personal site, rebuilt as one static page. It has three states, **work**, **play** and **sleep**, each a full-screen cyberpunk poster with a 3D model of Daniele at its centre and animated, interactive HUD pieces around it: charts, calendar strips, a terminal (decorative, no real data). It replaces the 2012 PHP site at the same address and keeps every old folder and URL working. How it works: [docs/DESIGN.md](docs/DESIGN.md).
 
 Status (2026-11-24): the project is an Angular 22.3 scaffold with the agent harness applied; the page is still the Angular welcome screen. The states, the 3D model, the HUD components and the legacy path rules are backlog records F-002 to F-007.
 
@@ -23,7 +23,7 @@ The build output goes into the Apache docroot of voidbrain.net, next to the old 
 
 ```
 src/app/          the page: root component, later one component per poster and HUD piece
-src/app/core/     framework-free logic (state model, legacy path map, chart data), planned
+src/app/core/     framework-free logic (state model, legacy path map, HUD value generators), planned
 src/styles.scss   global styles and design tokens
 public/           copied as-is to the docroot (never name anything like a legacy folder)
 docs/             design, style guide, backlog, audits, agent procedures
