@@ -82,31 +82,43 @@
       "id": "style-tokens",
       "when": [
         "src/styles.scss",
-        "src/styles/**"
+        "angular.json"
       ],
-      "then": "Update the token, type and spacing tables in docs/STYLE-GUIDE.md in the same change.",
+      "then": "Update the token, type and spacing tables in docs/STYLE-GUIDE.md in the same change; keep public/404.html colours equal to the palette.",
       "run": "npm run format:check && npm run build",
       "checked": "Review: STYLE-GUIDE tables match the --tokens in src/styles.scss"
     },
     {
       "id": "legacy-paths",
       "when": [
-        "public/.htaccess",
-        "src/app/core/legacy-paths.ts",
-        "src/app/core/legacy-paths.spec.ts"
+        "public/**",
+        "tools/test-legacy-paths.mjs"
       ],
-      "then": "Keep the legacy path table in docs/DESIGN.md, the Apache rules in public/.htaccess and the client-side map in agreement.",
-      "run": "npm test -- --watch=false",
-      "checked": "legacy-paths.spec.ts (client map); Apache rules checked by hand against the legacy docroot (F-002)"
+      "then": "Keep the Legacy paths section and deploy steps in docs/DESIGN.md in step with the Apache rules, and run the Apache test.",
+      "run": "npm run build && npm run test:legacy",
+      "checked": "tools/test-legacy-paths.mjs (119 Apache requests, public/ names) locally and in CI"
     },
     {
       "id": "states",
       "when": [
-        "src/app/core/states.ts"
+        "src/app/core/states.ts",
+        "src/app/core/content.ts",
+        "src/app/core/pose.ts",
+        "src/app/poster/**"
       ],
-      "then": "Update the states table in docs/DESIGN.md.",
+      "then": "Update the states table and behaviour in docs/DESIGN.md, and the components table in docs/STYLE-GUIDE.md if a HUD piece moves.",
       "run": "npm test -- --watch=false",
-      "checked": "Unit tests on the state model"
+      "checked": "states.spec.ts, pose.spec.ts (one pose and poster per state, privacy), app.spec.ts"
+    },
+    {
+      "id": "hud",
+      "when": [
+        "src/app/hud/**",
+        "src/app/core/hud.ts"
+      ],
+      "then": "Update DESIGN \"HUD components\" and the STYLE-GUIDE components table (interactions, labels).",
+      "run": "npm test -- --watch=false",
+      "checked": "hud.spec.ts; app.spec.ts (every piece labelled decorative and focusable)"
     }
   ],
   "couplings": [
@@ -115,21 +127,61 @@
       "places": [
         {
           "file": "public/.htaccess",
-          "what": "pass-through folder list"
+          "what": "rule 1 pass-through list"
+        },
+        {
+          "file": "tools/test-legacy-paths.mjs",
+          "what": "LEGACY_FOLDERS, LEGACY_FILES"
         },
         {
           "file": "docs/DESIGN.md",
-          "what": "Legacy paths table"
+          "what": "Legacy paths, point 3"
         }
       ],
-      "kept": "Review against the live docroot listing before each deploy (F-002)"
+      "kept": "npm run test:legacy: every LEGACY_FOLDERS entry must answer as a legacy folder"
+    },
+    {
+      "value": "Palette colours",
+      "places": [
+        {
+          "file": "src/styles.scss",
+          "what": "--vb-* tokens"
+        },
+        {
+          "file": "public/404.html",
+          "what": "literal #0a0a0a, #ff5a1f, #a6ff00 (no app CSS there)"
+        },
+        {
+          "file": "src/index.html",
+          "what": "theme-color #a6ff00"
+        },
+        {
+          "file": "docs/STYLE-GUIDE.md",
+          "what": "Colour tables"
+        }
+      ],
+      "kept": "Review (impact row style-tokens)"
+    },
+    {
+      "value": "Allowed docroot entries from public/",
+      "places": [
+        {
+          "file": "tools/test-legacy-paths.mjs",
+          "what": "ALLOWED_PUBLIC"
+        },
+        {
+          "file": "AGENTS.md",
+          "what": "Known pitfalls, Legacy folders overwritten"
+        }
+      ],
+      "kept": "npm run test:legacy fails on an entry not in ALLOWED_PUBLIC"
     }
   ],
   "outside": [
     {
-      "what": "Legacy docroot on the Apache host (old PHP site folders: base, cube, extradry, grover, laura, pasubio, summer2020, uboard, …)",
-      "affects": "public/.htaccess pass-through list",
-      "noticed": "Listing of the live docroot before deploy (F-002)"
+      "what": "Legacy docroot on the Apache host (old site folders and verification files, listed 2026-11-24)",
+      "affects": "public/.htaccess pass-through list; LEGACY_FOLDERS in tools/test-legacy-paths.mjs",
+      "noticed": "Listing of the live docroot before each deploy (DESIGN deploy steps)"
     }
   ],
   "pages": [

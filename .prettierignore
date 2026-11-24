@@ -11,3 +11,4 @@ tools/
 *.json
 *.yml
 *.yaml
+!tools/test-legacy-paths.mjs

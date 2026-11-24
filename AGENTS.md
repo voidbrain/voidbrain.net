@@ -4,10 +4,10 @@ The project is **voidbrain.net**, Daniele's personal site: one static page with 
 
 ### Architecture
 
-- `src/app/core/` is plain TypeScript with no framework imports, so it stays unit-testable (enforced by ESLint `no-restricted-imports` and `npm run check:conventions`). Put logic there (state model, legacy path map, generators for the animated HUD values) and keep components thin.
-- Components in `src/app/`, one per HUD element; three.js only inside its own lazy-loaded component ([areas](docs/agents/areas.md#ui-shell-and-posters)).
+- `src/app/core/` is plain TypeScript with no framework imports, so it stays unit-testable (enforced by ESLint `no-restricted-imports` and `npm run check:conventions`). Put logic there (state model, page text, poses, generators for the animated HUD values) and keep components thin.
+- Components in `src/app/`: the shell, `poster/`, one per HUD element in `hud/`; three.js only inside `figure/self-model.ts`, lazy-loaded with `@defer` ([areas](docs/agents/areas.md#ui-shell-and-posters)).
 - `public/` is copied to the server's docroot as it is: never give an entry there the name of a legacy folder (`img`, `js`, `fonts`, `style`, …); use `public/assets/` and `public/models/`.
-- Old URLs are handled by `public/.htaccess` and the client-side map together: change both, and the table in DESIGN (impact row `legacy-paths`).
+- Old URLs are handled only on the server, by `public/.htaccess` and `public/old/.htaccess`; `npm run test:legacy` checks them on a real Apache (impact row `legacy-paths`).
 
 ### Style guide
 
@@ -15,9 +15,9 @@ The project is **voidbrain.net**, Daniele's personal site: one static page with 
 
 ### Adding things
 
-- **A state**: add it to the state model in `src/app/core/` with its spec, its poster component, its palette tokens in `src/styles.scss` and [STYLE-GUIDE](docs/STYLE-GUIDE.md), its row in [DESIGN](docs/DESIGN.md), and its hash to the legacy map if an old URL should land there.
+- **A state**: add it to `STATES` in `src/app/core/states.ts`, its text in `content.ts`, its pose in `pose.ts` (specs cover all three), its `@case` blocks in `poster/poster.html`, its palette roles in `src/styles.scss` and [STYLE-GUIDE](docs/STYLE-GUIDE.md), and its row in [DESIGN](docs/DESIGN.md).
 - **A HUD component** (chart, calendar strip, QR, terminal): its value generator in `src/app/core/` with a spec (animated, no real data: [design](docs/DESIGN.md#hud-components)); the component with keyboard and screen-reader support; an entry under Components in the style guide.
-- **A legacy path**: the rule in `public/.htaccess`, the entry in `src/app/core/legacy-paths.ts` with a spec case, the row in DESIGN.
+- **A legacy path**: the rule in `public/.htaccess` (or `public/old/.htaccess`), a case in `tools/test-legacy-paths.mjs`, the text in DESIGN "Legacy paths"; run `npm run build && npm run test:legacy`.
 - **A 3D model or font**: under `public/models/` or `public/assets/fonts/`, within the size and licence rules of the style guide, "Assets".
 
 ### Checks before you finish
@@ -41,6 +41,7 @@ npm run check:freshness   # first, at session start: backlog behind main, merged
 npm run lint                # ESLint (angular-eslint, typescript-eslint)
 npm test -- --watch=false   # Vitest unit tests
 npm run build               # production build to dist/voidbrain-net/browser
+npm run test:legacy         # after the build: every legacy path rule on a real Apache
 npx tsc -p tsconfig.app.json --noEmit --noUnusedLocals --noUnusedParameters
 npm run check:backlog     # active record layout and lifecycle cues
 npm run check:conventions # stack conventions (docs/agents/<stack>.md) and unused exports (when the stack has one)
@@ -92,8 +93,9 @@ Each procedure is binding when its trigger applies: read it before the task; a s
 
 ### Known pitfalls
 
-- **Legacy folders overwritten.** The build copies `public/` over the docroot; a same-named folder replaces a live legacy one. Keep `public/` to `assets/`, `models/`, `.htaccess`, `favicon.ico`, `robots.txt`, `sitemap.xml`.
-- **Old `index.php` wins at `/`** unless `DirectoryIndex index.html index.php` is set in `public/.htaccess` (F-002).
+- **Legacy folders overwritten.** The build copies `public/` over the docroot; a same-named folder replaces a live legacy one. Keep `public/` to `.htaccess`, `404.html`, `assets/`, `favicon.ico`, `models/`, `old/` (only its `.htaccess`), `robots.txt`, `sitemap.xml`; `test:legacy` fails on anything else.
+- **Old `index.php` would win at `/`**: `DirectoryIndex index.html` in `public/.htaccess` keeps the new page in front while the old file is still on the server.
+- **Styles never reach DOM made in code.** The three.js canvas (or any element created with `document.createElement`) gets no component styles, because Angular scopes them to template elements: size and position it inline (the canvas once grew without bound on phones). And it must never size its own container (`position: absolute; inset: 0`), or a resize loop follows.
 - **npm 11 `allowScripts`.** A new dependency with an install script is skipped until approved: `npm approve-scripts <pkg>` writes `allowScripts` in `package.json`; review the script before approving.
 - **The reference posters are a stock image** (Adobe Stock watermark): never commit or ship them ([style guide](docs/STYLE-GUIDE.md#art-direction)).
 

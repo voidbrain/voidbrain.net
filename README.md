@@ -2,7 +2,7 @@
 
 Daniele's personal site, rebuilt as one static page. It has three states, **work**, **play** and **sleep**, each a full-screen cyberpunk poster with a 3D model of Daniele at its centre and animated, interactive HUD pieces around it: charts, calendar strips, a terminal (decorative, no real data). It replaces the 2012 PHP site at the same address and keeps every old folder and URL working. How it works: [docs/DESIGN.md](docs/DESIGN.md).
 
-Status (2026-11-24): the project is an Angular 22.3 scaffold with the agent harness applied; the page is still the Angular welcome screen. The states, the 3D model, the HUD components and the legacy path rules are backlog records F-002 to F-007.
+Status (2026-11-24): the three posters, the animated HUD pieces, a placeholder 3D figure and the legacy path rules are built and tested locally. Waiting on the owner: the real 3D model (F-004) and how the site is deployed (F-007); see the [backlog](docs/BACKLOG.md).
 
 ## Run it
 
@@ -13,21 +13,25 @@ npm ci
 npm start                    # dev server at http://localhost:4200/
 npm test -- --watch=false    # unit tests (Vitest)
 npm run build                # static files in dist/voidbrain-net/browser/
+npm run test:legacy          # after the build: old URLs and folders on a real Apache
 ```
 
 ## Deploying
 
-The build output goes into the Apache docroot of voidbrain.net, next to the old site's folders, which stay where they are. The deploy method is not decided yet (F-007), and the rules for old URLs are not written yet (F-002): do not deploy before both are done. What must keep working, and where old URLs go: [legacy paths](docs/DESIGN.md#legacy-paths).
+The build output goes into the Apache docroot of voidbrain.net, next to the old site's folders, which stay where they are. The upload method is not decided yet (F-007). Every old page redirects to `/`, the old site moves to `/old/`, and the old folders stay where they are: [legacy paths and deploy steps](docs/DESIGN.md#legacy-paths).
 
 ## Where things are
 
 ```
-src/app/          the page: root component, later one component per poster and HUD piece
-src/app/core/     framework-free logic (state model, legacy path map, HUD value generators), planned
+src/app/          the shell (state, hash, switcher, keys, swipe)
+src/app/core/     framework-free logic: states, page text, poses, HUD value generators
+src/app/poster/   one state's poster
+src/app/hud/      the animated HUD pieces and their shared clock
+src/app/figure/   the three.js self-model (lazy)
 src/styles.scss   global styles and design tokens
-public/           copied as-is to the docroot (never name anything like a legacy folder)
+public/           copied as-is to the docroot: .htaccess, old/.htaccess, 404, robots, sitemap
 docs/             design, style guide, backlog, audits, agent procedures
-tools/            harness checks (copied from the project harness; do not edit)
+tools/            harness checks (copied; do not edit) and test-legacy-paths.mjs (ours)
 ```
 
 ## Working on it

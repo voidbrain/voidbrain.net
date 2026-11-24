@@ -15,8 +15,8 @@
     "reconcile:draft": "node tools/reconcile-draft.mjs",
     "check:conventions": "node tools/check-conventions.mjs",
     "lint": "ng lint",
-    "format": "prettier --write \"src/**/*.{ts,scss,html}\" eslint.config.mjs",
-    "format:check": "prettier --check \"src/**/*.{ts,scss,html}\" eslint.config.mjs",
+    "format": "prettier --write \"src/**/*.{ts,scss,html}\" eslint.config.mjs tools/test-legacy-paths.mjs",
+    "format:check": "prettier --check \"src/**/*.{ts,scss,html}\" eslint.config.mjs tools/test-legacy-paths.mjs",
     "coverage": "ng test --watch=false --coverage --coverage-reporters=json-summary --coverage-include='src/**/*.ts' --coverage-exclude='**/*.spec.ts' && node tools/coverage-table.mjs --write",
     "check:integrations": "node tools/mcp.mjs check",
     "mcp:recommend": "node tools/mcp.mjs recommend",
@@ -42,7 +42,8 @@
     "work:usage": "node tools/work-usage.mjs",
     "work:launch": "node tools/usage-launch.mjs",
     "rule-load": "node tools/rule-load.mjs",
-    "check:rule-load": "node tools/rule-load.mjs --check"
+    "check:rule-load": "node tools/rule-load.mjs --check",
+    "test:legacy": "node tools/test-legacy-paths.mjs"
   },
   "private": true,
   "packageManager": "npm@11.17.0",
@@ -53,7 +54,10 @@
     "@angular/forms": "^22.3.0",
     "@angular/platform-browser": "^22.3.0",
     "@angular/router": "^22.3.0",
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "@fontsource/rubik-glitch": "5.3.0",
     "rxjs": "~7.8.0",
+    "three": "0.187.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
@@ -61,6 +65,7 @@
     "@angular/cli": "^22.3.0",
     "@angular/compiler-cli": "^22.3.0",
     "@eslint/js": "10.0.1",
+    "@types/three": "0.187.0",
     "@vitest/coverage-v8": "5.1.1",
     "angular-eslint": "22.8.0",
     "eslint": "10.15.0",

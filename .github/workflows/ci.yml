@@ -94,6 +94,12 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Legacy paths on a real Apache (public/.htaccess, public/old/.htaccess)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends apache2 >/dev/null
+          HTTPD=/usr/sbin/apache2 npm run test:legacy
+
       - name: Optional backlog dependency validation
         run: |
           if test -f tools/backlog-dependencies.mjs; then

@@ -46,28 +46,28 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 
 | Signal | Priority | Status | Effort |
 |:---:|---|---|---|
-| 🔴 | 🔺 P1 | Open | 🟡 Medium |
+| 🟡 | 🔺 P1 | Implemented | 🟢 Small |
 
-🧑 **→ Human action required: Decision**<br />Confirm the redirect targets for old URLs in [legacy paths](DESIGN.md#legacy-paths).
+🧑 **→ Human action required: Procedure**<br />When the site is deployed (F-007), follow the [deploy steps](DESIGN.md#deploy-steps) and check their four URLs on voidbrain.net.
 
 | | |
 |---|---|
-| **Issue** | The new single page is deployed into the same Apache docroot as the old PHP site; old content URLs must redirect and every legacy folder must keep being served as it is. |
-| **Reproduce** | Against a copy of the legacy docroot with the new build on top (the `voidbrain` repository's Docker setup serves `public/` on Apache): request `/`, `/home`, `/about/me`, `/labs/x`, `/contacts`, `/?url=about`, `/sitemap.xml`, `/api/x`, `/grover/`, `/extradry/`, `/uboard/`, `/BingSiteAuth.xml`, a missing path. |
-| **Check** | Each old content URL answers 301 to its target in the DESIGN table; every legacy folder and file answers as it does today; `/` serves the new page, not `index.php`; a missing path gets the new 404; no file in `public/` shares a name with a legacy folder. |
+| **Issue** | The new single page is deployed into the same Apache docroot as the old PHP site: old page URLs must redirect home (search engines), the old site must stay reachable under `/old/`, and every folder the old rules excluded must keep being served as it is. |
+| **Reproduce** | `npm run build && npm run test:legacy` (local Apache); on the live site, the [deploy steps](DESIGN.md#deploy-steps), step 3. |
+| **Check** | Old page URLs (`/about/work`, `/labs/x`, `/contacts`, `/?url=about`, `/index.php`, any case or trailing slash) answer 301 to `/`; `/old/…` serves the old site, not indexed; every legacy folder and verification file answers as before; `/` serves the new page; `/api/…` is 410; a missing file gets the new 404; no `public/` entry shares a legacy name. |
 
 <details>
 <summary>Next action, estimates and PR history</summary>
 
-**Next action / closure evidence:** after the owner confirms the targets, write `public/.htaccess` (pass-through for real files and folders and the old explicit list, `DirectoryIndex index.html index.php`, the 301 table, 410 for `/api/`, `ErrorDocument 404`), the client-side map `src/app/core/legacy-paths.ts` with a spec, a static `public/sitemap.xml`, and a 404 page. Check by hand on the Docker Apache with the legacy `public/` folder mounted, and record each URL's status code. Closes when the checks above pass and the owner confirms after deploy (F-007).
+**Next action / closure evidence:** owner decision 2026-11-24: all old pages redirect home, the old site moves to `/old/`, excluded folders stay reachable. Built: `public/.htaccess`, `public/old/.htaccess`, `robots.txt` (`Disallow: /old/`), `sitemap.xml`, `404.html`, and `tools/test-legacy-paths.mjs` (`npm run test:legacy`, also a CI step). The planned client-side path map was dropped: with every old page going home, the server does all of it. Verified when CI runs the Apache test (F-007) and the owner's live check after deploy passes.
 
-**Estimates:** Medium remaining effort, about 3 agent hours: rules, map and spec, plus the Apache check. Assumes the Docker setup in the `voidbrain` repository still starts. Estimated 2026-11-24; not acceptance evidence.
+**Estimates:** Small remaining effort: the deploy itself and the live check. Reassessed 2026-11-24 after implementation; not acceptance evidence.
 
 | Field | Value |
 |---|---|
-| PR / evidence | — |
+| PR / evidence | Branch `feature/one-page`; mutation check: a broken redirect rule fails 11 of the Apache cases |
 | Opened | 2026-11-24 |
-| Verification | Pending |
+| Verification | Apache (macOS httpd 2.4.67) · 2026-11-24 · 119 requests passed; CI · Pending (F-007); Human (live) · Pending |
 | Reviewed | 2026-11-24 |
 
 </details>
@@ -80,28 +80,28 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 
 | Signal | Priority | Status | Effort |
 |:---:|---|---|---|
-| 🔴 | 🔺 P1 | Open | 🔴 Large |
+| 🟡 | 🔺 P1 | Implemented | 🟢 Small |
 
-🧑 **→ Human action required: Decision**<br />Choose which palette goes with which state, and the page text, in [design](DESIGN.md#open-decisions).
+🧑 **→ Human action required: Procedure**<br />Start the page as [Run it](../README.md#run-it) says and judge the three posters and their text.
 
 | | |
 |---|---|
-| **Issue** | The page is still the Angular welcome screen; it should show three full-screen poster states the visitor can switch between. |
-| **Reproduce** | `npm start`, open `http://localhost:4200/`, `/#work`, `/#play`, `/#sleep`; switch with the state buttons, arrow keys and a touch swipe; repeat with reduced motion on. |
-| **Check** | Each hash opens its state; switching updates the hash and the back button returns; keyboard, pointer and swipe all switch; with reduced motion the switch is a cut; the welcome screen and its styles are gone; unit tests cover the state model; layout works from 360 px wide. |
+| **Issue** | The page was the Angular welcome screen; it should show three full-screen poster states the visitor can switch between. |
+| **Reproduce** | [Run it](../README.md#run-it), then open `http://localhost:4200/`, `/#work`, `/#play`, `/#sleep`; switch with the top buttons, the arrow keys, the ← → buttons and a swipe on a phone; repeat with reduced motion on. |
+| **Check** | Each hash opens its state; switching updates the hash and the back button returns; keyboard, pointer and swipe all switch; with reduced motion the switch is a cut; the welcome screen is gone; unit tests cover the state model; no horizontal scroll from 360 px; the owner accepts the text and palettes. |
 
 <details>
 <summary>Next action, estimates and PR history</summary>
 
-**Next action / closure evidence:** state model in `src/app/core/states.ts` with spec (order, hash parsing, next/previous); a shell component with the three poster layouts using placeholder figures until F-004; remove the welcome screen. Then a browser check of the list above, with a screenshot of each state.
+**Next action / closure evidence:** owner left the palettes to the agent and asked for text from the website and CV, with lorem/logs as filler (2026-11-24). Built: work = acid green (career, stack), play = orange (FPV, maker, projects), sleep = paper white with lime (quote, links, the old site); text in `src/app/core/content.ts` without contact or personal details (a spec checks). Next: the owner's look and text review; changes go into `content.ts` and the style guide.
 
-**Estimates:** Large remaining effort, about 6–8 agent hours: state model, three poster layouts and the switch animation. Depends on the palette decision; type and tokens come with F-006. Estimated 2026-11-24; not acceptance evidence.
+**Estimates:** Small remaining effort: text and layout corrections after the owner's review. Reassessed 2026-11-24 after implementation; not acceptance evidence.
 
 | Field | Value |
 |---|---|
-| PR / evidence | — |
+| PR / evidence | Branch `feature/one-page` |
 | Opened | 2026-11-24 |
-| Verification | Pending |
+| Verification | Unit · 2026-11-24 · 26 tests passed (state model, shell across hash, buttons, keys); Browser · 2026-11-24 · agent check in Chrome 1440 × 900 and iPhone 13 emulation: render, no overflow, click, arrow, back button, reduced motion; Human · Pending |
 | Reviewed | 2026-11-24 |
 
 </details>
@@ -114,28 +114,28 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 
 | Signal | Priority | Status | Effort |
 |:---:|---|---|---|
-| 🔴 | 🔶 P2 | Open | 🔴 Large |
+| 🔴 | 🔶 P2 | Open | 🟡 Medium |
 
 🧑 **→ Human action required: Procedure**<br />Make and hand over the model, following [self-model asset](DESIGN.md#self-model-asset).
 
 | | |
 |---|---|
-| **Issue** | Each poster's central figure should be a 3D model of Daniele, posed for work, play (with FPV goggles) and sleep, instead of the reference posters' drawn characters. |
-| **Reproduce** | [Self-model asset](DESIGN.md#self-model-asset) for making the model; then `npm start` and switch states. |
-| **Check** | The model loads lazily after first paint; each state shows its pose and switching animates between them; it responds to pointer (look-at or orbit within limits); the render loop pauses when the tab is hidden; without WebGL a still render shows; models total under 3 MB; the page keeps 60 fps on a mid-range phone. |
+| **Issue** | Each poster's central figure should be a 3D model of Daniele, posed for work, play (with FPV goggles) and sleep; a procedural placeholder stands in until the real model exists. |
+| **Reproduce** | [Self-model asset](DESIGN.md#self-model-asset) for making the model; then [Run it](../README.md#run-it) and switch states. |
+| **Check** | The model loads lazily after first paint; each state shows its pose and switching blends between them; the head follows the pointer (not in sleep); the render loop pauses when the tab is hidden or off-screen; without WebGL a silhouette shows; models total under 3 MB; the page stays smooth on a mid-range phone. |
 
 <details>
 <summary>Next action, estimates and PR history</summary>
 
-**Next action / closure evidence:** the agent can build the three.js component with a placeholder model (a low-poly head with goggles) now, so only the asset swap waits on the owner. Port what helps from the earlier attempt's `wireframe-*` components (`../voidrbain-new/voidbrain.net/src/app/components/`).
+**Next action / closure evidence:** placeholder built 2026-11-24 in `src/app/figure/self-model.ts` (three.js r187, lazy chunk 549 kB, 115 kB transferred): faceted head, neck, shoulders, glasses (work), FPV goggles with antenna (play), sleep mask (sleep); poses and blending in `src/app/core/pose.ts` with specs. When the `.glb` arrives: load it with `GLTFLoader` + Draco, map its poses or props onto `POSES`, keep the placeholder as the no-model fallback, and check on a real phone.
 
-**Estimates:** Large remaining effort, about 6–8 agent hours for the component, loading, poses and fallback, not counting the owner's capture and cleanup. Estimated 2026-11-24; not acceptance evidence.
+**Estimates:** Medium remaining effort, about 2–3 agent hours for loading and posing the real model, after the owner's capture and cleanup. Reassessed 2026-11-24 after the placeholder; not acceptance evidence.
 
 | Field | Value |
 |---|---|
-| PR / evidence | — |
+| PR / evidence | Branch `feature/one-page` (placeholder) |
 | Opened | 2026-11-24 |
-| Verification | Pending |
+| Verification | Browser · 2026-11-24 · placeholder renders in Chrome (SwiftShader) desktop and iPhone 13 emulation, no console errors; Real-device · Pending |
 | Reviewed | 2026-11-24 |
 
 </details>
@@ -148,28 +148,28 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 
 | Signal | Priority | Status | Effort |
 |:---:|---|---|---|
-| 🔴 | 🔶 P2 | Open | 🟣 Very large |
+| 🟡 | 🔶 P2 | Implemented | 🟢 Small |
 
-💻 **→ Human action required: No**<br />Port the reusable components from the earlier attempt and add seeded value generators in `src/app/core/`.
+🧑 **→ Human action required: Procedure**<br />Part of the F-003 review: [Run it](../README.md#run-it), then hover, drag and Tab through the HUD pieces.
 
 | | |
 |---|---|
-| **Issue** | The posters' furniture (calendar strips, wireframe spheres and grids, charts, QR code, terminal, arrows, hazard stripes) must be animated, interactive components, not pictures; their values are generated, with no real data (owner decision 2026-11-24). |
-| **Reproduce** | `npm start`, in each state hover, focus (Tab) and drag every HUD piece. |
+| **Issue** | The posters' furniture (calendar strips, wireframe spheres, charts, QR code, terminal, glyphs, hazard stripes) must be animated, interactive components, not pictures; their values are generated, with no real data (owner decision 2026-11-24). |
+| **Reproduce** | [Run it](../README.md#run-it), in each state hover, focus (Tab) and drag every HUD piece; repeat with reduced motion on. |
 | **Check** | Every piece animates and reacts to pointer and keyboard, with one accessible name marking it decorative; no label presents a generated number as a real statistic; nothing is fetched; generators have specs; nothing blocks the first paint; reduced motion shows a still frame. |
 
 <details>
 <summary>Next action, estimates and PR history</summary>
 
-**Next action / closure evidence:** list the pieces per poster, port the reusable ones from the earlier attempt (`sinusoid-graph`, `random-flash-matrix`, `terminal`, `wireframe-sphere`, `wireframe-room`, `wireframe-fpv-plane`) to Angular 22 signals and the new tokens, and add seeded value generators in `src/app/core/` with specs. Owner decision 2026-11-24: animated only, no real data ([HUD components](DESIGN.md#hud-components)).
+**Next action / closure evidence:** built 2026-11-24: signal chart, wire sphere, glyph matrix, terminal log, fake QR, calendar strip (`src/app/hud/`), one shared clock, generators in `src/app/core/hud.ts` with specs. Written new rather than ported: the earlier attempt's components were Angular 21 canvas code without keyboard support. Next: the owner's review with F-003.
 
-**Estimates:** Very large remaining effort, about 9–12 agent hours across roughly a dozen components; reassessed 2026-11-24 after the no-real-data decision removed data sources and their shaping. Estimated 2026-11-24; not acceptance evidence.
+**Estimates:** Small remaining effort: adjustments after the owner's review. Reassessed 2026-11-24 after implementation; not acceptance evidence.
 
 | Field | Value |
 |---|---|
-| PR / evidence | — |
+| PR / evidence | Branch `feature/one-page` |
 | Opened | 2026-11-24 |
-| Verification | Pending |
+| Verification | Unit · 2026-11-24 · generator specs and the decorative-label test passed; Browser · 2026-11-24 · agent check: chart moves, and stops with reduced motion; Human · Pending |
 | Reviewed | 2026-11-24 |
 
 </details>
@@ -182,28 +182,28 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 
 | Signal | Priority | Status | Effort |
 |:---:|---|---|---|
-| 🔴 | 🔶 P2 | Open | 🟡 Medium |
+| 🟡 | 🔶 P2 | Implemented | 🟢 Small |
 
-💻 **→ Human action required: No**<br />Propose the three palettes and two licensed fonts as tokens in `src/styles.scss`, with the style guide tables.
+🧑 **→ Human action required: Procedure**<br />Part of the F-003 review: [Run it](../README.md#run-it) and look at the colours and type in all three states.
 
 | | |
 |---|---|
-| **Issue** | The style guide's art direction has no tokens or fonts in code yet. |
-| **Reproduce** | `src/styles.scss` is empty; STYLE-GUIDE "Colour" and "Type" list nothing. |
-| **Check** | Each state has ground, ink and accent tokens on `:root`, listed in the style guide; text pairs pass WCAG AA; a display face and a monospaced face are self-hosted under `public/assets/fonts/` with their licence recorded; no component uses a literal colour. |
+| **Issue** | The style guide's art direction had no tokens or fonts in code. |
+| **Reproduce** | `src/styles.scss` and STYLE-GUIDE "Colour", "Type", "Spacing and layout". |
+| **Check** | Each state has ground, ink and accent roles on `:root`, listed in the style guide; text pairs pass WCAG AA; a display face and a monospaced face are self-hosted with an open licence; no component uses a literal colour (404 page excepted, coupled). |
 
 <details>
 <summary>Next action, estimates and PR history</summary>
 
-**Next action / closure evidence:** pick open-licence faces (SIL OFL) that match the stretched/blackletter-tech headline and HUD captions; define tokens per state, check contrast, fill the style guide tables. The palette-to-state pairing follows F-003's decision.
+**Next action / closure evidence:** built 2026-11-24: five palette tokens and four roles per state, contrast 6.3:1 to 17.4:1 for every text pair (lime only as a fill), Rubik Glitch and JetBrains Mono from `@fontsource` (OFL-1.1, Latin subset), type, spacing and layout tokens, all listed in the style guide. Next: the owner's review with F-003.
 
-**Estimates:** Medium remaining effort, about 2–3 agent hours. Estimated 2026-11-24; not acceptance evidence.
+**Estimates:** Small remaining effort: adjustments after the owner's review. Reassessed 2026-11-24 after implementation; not acceptance evidence.
 
 | Field | Value |
 |---|---|
-| PR / evidence | — |
+| PR / evidence | Branch `feature/one-page` |
 | Opened | 2026-11-24 |
-| Verification | Pending |
+| Verification | Documentation · 2026-11-24 · tokens and contrast computed and listed; Browser · 2026-11-24 · agent screenshots of the three states; Human · Pending |
 | Reviewed | 2026-11-24 |
 
 </details>

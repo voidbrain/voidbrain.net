@@ -1,1 +1,442 @@
-/* You can add global styles to this file, and also import other style files */
+// Global tokens and the poster layout. Documented in docs/STYLE-GUIDE.md: a token change updates its tables.
+// Fonts are self-hosted from @fontsource (OFL-1.1), listed in angular.json "styles".
+
+:root {
+  // palette: print colours, black does the drawing
+  --vb-black: #0a0a0a;
+  --vb-paper: #f2f0ea;
+  --vb-orange: #ff5a1f;
+  --vb-acid: #a6ff00;
+  --vb-lime: #c6ff00;
+
+  // roles, set per state below
+  --ground: var(--vb-acid);
+  --ink: var(--vb-black);
+  --accent: var(--vb-black);
+  --on-accent: var(--vb-acid);
+
+  // type
+  --font-display: 'Rubik Glitch', 'Impact', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Menlo', monospace;
+  --text-xs: 0.75rem;
+  --text-s: 0.875rem;
+  --text-m: 1rem;
+  --text-l: 1.375rem;
+  --text-display: clamp(2.75rem, 11vw, 9.5rem);
+
+  // spacing and lines
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 40px;
+  --gutter: clamp(16px, 3vw, 40px);
+  --line: 2px;
+  --bar: 52px;
+
+  --switch-time: 420ms;
+}
+
+:root[data-state='work'] {
+  --ground: var(--vb-acid);
+  --accent: var(--vb-black);
+  --on-accent: var(--vb-acid);
+}
+
+:root[data-state='play'] {
+  --ground: var(--vb-orange);
+  --accent: var(--vb-black);
+  --on-accent: var(--vb-orange);
+}
+
+:root[data-state='sleep'] {
+  --ground: var(--vb-paper);
+  --accent: var(--vb-lime);
+  --on-accent: var(--vb-black);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--ground);
+  color: var(--ink);
+  font: var(--text-s) / 1.55 var(--font-mono);
+  transition: background-color var(--switch-time) steps(6, end);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 3px;
+  text-decoration-thickness: var(--line);
+}
+
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: -100px;
+  z-index: 10;
+  padding: var(--space-2) var(--space-3);
+  background: var(--ink);
+  color: var(--ground);
+  &:focus {
+    top: var(--space-2);
+  }
+}
+
+// ---- shell bars
+
+.bar {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+  min-height: var(--bar);
+  padding: var(--space-2) var(--gutter);
+  border-bottom: var(--line) solid var(--ink);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+
+  &--bottom {
+    border-top: var(--line) solid var(--ink);
+    border-bottom: 0;
+  }
+}
+
+.brand {
+  margin: 0;
+  font-size: var(--text-s);
+  font-weight: 700;
+}
+
+.switcher {
+  display: flex;
+  gap: 0;
+  margin-left: auto;
+}
+
+.switch {
+  min-width: 44px;
+  min-height: 36px;
+  padding: var(--space-1) var(--space-4);
+  border: var(--line) solid var(--ink);
+  margin-left: calc(var(--line) * -1);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 700;
+  letter-spacing: inherit;
+  cursor: pointer;
+
+  &[aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--ground);
+  }
+
+  &:hover:not([aria-pressed='true']) {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+}
+
+.hazard {
+  height: 14px;
+  background: repeating-linear-gradient(-45deg, var(--ink) 0 10px, transparent 10px 20px);
+}
+
+// ---- stage: the persistent figure behind the poster
+
+.stage {
+  position: relative;
+  min-height: calc(100dvh - 2 * var(--bar));
+  touch-action: pan-y;
+}
+
+.figure {
+  position: absolute;
+  z-index: 1;
+  inset: 8% 28% 10%;
+  display: grid;
+  place-items: center;
+
+  @media (max-width: 800px) {
+    position: relative;
+    inset: auto;
+    height: min(52dvh, 460px);
+  }
+}
+
+.figure-placeholder {
+  width: min(60%, 320px);
+  aspect-ratio: 3 / 4;
+  border-radius: 48% 48% 40% 40%;
+  background: var(--ink);
+}
+
+// ---- poster
+
+.poster {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1fr);
+  grid-template-areas:
+    'head head head'
+    'left . right'
+    'foot foot foot';
+  grid-template-rows: auto 1fr auto;
+  gap: var(--space-5) var(--gutter);
+  min-height: calc(100dvh - 2 * var(--bar));
+  padding: var(--space-5) var(--gutter);
+  pointer-events: none;
+  animation: poster-in var(--switch-time) steps(5, end);
+
+  > * {
+    pointer-events: auto;
+  }
+
+  @media (max-width: 800px) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'head' 'left' 'right' 'foot';
+    min-height: 0;
+  }
+}
+
+@keyframes poster-in {
+  0% {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+    transform: translateX(-8px);
+  }
+  40% {
+    opacity: 1;
+    clip-path: inset(0 0 40% 0);
+    transform: translateX(6px);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+    transform: none;
+  }
+}
+
+.poster__head {
+  grid-area: head;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  border-bottom: var(--line) solid var(--ink);
+  padding-bottom: var(--space-3);
+}
+
+.poster__foot {
+  grid-area: foot;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  border-top: var(--line) solid var(--ink);
+  padding-top: var(--space-3);
+}
+
+.poster__foot > .hud {
+  flex: 0 0 auto;
+  width: min(220px, 42%);
+}
+
+.poster__left,
+.poster__right {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+.poster__left {
+  grid-area: left;
+}
+
+.poster__right {
+  grid-area: right;
+  align-items: stretch;
+}
+
+.display {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-display);
+  font-weight: 400;
+  line-height: 0.82;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+  transform: scaleX(1.08);
+  transform-origin: left bottom;
+}
+
+.display--foot {
+  font-size: calc(var(--text-display) * 0.62);
+  transform-origin: left top;
+}
+
+.kanji {
+  font-size: clamp(2rem, 6vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1;
+  writing-mode: vertical-rl;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-l);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.kicker {
+  margin: 0;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.copy p {
+  margin: 0 0 var(--space-3);
+  max-width: 46ch;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    padding: 2px var(--space-2);
+    background: var(--accent);
+    color: var(--on-accent);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+}
+
+.entries {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: var(--line) solid var(--ink);
+
+  li {
+    display: grid;
+    grid-template-columns: 12ch minmax(0, 1fr);
+    gap: var(--space-1) var(--space-3);
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .when {
+    font-weight: 700;
+  }
+
+  .what {
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .detail {
+    grid-column: 2;
+    font-size: var(--text-xs);
+  }
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-weight: 700;
+  text-transform: uppercase;
+
+  a {
+    display: inline-block;
+    min-height: 24px;
+    &::before {
+      content: '↗ ';
+    }
+  }
+}
+
+.hud-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--space-4);
+  align-items: start;
+}
+
+// a framed HUD piece
+.hud {
+  display: block;
+  border: var(--line) solid var(--ink);
+  padding: var(--space-2);
+  cursor: crosshair;
+  user-select: none;
+  touch-action: none;
+
+  &__caption {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-2);
+    margin-top: var(--space-1);
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    transition: none;
+  }
+  .poster {
+    animation: none;
+  }
+}

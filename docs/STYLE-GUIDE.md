@@ -2,7 +2,7 @@
 
 How the site looks and talks, and how this repository's documents are written. Read it before changing UI (templates, component styles, global styles, user-facing text). The values live in code: CSS custom properties on `:root` in [`src/styles.scss`](../src/styles.scss). When this guide and the code disagree, the code is what ships: fix whichever is wrong and record the discrepancy in the backlog if it is not fixed in the same change.
 
-**Current state (2026-11-24):** the code ships no tokens yet. `src/styles.scss` is empty and the page is still the Angular welcome screen, whose own `--…` colours in `src/app/app.html` are scaffold leftovers, not tokens: they are removed with the welcome screen (F-003). The tokens and type below the art direction are planned in F-006; until then this guide states the rules they must follow.
+**Current state (2026-11-24):** the tokens, fonts and components below ship in code (F-003, F-005, F-006). The only literal colours outside `src/styles.scss` are in the standalone [`public/404.html`](../public/404.html), which loads no app CSS and repeats `--vb-black`, `--vb-orange` and `--vb-acid` (coupling in `.harness.json`).
 
 ## Art direction
 
@@ -44,42 +44,78 @@ This guide governs the site's UI and repository writing; [Backlog rules](BACKLOG
 
 ### Colour
 
-No colour tokens ship yet (F-006). When they do, they are defined on `:root` in `src/styles.scss`, one set per state, and listed here:
+Defined on `:root` in `src/styles.scss`. The palette is five print colours; each state maps them to four roles, set on `<html data-state="…">` by the shell.
 
 | Token | Value | Use |
 |---|---|---|
-| — | — | none defined yet (F-006) |
+| `--vb-black` | `#0a0a0a` | ink: all text, lines and the figure |
+| `--vb-acid` | `#a6ff00` | work ground |
+| `--vb-orange` | `#ff5a1f` | play ground |
+| `--vb-paper` | `#f2f0ea` | sleep ground |
+| `--vb-lime` | `#c6ff00` | sleep accent (fills only) |
+
+| Role | work | play | sleep | Use |
+|---|---|---|---|---|
+| `--ground` | acid | orange | paper | page background, canvas lines, text on ink |
+| `--ink` | black | black | black | text, borders, the figure, pressed buttons |
+| `--accent` | black | black | lime | tag chips, hover fill |
+| `--on-accent` | acid | orange | black | text on `--accent` |
+
+Contrast (WCAG 2): black on acid 16.0:1, on orange 6.3:1, on paper 17.4:1, on lime 16.7:1; the reverse pairs are the same. Lime on paper is 1.04:1: lime is a fill behind black text, never a text or line colour on paper.
 
 - Use tokens (`var(--…)`), never a new literal colour. A new colour is a new token, added here in the same change.
-- Change fill and foreground as a pair, and check contrast (WCAG AA: 4.5:1 for text, 3:1 for large text and UI parts). Black on orange, acid green and white all pass; small lime text on white does not.
+- Change fill and foreground as a pair, and check contrast (WCAG AA: 4.5:1 for text, 3:1 for large text and UI parts).
 
 ### Type
 
-No web fonts are loaded yet; the browser default applies. Planned (F-006): one display face for the distorted headlines and one monospaced face for HUD captions and the terminal, both self-hosted under `public/assets/fonts/` with a licence that allows web use.
+Self-hosted from `@fontsource` (SIL OFL 1.1), Latin subset only, registered in `angular.json` "styles"; the build puts the files in `media/`.
+
+| Token | Face | Use |
+|---|---|---|
+| `--font-display` | Rubik Glitch 400 | the distorted top and bottom headlines (`.display`), stretched 108 % wide; decorative, `aria-hidden` |
+| `--font-mono` | JetBrains Mono 400 and 700 | everything else: body, labels, HUD captions, terminal |
+
+Sizes: `--text-xs` 0.75rem (labels, captions), `--text-s` 0.875rem (body), `--text-m` 1rem, `--text-l` 1.375rem (state title), `--text-display` `clamp(2.75rem, 11vw, 9.5rem)` (headline; the bottom one is 62 % of it). Labels and titles are uppercase with 0.08–0.12em tracking, from CSS. The Japanese state word (仕事, 遊び, 睡眠) is vertical texture, `lang="ja"` and `aria-hidden`.
 
 ### Spacing and layout
 
-Not defined yet (F-006). Each state fills the viewport (`100dvh`); the layout must work from 360 px wide phones to wide desktops without horizontal scrolling.
+Spacing: `--space-1` 4px, `--space-2` 8px, `--space-3` 12px, `--space-4` 16px, `--space-5` 24px, `--space-6` 40px; `--gutter` `clamp(16px, 3vw, 40px)`; `--line` 2px (every rule and frame); `--bar` 52px (top and bottom bars).
+
+Layout: top bar, hazard stripe, the stage, hazard stripe, bottom bar. On the stage the figure sits behind a three-column poster grid (head; left text, empty centre, right timeline and HUD; foot). Below 800 px wide it becomes one column with the figure on top, at most 460px high. No horizontal scroll from 360 px up (checked at 390 px).
 
 ### States and motion
 
 - Hover, active, selected, disabled and focus each have one treatment. Focus is always visible on every ground colour.
-- Respect `prefers-reduced-motion`: the state switch becomes a cut, the model stops idling, glitch effects stop.
+- Switching state: the poster enters with a stepped glitch (`poster-in`, `--switch-time` 420ms, `steps()`), the ground steps to the new colour, the figure blends its pose.
+- Respect `prefers-reduced-motion`: the state switch becomes a cut, the model stops idling, the HUD shows still frames, the terminal cursor stops blinking.
 
 ## Components
 
-None yet beyond the scaffolded root component. Each shared component (state switcher, chart, calendar strip, QR block, terminal) gets an entry here when it is added: what it is for, its source file, its variants.
+| Component | Source | What it is, and its interactions |
+|---|---|---|
+| Shell | `src/app/app.ts` | Bars, switcher (`.switch`, `aria-pressed`), stage, live announcement of the state. |
+| Poster | `src/app/poster/` | One state's headlines, text, tags (`.tags`), timeline (`.entries`), links (`.links`) and HUD pieces. |
+| Self-model | `src/app/figure/self-model.ts` | three.js figure (F-004), lazy. Colours from `--ink`/`--ground`. |
+| Signal chart | `src/app/hud/signal-chart.ts` | Animated line. Hover or Space freezes, drag or ← → scrubs. |
+| Wire sphere | `src/app/hud/wire-sphere.ts` | Turning wireframe globe. Drag or arrow keys turn it. |
+| Glyph matrix | `src/app/hud/glyph-matrix.ts` | Flickering glyph block. Hover or Space freezes, Enter or click reshuffles. |
+| Terminal log | `src/app/hud/terminal-log.ts` | Fake scrolling log with a blinking cursor. Hover pauses, Enter or click prints a line. |
+| Fake QR | `src/app/hud/fake-qr.ts` | QR-shaped pattern that encodes nothing. Enter or click redraws. |
+| Calendar strip | `src/app/hud/calendar-strip.ts` | Five day boxes around today, one lit. Hover or ← → moves the light. |
+
+Every HUD piece is a `.hud` frame (2px ink border, caption row) with `role="img"`, `tabindex="0"` and a label ending in "decorative" plus its keys; its own arrow keys do not switch the state. Decorative only: see [design](DESIGN.md#hud-components).
 
 ## Accessibility
 
 - Every interactive element is reachable and operable by keyboard, with a visible focus and an accessible name.
 - Colour never carries meaning alone. Text meets WCAG AA contrast on its real background.
-- The 3D model has a text alternative describing the pose; HUD charts are decorative: one accessible name each ("animated signal chart, decorative"), their generated values are not read out.
+- The 3D model has a text alternative describing the pose (`POSTERS[state].figure`); HUD charts are decorative: one accessible name each ("animated signal chart, decorative"), their generated values are not read out.
 - Images that carry meaning have alt text; decorative ones have `alt=""`.
 
 ## Assets
 
-- Everything in `public/` is copied to the server's docroot. Never name a file or folder there like a legacy folder (`img`, `js`, `fonts`, `style`, …): see [design](DESIGN.md), "Legacy paths". Use `public/assets/` and `public/models/`.
+- Everything in `public/` is copied to the server's docroot. Never name a file or folder there like a legacy folder (`img`, `js`, `fonts`, `style`, …): see [design](DESIGN.md), "Legacy paths"; `npm run test:legacy` fails on one. Use `public/assets/` and `public/models/`.
+- Fonts come from npm (`@fontsource`, OFL), not from `public/`; the favicon is the old site's.
 - 3D models: glTF binary (`.glb`), Draco-compressed, under 3 MB in total (F-004).
 - Strip location metadata from any photo before it is committed. Raw scan photos never enter the repository.
 - Fonts and images need a licence that allows web use; record the source next to the file.
