@@ -1,0 +1,113 @@
+name: CI
+
+# Every pull request and every push to main: the harness checks, lint, unit tests, type check, build.
+# No browser (Playwright) suite yet: add an e2e job from the harness template when one exists.
+# tools/ci-status.mjs reads this workflow by its name (CI); keep it.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # check:freshness compares the backlog's commit with main and lists merged branches
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Generate CycloneDX SBOM
+        run: npm sbom --sbom-format cyclonedx > sbom.cdx.json
+
+      - name: Upload CycloneDX SBOM
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: dependency-sbom
+          path: sbom.cdx.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Optional integration recommendation metadata
+        run: npm run check:integrations
+
+      - name: Required maintenance evidence
+        run: node tools/maintenance.mjs check
+
+      - name: Scope-aware audit evidence
+        run: node tools/check-audits.mjs --github
+
+      - name: Safety rules in AGENTS, procedures on demand
+        run: npm run check:rules
+      - name: Rule load budgets (warnings only)
+        run: npm run check:rule-load
+
+      - name: Backlog records and layout
+        run: npm run check:backlog
+
+      - name: Harness template, for the release check below
+        # check-harness compares this project with the template's release tags; the template is public, so no token.
+        run: |
+          repo=$(node -p "require('./.harness.json').template?.repo ?? ''")
+          if [ -n "$repo" ]; then
+            git clone --quiet "$repo" "$RUNNER_TEMP/project-harness" ||
+              echo "::warning title=Harness template::Could not clone $repo: template release check skipped."
+          fi
+
+      - name: Impact map page matches the rows
+        run: node tools/impact-map.mjs && git diff --exit-code -- docs/agents/impact-map.md
+
+      - name: Freshness, template release and required review evidence
+        env:
+          HARNESS_HOME: ${{ runner.temp }}/project-harness
+        run: npm run check:freshness -- --github
+
+      - name: AGENTS conventions and unused exports
+        run: npm run check:conventions
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Formatter check, and that formatter and linter are enforced
+        run: npm run format:check && npm run check:tooling
+
+      - name: Test, with coverage
+        # every source file is included, so a file no test runs shows at 0 % instead of being left out
+        run: npx ng test --watch=false --coverage --coverage-reporters=json-summary --coverage-include='src/**/*.ts' --coverage-exclude='**/*.spec.ts'
+
+      - name: Code coverage table (optional enforcement)
+        run: node tools/coverage-table.mjs --check --github
+
+      - name: Type check
+        run: npx tsc -p tsconfig.app.json --noEmit --noUnusedLocals --noUnusedParameters
+
+      - name: Build
+        run: npm run build
+
+      - name: Optional backlog dependency validation
+        run: |
+          if test -f tools/backlog-dependencies.mjs; then
+            node tools/backlog-dependencies.mjs --check
+          fi
+
+      - name: Optional backlog work-queue validation
+        run: |
+          if test -f tools/backlog-queue.mjs; then
+            node tools/backlog-queue.mjs --check
+          fi
+
+      - name: Optional source-owned records and explicit tasks
+        run: |
+          if test -f tools/work-items.mjs; then
+            node tools/work-items.mjs check
+          fi
