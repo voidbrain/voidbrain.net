@@ -1,0 +1,49 @@
+# voidbrain.net: the one-page site, next to the old site's folders.
+# Rules and their reasons: docs/DESIGN.md, "Legacy paths". Tested by `npm run test:legacy` (tools/test-legacy-paths.mjs).
+
+AddDefaultCharset utf-8
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+
+<IfModule mod_headers.c>
+  Header unset X-Powered-By
+  # Angular's hashed bundles and fonts never change (name-HASH.ext); legacy files keep the server default.
+  <FilesMatch "^[a-z0-9-]+-[A-Z0-9]{8}\.(js|css|woff2?)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "^(index|404)\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # 1. Never serve dotfiles (.git, .env, …), anywhere, legacy folders and /old/ included.
+  RewriteRule (^|/)\. - [F]
+
+  # 2. The old site's copy and the legacy folders are served as they are, with their own rules.
+  RewriteRule ^(old|admin|cgi-bin|min|maiko|misc|include|extradry|hammer|js|laura|support|style|fonts|base|img|temp|templates|template|test|pasubio|cube|uBoard|uboard|inc|grover|summer2020|wip)(/|$) - [L]
+  RewriteRule ^(BingSiteAuth\.xml|googleba637e5c36f03a69\.html|humans\.txt|robots\.txt|sitemap\.xml|favicon\.ico|404\.html)$ - [L]
+
+  # 3. The old API is gone.
+  RewriteRule ^api(/|$) - [G]
+
+  # 4. The old query-string form (/?url=about/me) and the old PHP entry points go home.
+  RewriteCond %{QUERY_STRING} (^|&)(url|api|_escaped_fragment_)(=|&|$) [NC]
+  RewriteRule ^ /? [R=301,L]
+  RewriteRule ^(index|sitemap|test1?)\.php$ / [R=301,L]
+
+  # 5. Anything else that exists (the new page and its bundles) is served as it is.
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # 6. Every old page (home, about, about/me, about/work, labs, labs/<x>, contacts, …,
+  #    in any case, with or without a trailing slash or .php) goes home.
+  RewriteRule ^[^.]*$ / [R=301,L]
+  RewriteRule ^[^.]+\.php$ / [R=301,L]
+
+  # 7. Anything left (a missing file with an extension) is a 404 (ErrorDocument above).
+</IfModule>

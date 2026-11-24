@@ -1,0 +1,32 @@
+# The old voidbrain.net PHP site, kept at /old/ (docs/DESIGN.md, "Legacy paths").
+# The site's files are copied here on the server; this file replaces its root .htaccess,
+# with the same routing rebased to /old/. Not indexed: search engines get the new home page.
+# Tested by `npm run test:legacy` (tools/test-legacy-paths.mjs).
+
+AddDefaultCharset utf-8
+DirectoryIndex index.php
+
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex, nofollow"
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /old/
+
+  # Dotfiles first, then the old API (gone, as at the root), then the old site's own folders.
+  RewriteRule (^|/)\. - [F]
+  RewriteRule ^api(/|$) - [G]
+  RewriteRule ^(admin|cgi-bin|min|maiko|misc|include|extradry|hammer|js|laura|support|style|fonts|base|img|temp|templates|test|pasubio|cube|uBoard|uboard|inc)(/|$) - [L]
+  RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
+  # /old/ opens the old home page, as / did.
+  RewriteRule ^$ home [R=301,L]
+
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  RewriteRule ^(labs/([A-Za-z0-9-]+))/?$ templates/pages.php?url=$1 [L]
+  RewriteRule ^([^.]*?)/?$ index.php?url=$1 [L,QSA]
+</IfModule>

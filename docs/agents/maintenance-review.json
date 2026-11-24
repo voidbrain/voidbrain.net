@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "reviewed": "2026-11-24T14:28:26.487Z",
+  "policy": "dabfdc5836dc54371c7b2580ddb32649ec147220eee6828cc16709d6c8363294",
+  "inputs": {
+    "AGENTS.md": "17d5f1fed186ac152cd1f3762778b1ea5b28930e6a5c144d7a8e78a2852ca6c4",
+    "docs/BACKLOG-RULES.md": "bcde70273837df8dbb2835e92ba9e5a071b063200156f2e2f84219f7499c4146",
+    "docs/agents/angular.md": "ce4a2b6fd81fd5eae723cf2d1eb42203e253ab5d08c13457d656814aeaf2448e",
+    "docs/agents/architecture-review.md": "5d967314854912b1a5f1446aeab309763b14f9856bceb3c82df5c6c25c166526",
+    "docs/agents/areas.md": "0d3fb87101733a1b449fb00b09839bc0b762d1618ca17d2fa3f3b17c062e2dc2",
+    "docs/agents/audit.md": "e58480c21e8afe9a825df4726fa93b8a7f841557f4267f1fc2c61ac3dac8f642",
+    "docs/agents/change-impact.md": "dc1c473e274f76bd70a87ff57bbc53fc75dc75a35d121cf67baf163a2fd2e975",
+    "docs/agents/coverage-guide.md": "3d539eb8beedfa101a5e47d9973cdf85dce197436fab2ab096f760e12d208106",
+    "docs/agents/maintenance.md": "69f77d944551e4a442de20a0e46badf19a91e42f870bf8048f428c8a64f343a9",
+    "docs/agents/mcp.md": "06efbb58a50f9236506ca0afa9a79bb1d42c12ca380a29ed0254bf0a537f860d",
+    "docs/agents/parallel-work-plans.md": "d171d89ec5431668ff770e5fcb0098ad518da6289a0d12a56aafdae60930d567",
+    "docs/agents/parallel-work.md": "e460a7ef54aa1ce270e9c8d87a8da85680182d2adec3cafbbf7ad0af5b75439c",
+    "docs/agents/procedures.md": "60d1502790439ed68796d632456cd5bd8ad2634abfaa9d12e4fe88aa65c376e3",
+    "docs/agents/prompt-caching.md": "3b8962bd4f2f713d5730e999e65338ebdd90347ee09dffbd9c8da98e2405a21e",
+    "docs/agents/rule-review.md": "1a6cb030a1cd2b802312d02a974f76e4df04b47865aedb99fb7c5f78d5d15f10",
+    "docs/agents/skills-discovery.md": "ad322a2b93f2dc1b8f27d0b052248d57c050ca852077589ba889447577357057",
+    "docs/agents/skills.md": "7da9fc43bd0886b06580cc15b9a45e47d097c6fa7fca627bf7ed0f0202a409a1",
+    "docs/agents/solution-profile.md": "685d55612f55d157bf124e23115f95bd16fe4d4f8834a4e0e152a191e3cd45f8",
+    "docs/agents/task-context.md": "c689f02b9571ff747a4866d71690bb01afd7e6654dea640a1ce1c66e7c0fa204",
+    "docs/agents/work-usage-launch.md": "3225858b8b840322d2bb073f30659c376826eea3d1f772df8582fb37eef74465",
+    "docs/agents/work-usage.md": "9a4c574e6cd2b0af3ddd1cb5a70560dc84c962c991d42567b7829b9a25cae3be",
+    "docs/backlog/closure.md": "621d7de170f1cf91b1fdbcbe5024f298a1c72f8fb754af8bae3a1c282d5a3ce1",
+    "docs/backlog/documentation.md": "73448be453c7719f932a6e70c2fb359516639dc94a6595e14a3ba40f14b6d3a4",
+    "docs/backlog/estimates.md": "464a51ccad0db3958a2afa36caa2ffd79e780c49fe66cab01d1a7d0793411912",
+    "docs/backlog/evaluations.md": "7540bf69b6b5d40dc09dc9ce82138218525733c5f602945bdaa58d5c3a743f37",
+    "docs/backlog/feature-plans.md": "f2377140ce4f2f38b449516498dd5ff6ba58ca04287aa92381a1029f7416f85b",
+    "docs/backlog/human-action.md": "8c1e2e47da82dae9b6b533988d73d10bbeaa06e0c613fbd4e6d0e58e939c66ae",
+    "docs/backlog/ledger-header.md": "933a71e153faf8ab36f52f416de956b38338dc5f1dfe0851244136ede3b61c4c",
+    "docs/backlog/ordering.md": "614ce772b88273461656232ab51e4cebaff47b36fcf6008367124b779fb1b03e",
+    "docs/backlog/outcomes.md": "c6f1d8e4ac3afd85e6d90ac7cef8ae39fba765b13c821522fb005edd2b5b88e4",
+    "docs/backlog/ownership.md": "d2d39a4e2a56fb7a18c5cce2fe5490282a9c89c947574746bacd71f1040c457f",
+    "docs/backlog/records.md": "d7b02554622b29436241c941b42fcefb7b0ec1a104fb5eceb2ad9dadfc14b814",
+    "docs/backlog/review.md": "ce8a531284b1985fe894d5c18c70c5e3d1ad1f96dbb3d6039e75b7aede7fe50c",
+    "docs/backlog/steps.md": "98705e1e90b5a908a6a6cc666bf64fbdae82020a2a80cf8d11906ebb19108c8c",
+    "tools/task-claims.mjs": "ef755fe7951544e5c05b20de7c64a7b53778b6d039a11a2abeb079e7d42b6fd2",
+    "tools/usage-launch.mjs": "51dea30282a89f7efa8fa0291679447d8f25a1b4b2aeb805173db603d093d6f5",
+    "tools/work-items.mjs": "e33cd1d21a381f7127aaccf9a8ba189c6d0414ba7af4af5bb121c29c4f79aa93",
+    "tools/work-usage.mjs": "09569f9b56bd6e403d4c235f980ba5fb03b2aff8fe56a28878cc298fe8a4b2af"
+  },
+  "measurements": {
+    "samples": 1,
+    "latestAt": "2026-11-24T11:58:15.287Z",
+    "operations": {
+      "adoption": {
+        "samples": 1,
+        "durationMs": {
+          "observed": 1,
+          "missing": 0,
+          "median": 487000
+        },
+        "conflicts": {
+          "observed": 1,
+          "missing": 0,
+          "median": 0
+        },
+        "unnecessaryPrompts": {
+          "observed": 1,
+          "missing": 0,
+          "median": 0
+        },
+        "repeatedContextLoads": {
+          "observed": 0,
+          "missing": 1,
+          "median": null
+        }
+      },
+      "reconciliation": {
+        "samples": 0,
+        "durationMs": {
+          "observed": 0,
+          "missing": 0,
+          "median": null
+        },
+        "conflicts": {
+          "observed": 0,
+          "missing": 0,
+          "median": null
+        },
+        "unnecessaryPrompts": {
+          "observed": 0,
+          "missing": 0,
+          "median": null
+        },
+        "repeatedContextLoads": {
+          "observed": 0,
+          "missing": 0,
+          "median": null
+        }
+      }
+    }
+  },
+  "outcomes": [
+    {
+      "kind": "rule",
+      "disposition": "implemented",
+      "target": "AGENTS.md",
+      "evidence": "Project lines: no remote/CI yet so the owner merges into main (narrows the landing rule until F-007); Node 24 via .nvmrc because the host's Homebrew Node fails to start."
+    },
+    {
+      "kind": "tool",
+      "disposition": "backlog",
+      "target": "F-007",
+      "evidence": "CI workflow adapted (Node from .nvmrc, PR + push to main, no e2e job) but cannot run without a GitHub remote."
+    },
+    {
+      "kind": "tool",
+      "disposition": "backlog",
+      "target": "F-001",
+      "evidence": "Audit manifest needs a commit SHA baseline; written with the first commit."
+    },
+    {
+      "kind": "none",
+      "disposition": "no-change",
+      "evidence": "check:rule-load warns that the audit trigger reads 5,284 tokens (budget 5,000); the guides are copied template files, so any change belongs to the template, not this project."
+    },
+    {
+      "kind": "rule",
+      "disposition": "implemented",
+      "target": "AGENTS.md",
+      "evidence": "Owner decision 2026-11-24 (F-005): HUD values are generated, never real data; AGENTS 'Adding things' and areas.md now name seeded generators in src/app/core/ instead of chart data shaping."
+    },
+    {
+      "kind": "rule",
+      "disposition": "implemented",
+      "target": "AGENTS.md",
+      "evidence": "F-002..F-006 built: AGENTS architecture, adding-things and pitfalls now describe server-only legacy rules (test:legacy on a real Apache), the poster/hud/figure layout, and the scoped-styles trap for DOM made in code; areas.md records the canvas resize loop and the document keydown lessons."
+    },
+    {
+      "kind": "tool",
+      "disposition": "implemented",
+      "target": "tools/test-legacy-paths.mjs",
+      "evidence": "Project-owned Apache test of public/.htaccess and public/old/.htaccess (119 requests) plus the public/ names check; npm run test:legacy, CI step on apache2; mutation check fails 11 cases."
+    },
+    {
+      "kind": "rule",
+      "disposition": "implemented",
+      "target": "AGENTS.md",
+      "evidence": "F-007: remote is voidbrain/voidbrain.net; the no-remote project line becomes: no branch protection yet, the agent opens PRs and runs checks, the owner merges."
+    },
+    {
+      "kind": "rule",
+      "disposition": "implemented",
+      "target": "docs/agents/areas.md",
+      "evidence": "PR #1 independent review: lessons on .htaccess rule order (dotfiles first), in-page anchors resetting the state, the HUD group role, and a clock regression only a browser check caught."
+    }
+  ]
+}

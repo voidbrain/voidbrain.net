@@ -1,311 +1,111 @@
-import { Component, inject, signal, ViewChild, ElementRef, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Added CommonModule
-import { AppLogoComponent } from './components/app-logo/app-logo'; // Import AppLogoComponent
-import { WireframeSphere } from './components/wireframe-sphere/wireframe-sphere';
-import { Theme as ThemeService } from './services/ui/theme';
-import { Color as ColorService } from './services/ui/color';
-import { Flavour as FlavourService } from './services/ui/flavour';
-import { Settings } from './services/settings';
+import {
+  Component,
+  DOCUMENT,
+  Injector,
+  afterNextRender,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
+import { OWNER, POSTERS } from './core/content';
+import {
+  STATES,
+  StateId,
+  hashFor,
+  isStateId,
+  stateFromHash,
+  stepState,
+  swipeDelta,
+} from './core/states';
+import { SelfModel } from './figure/self-model';
+import { Poster } from './poster/poster';
 
-import { TerminalComponent } from './components/terminal/terminal';
-import { RandomFlashMatrix } from './components/random-flash-matrix/random-flash-matrix';
-import { FxImageComponent } from './components/fx-image/fx-image';
-import { SinusoidGraph } from './components/sinusoid-graph/sinusoid-graph';
-import { CommonModal } from './components/common-modal/common-modal';
-import { LangDialog } from './components/lang-dialog/lang-dialog';
-import { ThemeDialog } from './components/theme-dialog/theme-dialog';
-import { FlavourDialog } from './components/flavour-dialog/flavour-dialog';
-import { ColorDialog } from './components/color-dialog/color-dialog';
-
+/** The page shell: the current state (kept in the URL hash), the state switcher, keyboard and swipe, and the
+ *  persistent self-model behind the poster. */
 @Component({
-  selector: 'app-root',
-  standalone: true, // Added standalone: true
-  imports: [
-    CommonModule, // Added CommonModule
-    AppLogoComponent, // Added AppLogoComponent
-    WireframeSphere,
-    RandomFlashMatrix,
-    TerminalComponent,
-    FxImageComponent,
-    SinusoidGraph,
-    CommonModal,
-    LangDialog,
-    ThemeDialog,
-    ColorDialog,
-    FlavourDialog,
-  ],
+  selector: 'vb-root',
+  imports: [Poster, SelfModel],
+  host: {
+    '(window:hashchange)': 'fromHash()',
+    '(document:keydown)': 'onKey($event)',
+  },
   templateUrl: './app.html',
-  styleUrl: './app.scss',
 })
 export class App {
-  @ViewChild('contentColumn', { static: true }) contentColumnEl!: ElementRef;
-  protected readonly title = signal('voidbrain.net');
+  private readonly doc = inject(DOCUMENT);
+  private readonly injector = inject(Injector);
 
-  isLangModalOpen = signal(false);
-  isFlavourModalOpen = signal(false);
-  isColorModalOpen = signal(false);
-  isThemeModalOpen = signal(false);
+  protected readonly states = STATES;
+  protected readonly owner = OWNER;
+  protected readonly titles = Object.fromEntries(
+    STATES.map((s) => [s, POSTERS[s].title]),
+  ) as Record<StateId, string>;
+  protected readonly state = signal<StateId>(stateFromHash(this.doc.location.hash));
+  protected readonly poster = computed(() => POSTERS[this.state()]);
+  protected readonly announcement = computed(() => `${this.poster().title} poster`);
 
-  isInternalDialogVisible = true; // Set to true for initial display as per image
-  isSettingsModalOpen = false; // Settings dialog state
-  private settings = inject(Settings);
-  private themeService = inject(ThemeService);
-  private colorService = inject(ColorService);
-  private flavourService = inject(FlavourService);
-
-  // Save feedback signals
-  saveFeedbackMessage = signal('');
-  isSavingSettings = signal(false);
-  protected modalTitle = '';
-
-  protected selectedTheme = signal(this.settings.theme);
+  private swipeStart: { x: number; y: number } | null = null;
 
   constructor() {
-    // Apply theme from settings on app startup
-    // const settings = this.settings.getSettings();
+    effect(() => {
+      const state = this.state();
+      this.doc.documentElement.dataset['state'] = state;
+      this.doc.title = `${POSTERS[state].title} · voidbrain.net · ${OWNER.name}`;
+    });
   }
 
-  openLangModal() {
-    this.modalTitle = 'Lang';
-    // Reset save feedback signals
-    this.saveFeedbackMessage.set('');
-    this.isSavingSettings.set(false);
-    // Close all other modals first
-    this.isFlavourModalOpen.set(false);
-    this.isColorModalOpen.set(false);
-    this.isThemeModalOpen.set(false);
-    // Open the requested modal
-    this.isLangModalOpen.set(true);
+  protected go(state: StateId): void {
+    if (state === this.state()) return;
+    // the poster is recreated: if focus was inside it, give it to the new heading instead of <body>
+    const focusInPoster = !!this.doc.activeElement?.closest('vb-poster');
+    this.state.set(state);
+    if (focusInPoster) this.focusTitle();
+    const hash = hashFor(state);
+    if (this.doc.location.hash !== hash) this.doc.defaultView?.history.pushState(null, '', hash);
   }
 
-  openFlavourModal() {
-    this.modalTitle = 'Flavour';
-    // Reset save feedback signals
-    this.saveFeedbackMessage.set('');
-    this.isSavingSettings.set(false);
-    // Close all other modals first
-    this.isLangModalOpen.set(false);
-    this.isColorModalOpen.set(false);
-    this.isThemeModalOpen.set(false);
-    // Open the requested modal
-    this.isFlavourModalOpen.set(true);
+  protected step(delta: number): void {
+    this.go(stepState(this.state(), delta));
   }
 
-  openColorModal() {
-    this.modalTitle = 'Colors';
-    // Reset save feedback signals
-    this.saveFeedbackMessage.set('');
-    this.isSavingSettings.set(false);
-    // Close all other modals first
-    this.isLangModalOpen.set(false);
-    this.isFlavourModalOpen.set(false);
-    this.isThemeModalOpen.set(false);
-    // Open the requested modal
-    this.isColorModalOpen.set(true);
+  /** Only a state hash (or none) changes the state: an in-page anchor such as #poster-title must not. */
+  protected fromHash(): void {
+    const id = this.doc.location.hash.replace(/^#/, '').toLowerCase();
+    if (id && !isStateId(id)) return;
+    this.state.set(stateFromHash(this.doc.location.hash));
   }
 
-  openThemeModal() {
-    this.modalTitle = 'Theme';
-    // Reset save feedback signals
-    this.saveFeedbackMessage.set('');
-    this.isSavingSettings.set(false);
-    // Close all other modals first
-    this.isLangModalOpen.set(false);
-    this.isFlavourModalOpen.set(false);
-    this.isColorModalOpen.set(false);
-    // Open the requested modal
-    this.isThemeModalOpen.set(true);
+  protected skipToContent(e: Event): void {
+    e.preventDefault();
+    this.focusTitle(true);
   }
 
-  closeLangModal() {
-    this.isLangModalOpen.set(false);
+  private focusTitle(now = false): void {
+    const focus = () => this.doc.getElementById('poster-title')?.focus();
+    if (now) focus();
+    else afterNextRender(focus, { injector: this.injector });
   }
 
-  closeFlavourModal() {
-    this.isFlavourModalOpen.set(false);
-  }
-
-  closeColorModal() {
-    this.isColorModalOpen.set(false);
-  }
-
-  closeThemeModal() {
-    this.isThemeModalOpen.set(false);
-  }
-
-  // Common close method for modal X button and backdrop click
-  closeAnyModal() {
-    this.closeLangModal();
-    this.closeFlavourModal();
-    this.closeColorModal();
-    this.closeThemeModal();
-  }
-
-  // Save settings with feedback - shows message, waits 2 sec, then closes modal
-  async saveSettings() {
-    this.isSavingSettings.set(true);
-    this.saveFeedbackMessage.set('Settings saved successfully!');
-
-    // Wait 2 seconds with loading indicator
-    setTimeout(() => {
-      this.isSavingSettings.set(false);
-      this.closeAnyModal();
-
-      // Clear message after modal closes
-      setTimeout(() => {
-        this.saveFeedbackMessage.set('');
-      }, 500);
-    }, 2000);
-  }
-
-  // Specific save methods for different dialogs
-  saveLangSettings() {
-    // Save language setting first, then redirect to the language-specific URL
-    const currentSettings = this.settings.getSettings();
-
-    // Show feedback message
-    this.saveFeedbackMessage.set(
-      `Language set to: ${currentSettings.language.toUpperCase()}. Redirecting...`,
-    );
-
-    // Close modal immediately
-    this.closeAnyModal();
-
-    // Auto redirect after 2 seconds
-    setTimeout(() => {
-      this.saveFeedbackMessage.set('');
-      // Redirect to the language-specific URL
-      const baseUrl = window.location.origin;
-      window.location.href = `${baseUrl}/${currentSettings.language}`;
-    }, 2000);
-  }
-
-  saveColorSettings() {
-    // Get current color setting and apply it
-    const currentSettings = this.settings.getSettings();
-    this.colorService.setColor(currentSettings.color);
-
-    // Save the general settings
-    this.saveSettings();
-  }
-
-  saveFlavourSettings() {
-    // Get current flavour setting and apply it
-    const currentSettings = this.settings.getSettings();
-    this.flavourService.setFlavour(currentSettings.flavour);
-
-    // Save the general settings
-    this.saveSettings();
-  }
-
-  saveThemeSettings() {
-    // Get current theme setting and apply it
-    const currentSettings = this.settings.getSettings();
-    this.themeService.setTheme(currentSettings.theme);
-
-    // Save the general settings
-    this.saveSettings();
-  }
-
-  openSettingsModal() {
-    this.isSettingsModalOpen = true;
-  }
-
-  closeSettingsModal() {
-    this.isSettingsModalOpen = false;
-  }
-
-  @HostListener('document:keydown.escape')
-  onEscapeKey() {
-    if (
-      this.isColorModalOpen() ||
-      this.isThemeModalOpen() ||
-      this.isLangModalOpen() ||
-      this.isFlavourModalOpen()
-    ) {
-      this.closeLangModal();
-      this.closeFlavourModal();
-      this.closeColorModal();
-      this.closeThemeModal();
+  protected onKey(e: KeyboardEvent): void {
+    if (e.altKey || e.ctrlKey || e.metaKey || e.defaultPrevented) return;
+    // the target can be the document itself, which has no closest()
+    const target = e.target instanceof Element ? e.target : null;
+    if (target?.closest('input, textarea, select, [contenteditable="true"]')) return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      this.step(e.key === 'ArrowRight' ? 1 : -1);
+      e.preventDefault();
     }
   }
 
-  onBackdropClick() {
-    // Only close if clicking the backdrop itself, not the modal content
-    if (
-      this.isColorModalOpen() ||
-      this.isThemeModalOpen() ||
-      this.isLangModalOpen() ||
-      this.isFlavourModalOpen()
-    ) {
-      this.closeLangModal();
-      this.closeFlavourModal();
-      this.closeColorModal();
-      this.closeThemeModal();
-    }
+  protected onPointerDown(e: PointerEvent): void {
+    this.swipeStart = e.pointerType === 'mouse' ? null : { x: e.clientX, y: e.clientY };
   }
 
-  goTo(dest: string) {
-    const contentColumn = this.contentColumnEl.nativeElement;
-    const element = document.getElementById(dest);
-
-    if (element) {
-      // Get sticky header height to account for it
-      const header = document.querySelector('header');
-      const headerHeight = header ? header.offsetHeight : 0;
-
-      // Calculate position relative to contentColumn and adjust for sticky header
-      const elementRect = element.getBoundingClientRect();
-      const contentRect = contentColumn.getBoundingClientRect();
-      let relativeTop =
-        elementRect.top - contentRect.top + contentColumn.scrollTop - headerHeight - 10; // +10 for margin
-
-      // Ensure we don't scroll above the content
-      relativeTop = Math.max(0, relativeTop);
-
-      // Add highlight class for visual feedback
-      element.classList.add('goto-highlight');
-
-      // Remove highlight class after animation completes
-      setTimeout(() => {
-        element.classList.remove('goto-highlight');
-      }, 1200); // Match animation duration
-
-      contentColumn.scrollTo({
-        top: relativeTop,
-        behavior: 'smooth',
-      });
-    } else {
-      // If element not found, scroll to top of content column
-      contentColumn.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
-    }
+  protected onPointerUp(e: PointerEvent): void {
+    if (!this.swipeStart) return;
+    const delta = swipeDelta(e.clientX - this.swipeStart.x, e.clientY - this.swipeStart.y);
+    this.swipeStart = null;
+    if (delta) this.step(delta);
   }
-
-  codeDiffContent: string = `
-            ------- SEARCH
-            if len(lsp) > maxLSPs {
-              remaining := len(lsp) - maxLSPs
-              lspList = append(lspList,
-                t.S().Base.Foreground(t.FgMuted).Render(fmt.Sprintf("...and %d more", remaining)),
-                t.S().Base.Foreground(t.FgMuted).Render(fmt.Sprintf("...and %d more", remaining)),
-              )
-            }
-            =======
-            +++++++ REPLACE
-
-            ------- SEARCH
-            if len(mcps) > maxMCPs {
-              remaining := len(mcps) - maxMCPs
-              mcpList = append(mcpList,
-              remaining := len(mcps) - maxMCPs
-              mcpList = append(mcpList,
-                t.S().Base.Foreground(t.FgMuted).Render(fmt.Sprintf("...and %d more", remaining)),
-              )
-            }
-            =======
-            +++++++ REPLACE
-  `;
 }
