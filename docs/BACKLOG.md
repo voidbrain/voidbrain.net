@@ -14,7 +14,7 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 |:---:|---|---|---|
 | 🟡 | 🔶 P2 | Implemented | 🟢 Small |
 
-🧑 **→ Human action required: Procedure**<br />Review the `harness/agent-harness` branch and its [baseline audit](audits/2026-11-24-harness-baseline.md), then merge it into `main`.
+🧑 **→ Human action required: Procedure**<br />Review [#1](https://github.com/voidbrain/voidbrain.net/pull/1) and its [baseline audit](audits/2026-11-24-harness-baseline.md), then merge it.
 
 | | |
 |---|---|
@@ -31,7 +31,7 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 
 | Field | Value |
 |---|---|
-| PR / evidence | Branch `harness/agent-harness` (`ea46ffa`, manifest commit after it); [baseline audit](audits/2026-11-24-harness-baseline.md) |
+| PR / evidence | [#1](https://github.com/voidbrain/voidbrain.net/pull/1) (harness `ea46ffa`, manifest `b9194fb`); [baseline audit](audits/2026-11-24-harness-baseline.md) |
 | Opened | 2026-11-24 |
 | Verification | Unit + lint + build · 2026-11-24 · local run passed (audit); CI · Pending (F-007) |
 | Reviewed | 2026-11-24 |
@@ -65,7 +65,7 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 
 | Field | Value |
 |---|---|
-| PR / evidence | Branch `feature/one-page`; mutation check: a broken redirect rule fails 11 of the Apache cases |
+| PR / evidence | [#1](https://github.com/voidbrain/voidbrain.net/pull/1); mutation check: a broken redirect rule fails 11 of the Apache cases |
 | Opened | 2026-11-24 |
 | Verification | Apache (macOS httpd 2.4.67) · 2026-11-24 · 119 requests passed; CI · Pending (F-007); Human (live) · Pending |
 | Reviewed | 2026-11-24 |
@@ -99,7 +99,7 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 
 | Field | Value |
 |---|---|
-| PR / evidence | Branch `feature/one-page` |
+| PR / evidence | [#1](https://github.com/voidbrain/voidbrain.net/pull/1) |
 | Opened | 2026-11-24 |
 | Verification | Unit · 2026-11-24 · 26 tests passed (state model, shell across hash, buttons, keys); Browser · 2026-11-24 · agent check in Chrome 1440 × 900 and iPhone 13 emulation: render, no overflow, click, arrow, back button, reduced motion; Human · Pending |
 | Reviewed | 2026-11-24 |
@@ -133,7 +133,7 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 
 | Field | Value |
 |---|---|
-| PR / evidence | Branch `feature/one-page` (placeholder) |
+| PR / evidence | [#1](https://github.com/voidbrain/voidbrain.net/pull/1) (placeholder) |
 | Opened | 2026-11-24 |
 | Verification | Browser · 2026-11-24 · placeholder renders in Chrome (SwiftShader) desktop and iPhone 13 emulation, no console errors; Real-device · Pending |
 | Reviewed | 2026-11-24 |
@@ -167,7 +167,7 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 
 | Field | Value |
 |---|---|
-| PR / evidence | Branch `feature/one-page` |
+| PR / evidence | [#1](https://github.com/voidbrain/voidbrain.net/pull/1) |
 | Opened | 2026-11-24 |
 | Verification | Unit · 2026-11-24 · generator specs and the decorative-label test passed; Browser · 2026-11-24 · agent check: chart moves, and stops with reduced motion; Human · Pending |
 | Reviewed | 2026-11-24 |
@@ -201,7 +201,7 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 
 | Field | Value |
 |---|---|
-| PR / evidence | Branch `feature/one-page` |
+| PR / evidence | [#1](https://github.com/voidbrain/voidbrain.net/pull/1) |
 | Opened | 2026-11-24 |
 | Verification | Documentation · 2026-11-24 · tokens and contrast computed and listed; Browser · 2026-11-24 · agent screenshots of the three states; Human · Pending |
 | Reviewed | 2026-11-24 |
@@ -235,7 +235,7 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 
 | Field | Value |
 |---|---|
-| PR / evidence | Remote `origin` = `voidbrain/voidbrain.net` |
+| PR / evidence | [#1](https://github.com/voidbrain/voidbrain.net/pull/1) (remote `origin` = `voidbrain/voidbrain.net`) |
 | Opened | 2026-11-24 |
 | Verification | Pending |
 | Reviewed | 2026-11-24 |
