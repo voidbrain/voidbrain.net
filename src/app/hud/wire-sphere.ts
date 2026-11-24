@@ -7,7 +7,8 @@ import { HudClock } from './clock';
   selector: 'vb-wire-sphere',
   host: {
     class: 'hud',
-    role: 'img',
+    role: 'group',
+    'aria-roledescription': 'decorative animation',
     tabindex: '0',
     '[attr.aria-label]':
       "caption() + ': rotating wireframe sphere, decorative. Arrow keys turn it.'",

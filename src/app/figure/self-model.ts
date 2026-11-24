@@ -193,11 +193,14 @@ export class SelfModel {
       lineMat.color.set(groundColour);
     };
 
+    // set before resize() first runs: it marks the frame dirty
+    let dirty = true;
     const resize = () => {
       const rect = this.host.getBoundingClientRect();
       const width = Math.min(Math.round(rect.width), 2048);
       const height = Math.min(Math.round(rect.height), 2048);
       if (!width || !height) return;
+      dirty = true;
       renderer.setSize(width, height, false);
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
@@ -238,17 +241,23 @@ export class SelfModel {
       const dt = last ? Math.min(0.1, (now - last) / 1000) : 0;
       last = now;
       const state = this.state();
+      const still = reduced.matches;
+      // with reduced motion the figure is a still image: draw only when something changed
+      if (still && state === shownState && !dirty) return;
+      dirty = false;
       if (state !== shownState) {
         shownState = state;
         // tokens change on the root in the same frame; read them after style recalculation
-        win.requestAnimationFrame(applyColours);
+        win.requestAnimationFrame(() => {
+          applyColours();
+          dirty = true;
+        });
       }
-      const still = reduced.matches;
       const target = POSES[state];
       pose = still ? target : blendPose(pose, target, easeStep(dt));
       time += still ? 0 : dt;
 
-      const look = lookAt(pose, pointer.x, pointer.y);
+      const look = still ? lookAt(pose, 0, 0) : lookAt(pose, pointer.x, pointer.y);
       head.rotation.set(look.pitch, look.yaw, pose.roll);
       setProp(glasses, pose.glasses);
       setProp(goggles, pose.goggles);
@@ -260,12 +269,19 @@ export class SelfModel {
       figure.rotation.y = Math.sin(time * 0.3) * 0.05;
       renderer.render(scene, camera);
     };
+    const onContextLost = (e: Event) => {
+      e.preventDefault();
+      win.cancelAnimationFrame(frame);
+      this.failed.set(true); // the ink silhouette replaces the figure
+    };
+    renderer.domElement.addEventListener('webglcontextlost', onContextLost);
     applyColours();
     frame = win.requestAnimationFrame(render);
 
     return () => {
       win.cancelAnimationFrame(frame);
       win.removeEventListener('pointermove', onPointer);
+      renderer.domElement.removeEventListener('webglcontextlost', onContextLost);
       resizeObserver.disconnect();
       intersection.disconnect();
       for (const o of owned) o.dispose();

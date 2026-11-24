@@ -72,13 +72,36 @@ describe('App shell', () => {
     expect(title(el)).toBe('Play');
   });
 
+  it('keeps the state when the skip link or another in-page anchor changes the hash', async () => {
+    const { fixture, el } = await render('/#play');
+    el.querySelector<HTMLAnchorElement>('.skip-link')!.click();
+    await fixture.whenStable();
+    expect(title(el)).toBe('Play');
+    expect(doc.activeElement?.id).toBe('poster-title');
+
+    doc.defaultView!.history.replaceState(null, '', '/#poster-title');
+    doc.defaultView!.dispatchEvent(new HashChangeEvent('hashchange'));
+    await fixture.whenStable();
+    expect(title(el)).toBe('Play');
+  });
+
+  it('moves focus to the new heading when the poster that held it is replaced', async () => {
+    const { fixture, el } = await render();
+    el.querySelector<HTMLElement>('vb-poster a')!.focus();
+    doc.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+    await fixture.whenStable();
+    expect(title(el)).toBe('Play');
+    expect(doc.activeElement?.id).toBe('poster-title');
+  });
+
   it('labels every HUD piece as decorative and keyboard-reachable', async () => {
     for (const hash of ['/#work', '/#play', '/#sleep']) {
       const { el } = await render(hash);
       const pieces = [...el.querySelectorAll<HTMLElement>('.hud')];
       expect(pieces.length).toBeGreaterThanOrEqual(4);
       for (const piece of pieces) {
-        expect(piece.getAttribute('role')).toBe('img');
+        expect(piece.getAttribute('role')).toBe('group');
+        expect(piece.getAttribute('aria-roledescription')).toBe('decorative animation');
         expect(piece.getAttribute('tabindex')).toBe('0');
         expect(piece.getAttribute('aria-label')).toMatch(/decorative/);
       }

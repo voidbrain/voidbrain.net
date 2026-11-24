@@ -27,6 +27,7 @@ The text comes from the 2012 site, the earlier Angular attempt and Daniele's CV;
 How the page behaves:
 
 - One state is shown at a time. The current state is in the URL hash (`/#work`, `/#play`, `/#sleep`; no hash or an unknown one opens work), so it can be linked and the back button works.
+- Focus: the skip link focuses the poster heading without touching the hash; when the poster that holds focus is replaced, focus moves to the new heading. In-page anchors never change the state, only `#work`, `#play`, `#sleep` or no hash do.
 - Switching: the three buttons in the top bar, the ← → buttons in the bottom bar, the arrow keys anywhere (unless a focused HUD piece uses them), and a horizontal swipe on touch screens. The poster enters with a short stepped glitch, the ground colour steps to the new one, and the figure blends to its new pose. With `prefers-reduced-motion` all of this is a cut.
 - The self-model loads lazily (`@defer` on idle, or after 2.5 s at the latest), so the first paint never waits for three.js. Until then, or without WebGL, an ink silhouette stands in.
 
@@ -37,7 +38,7 @@ Decided by the owner on 2026-11-24 (F-005): **the HUD pieces are animated, with 
 - Values come from seeded generators in `src/app/core/hud.ts` (sine sums, random walks, glyph grids, a QR-shaped pattern, sphere wireframes, fake log lines), so the same seed gives the same motion and a spec can check it. One shared clock (`src/app/hud/clock.ts`, about 30 ticks a second) drives them; it stops while the tab is hidden and with reduced motion.
 - Labels never claim a real measurement: no "flights this year: 342" or "commits today". Captions are texture (`CPU_SIM`, `VTX_CH5`, `NULL_PAYLOAD`), not statistics.
 - Interaction changes the animation, not information: hover or Space freezes, drag or arrow keys scrub or turn, Enter or a click reshuffles or prints the next line.
-- For assistive technology each piece is one focusable, labelled, decorative element ("CPU_SIM: animated signal chart, decorative. …"); the generated numbers are not read out.
+- For assistive technology each piece is one focusable group with `aria-roledescription="decorative animation"` and a label that names its keys ("CPU_SIM: animated signal chart, decorative. …"); the generated numbers are not read out. (A focusable `role="img"` with key actions was replaced after review: screen readers in browse mode swallow its keys.)
 - With `prefers-reduced-motion` each piece shows one still frame.
 
 The pieces: signal chart, wire sphere, glyph matrix, terminal log, fake QR, calendar strip (around today's real date, the only real value, and not a statistic).
@@ -49,9 +50,10 @@ The new page is deployed into the **same Apache docroot** as the old site. Decid
 1. **Every old page redirects (301) to the home page `/`**, so search engines move their links to the new page: `/home`, `/about`, `/about/me`, `/about/work`, `/labs`, `/labs/<name>`, `/contacts`, any other path without an extension, any missing `.php`, the old query-string form (`/?url=about/me`) and the old entry points (`/index.php`, `/sitemap.php`).
 2. **The old site keeps running under `/old/`** (for example `/old/about/work`), with its own routing rebased to `/old/` ([`public/old/.htaccess`](../public/old/.htaccess)). It is not indexed: `X-Robots-Tag: noindex` and `Disallow: /old/` in `robots.txt`.
 3. **Folders the old rules excluded stay reachable, as they are**, with their own rules: `admin`, `cgi-bin`, `min`, `maiko`, `misc`, `include`, `extradry`, `hammer`, `js`, `laura`, `support`, `style`, `fonts`, `base`, `img`, `temp`, `templates`, `test`, `pasubio`, `cube`, `uBoard`/`uboard`, `inc`, plus `grover`, `summer2020`, `template` and `wip`, which exist on the server but were missing from the old list, and the files `BingSiteAuth.xml`, `googleba637e5c36f03a69.html`, `humans.txt`.
-4. `/api/…` answers `410 Gone`; a missing file with an extension gets the new [404 page](../public/404.html); dotfiles are refused.
+4. `/api/…` and `/old/api/…` answer `410 Gone`; a missing file with an extension gets the new [404 page](../public/404.html); dotfiles (`.git`, `.env`, …) are refused everywhere, inside legacy folders and `/old/` too (the dotfile rule runs before the pass-through).
+5. Directory listing is left as the host has it today: `Options -Indexes` can answer 500 on hosts that do not allow `Options` in `.htaccess`, so it is checked on the live host first (F-007).
 
-`npm run build && npm run test:legacy` checks all of it on a real Apache (macOS `httpd` locally, `apache2` in CI): 119 requests against the build, stub copies of every legacy folder, and a stub old site under `/old/`. The legacy folder list in the test is an outside fact (the server's listing on 2026-11-24): update it when the server changes.
+`npm run build && npm run test:legacy` checks all of it on a real Apache (macOS `httpd` locally, `apache2` in CI): 122 requests against the build, stub copies of every legacy folder, and a stub old site under `/old/`. The legacy folder list in the test is an outside fact (the server's listing on 2026-11-24): update it when the server changes.
 
 ### Deploy steps
 
@@ -84,6 +86,6 @@ The owner decides these; each is a 🧑 Decision in [the backlog](BACKLOG.md).
 
 ## Tests
 
-- Unit (Vitest, `npm test`): the state model and hash parsing, the HUD generators, the poses and their blending, the privacy of the page text, and, across the shell, the poster, the hash and the HUD pieces: opening a hash, buttons, arrow keys (and HUD pieces keeping their own arrows), hash changes, and every HUD piece being labelled decorative and focusable.
+- Unit (Vitest, `npm test`): the state model and hash parsing, the HUD generators and their clock (frames advance, none are scheduled with reduced motion), the poses and their blending, the privacy of the page text, and, across the shell, the poster, the hash and the HUD pieces: opening a hash, buttons, arrow keys (and HUD pieces keeping their own arrows), hash changes, every HUD piece being a labelled, focusable decorative group, the skip link keeping the state, and focus moving to the new heading.
 - Apache (`npm run test:legacy`): every legacy path rule, above.
 - Not covered by an automated test: the three.js figure (needs WebGL) and the look of the posters. They were checked in Chrome on 2026-11-24 (desktop 1440 × 900 and iPhone 13 emulation: render, no horizontal scroll, no console errors, reduced motion stops the animation); the owner's visual check is in F-003 to F-005.

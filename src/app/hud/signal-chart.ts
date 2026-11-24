@@ -7,7 +7,8 @@ import { HudClock } from './clock';
   selector: 'vb-signal-chart',
   host: {
     class: 'hud',
-    role: 'img',
+    role: 'group',
+    'aria-roledescription': 'decorative animation',
     tabindex: '0',
     '[attr.aria-label]':
       "caption() + ': animated signal chart, decorative. Space freezes, arrow keys scrub.'",
@@ -16,6 +17,7 @@ import { HudClock } from './clock';
     '(pointerdown)': 'onDown($event)',
     '(pointermove)': 'onMove($event)',
     '(pointerup)': 'dragX = null',
+    '(pointercancel)': 'dragX = null',
     '(keydown)': 'onKey($event)',
   },
   template: `

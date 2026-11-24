@@ -1,6 +1,23 @@
-import { Component, DOCUMENT, computed, effect, inject, signal } from '@angular/core';
+import {
+  Component,
+  DOCUMENT,
+  Injector,
+  afterNextRender,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { OWNER, POSTERS } from './core/content';
-import { STATES, StateId, hashFor, stateFromHash, stepState, swipeDelta } from './core/states';
+import {
+  STATES,
+  StateId,
+  hashFor,
+  isStateId,
+  stateFromHash,
+  stepState,
+  swipeDelta,
+} from './core/states';
 import { SelfModel } from './figure/self-model';
 import { Poster } from './poster/poster';
 
@@ -17,6 +34,7 @@ import { Poster } from './poster/poster';
 })
 export class App {
   private readonly doc = inject(DOCUMENT);
+  private readonly injector = inject(Injector);
 
   protected readonly states = STATES;
   protected readonly owner = OWNER;
@@ -39,7 +57,10 @@ export class App {
 
   protected go(state: StateId): void {
     if (state === this.state()) return;
+    // the poster is recreated: if focus was inside it, give it to the new heading instead of <body>
+    const focusInPoster = !!this.doc.activeElement?.closest('vb-poster');
     this.state.set(state);
+    if (focusInPoster) this.focusTitle();
     const hash = hashFor(state);
     if (this.doc.location.hash !== hash) this.doc.defaultView?.history.pushState(null, '', hash);
   }
@@ -48,8 +69,22 @@ export class App {
     this.go(stepState(this.state(), delta));
   }
 
+  /** Only a state hash (or none) changes the state: an in-page anchor such as #poster-title must not. */
   protected fromHash(): void {
+    const id = this.doc.location.hash.replace(/^#/, '').toLowerCase();
+    if (id && !isStateId(id)) return;
     this.state.set(stateFromHash(this.doc.location.hash));
+  }
+
+  protected skipToContent(e: Event): void {
+    e.preventDefault();
+    this.focusTitle(true);
+  }
+
+  private focusTitle(now = false): void {
+    const focus = () => this.doc.getElementById('poster-title')?.focus();
+    if (now) focus();
+    else afterNextRender(focus, { injector: this.injector });
   }
 
   protected onKey(e: KeyboardEvent): void {

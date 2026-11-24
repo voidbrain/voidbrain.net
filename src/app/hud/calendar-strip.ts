@@ -6,7 +6,8 @@ import { HudClock } from './clock';
   selector: 'vb-calendar-strip',
   host: {
     class: 'hud hud--calendar',
-    role: 'img',
+    role: 'group',
+    'aria-roledescription': 'decorative animation',
     tabindex: '0',
     '[attr.aria-label]':
       "caption() + ': calendar strip around today, decorative. Arrow keys move the light.'",

@@ -103,7 +103,7 @@ Layout: top bar, hazard stripe, the stage, hazard stripe, bottom bar. On the sta
 | Fake QR | `src/app/hud/fake-qr.ts` | QR-shaped pattern that encodes nothing. Enter or click redraws. |
 | Calendar strip | `src/app/hud/calendar-strip.ts` | Five day boxes around today, one lit. Hover or ← → moves the light. |
 
-Every HUD piece is a `.hud` frame (2px ink border, caption row) with `role="img"`, `tabindex="0"` and a label ending in "decorative" plus its keys; its own arrow keys do not switch the state. Decorative only: see [design](DESIGN.md#hud-components).
+Every HUD piece is a `.hud` frame (2px ink border, caption row) with `role="group"`, `aria-roledescription="decorative animation"`, `tabindex="0"` and a label saying "decorative" plus its keys; its own arrow keys do not switch the state. Decorative only: see [design](DESIGN.md#hud-components).
 
 ## Accessibility
 

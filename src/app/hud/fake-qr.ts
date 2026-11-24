@@ -6,7 +6,8 @@ import { fakeQr } from '../core/hud';
   selector: 'vb-fake-qr',
   host: {
     class: 'hud',
-    role: 'img',
+    role: 'group',
+    'aria-roledescription': 'decorative animation',
     tabindex: '0',
     '[attr.aria-label]':
       "caption() + ': decorative QR-like pattern, encodes nothing. Enter redraws it.'",

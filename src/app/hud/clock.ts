@@ -21,8 +21,14 @@ export class HudClock {
   private last = 0;
 
   constructor() {
-    const onVisibility = () => this.hidden.set(this.doc.visibilityState === 'hidden');
-    const onMotion = (e: MediaQueryListEvent) => this.reducedMotion.set(e.matches);
+    const onVisibility = () => {
+      this.hidden.set(this.doc.visibilityState === 'hidden');
+      this.resume();
+    };
+    const onMotion = (e: MediaQueryListEvent) => {
+      this.reducedMotion.set(e.matches);
+      this.resume();
+    };
     this.doc.addEventListener('visibilitychange', onVisibility);
     this.motionQuery?.addEventListener?.('change', onMotion);
     inject(DestroyRef).onDestroy(() => {
@@ -30,8 +36,15 @@ export class HudClock {
       this.motionQuery?.removeEventListener?.('change', onMotion);
       if (this.frame) this.win?.cancelAnimationFrame(this.frame);
     });
-    if (this.win?.requestAnimationFrame)
-      this.frame = this.win.requestAnimationFrame((t) => this.loop(t));
+    this.resume();
+  }
+
+  /** Starts the loop if the clock should run and is not running; a frozen clock schedules no frames. */
+  private resume(): void {
+    if (this.frame || this.hidden() || this.reducedMotion() || !this.win?.requestAnimationFrame)
+      return;
+    this.last = 0;
+    this.frame = this.win.requestAnimationFrame((t) => this.loop(t));
   }
 
   private loop(now: number): void {
@@ -39,8 +52,12 @@ export class HudClock {
     // 30 updates a second is enough for the HUD and halves the change detection work
     if (now - this.last >= 1000 / 30 || !this.last) {
       this.last = now;
-      if (!this.hidden() && !this.reducedMotion()) this.elapsed.update((s) => s + dt);
+      this.elapsed.update((s) => s + dt);
     }
-    this.frame = this.win!.requestAnimationFrame((t) => this.loop(t));
+    // keep going while it should run; otherwise stop, and resume() restarts it on the next change
+    this.frame =
+      this.hidden() || this.reducedMotion()
+        ? 0
+        : this.win!.requestAnimationFrame((t) => this.loop(t));
   }
 }

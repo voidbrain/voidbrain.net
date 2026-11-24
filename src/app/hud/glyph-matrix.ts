@@ -7,7 +7,8 @@ import { HudClock } from './clock';
   selector: 'vb-glyph-matrix',
   host: {
     class: 'hud',
-    role: 'img',
+    role: 'group',
+    'aria-roledescription': 'decorative animation',
     tabindex: '0',
     '[attr.aria-label]':
       "caption() + ': flickering glyph matrix, decorative. Space freezes, Enter reshuffles.'",

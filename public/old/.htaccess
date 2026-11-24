@@ -14,9 +14,10 @@ DirectoryIndex index.php
   RewriteEngine On
   RewriteBase /old/
 
-  # The old site's own asset and tool folders, as in its original .htaccess.
-  RewriteRule ^(admin|cgi-bin|min|maiko|misc|include|extradry|hammer|js|laura|support|style|fonts|base|img|temp|templates|test|pasubio|cube|uBoard|uboard|inc)(/|$) - [L]
+  # Dotfiles first, then the old API (gone, as at the root), then the old site's own folders.
   RewriteRule (^|/)\. - [F]
+  RewriteRule ^api(/|$) - [G]
+  RewriteRule ^(admin|cgi-bin|min|maiko|misc|include|extradry|hammer|js|laura|support|style|fonts|base|img|temp|templates|test|pasubio|cube|uBoard|uboard|inc)(/|$) - [L]
   RewriteRule ^sitemap\.xml$ sitemap.php [L]
 
   # /old/ opens the old home page, as / did.
@@ -26,7 +27,6 @@ DirectoryIndex index.php
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  RewriteRule ^api/?([^.]*)$ index.php?api&url=$1 [L,QSA]
   RewriteRule ^(labs/([A-Za-z0-9-]+))/?$ templates/pages.php?url=$1 [L]
   RewriteRule ^([^.]*?)/?$ index.php?url=$1 [L,QSA]
 </IfModule>

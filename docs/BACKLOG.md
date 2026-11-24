@@ -54,7 +54,7 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 |---|---|
 | **Issue** | The new single page is deployed into the same Apache docroot as the old PHP site: old page URLs must redirect home (search engines), the old site must stay reachable under `/old/`, and every folder the old rules excluded must keep being served as it is. |
 | **Reproduce** | `npm run build && npm run test:legacy` (local Apache); on the live site, the [deploy steps](DESIGN.md#deploy-steps), step 3. |
-| **Check** | Old page URLs (`/about/work`, `/labs/x`, `/contacts`, `/?url=about`, `/index.php`, any case or trailing slash) answer 301 to `/`; `/old/…` serves the old site, not indexed; every legacy folder and verification file answers as before; `/` serves the new page; `/api/…` is 410; a missing file gets the new 404; no `public/` entry shares a legacy name. |
+| **Check** | Old page URLs (`/about/work`, `/labs/x`, `/contacts`, `/?url=about`, `/index.php`, any case or trailing slash) answer 301 to `/`; `/old/…` serves the old site, not indexed; every legacy folder and verification file answers as before; dotfiles are refused everywhere; `/` serves the new page; `/api/…` and `/old/api/…` are 410; a missing file gets the new 404; no `public/` entry shares a legacy name. |
 
 <details>
 <summary>Next action, estimates and PR history</summary>
@@ -65,9 +65,9 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 
 | Field | Value |
 |---|---|
-| PR / evidence | [#1](https://github.com/voidbrain/voidbrain.net/pull/1); mutation check: a broken redirect rule fails 11 of the Apache cases |
+| PR / evidence | [#1](https://github.com/voidbrain/voidbrain.net/pull/1); mutation check: a broken redirect rule fails 11 of the Apache cases; Review: fresh-context agent (Opus), 2026-11-24, 10 findings; fixed in [#1](https://github.com/voidbrain/voidbrain.net/pull/1): dotfiles in legacy folders, `/old/api`, cache scope; directory listing left to the live check (F-007) |
 | Opened | 2026-11-24 |
-| Verification | Apache (macOS httpd 2.4.67) · 2026-11-24 · 119 requests passed; CI · Pending (F-007); Human (live) · Pending |
+| Verification | Apache · 2026-11-24 · 122 requests passed on macOS httpd 2.4.67 and in CI (Ubuntu apache2) on #1; Human (live) · Pending |
 | Reviewed | 2026-11-24 |
 
 </details>
@@ -99,9 +99,9 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 
 | Field | Value |
 |---|---|
-| PR / evidence | [#1](https://github.com/voidbrain/voidbrain.net/pull/1) |
+| PR / evidence | [#1](https://github.com/voidbrain/voidbrain.net/pull/1); Review: fresh-context agent (Opus), 2026-11-24; fixed in #1: skip link reset the poster, focus lost on switch (failing tests first confirmed) |
 | Opened | 2026-11-24 |
-| Verification | Unit · 2026-11-24 · 26 tests passed (state model, shell across hash, buttons, keys); Browser · 2026-11-24 · agent check in Chrome 1440 × 900 and iPhone 13 emulation: render, no overflow, click, arrow, back button, reduced motion; Human · Pending |
+| Verification | Unit · 2026-11-24 · 30 tests passed (state model, shell across hash, buttons, keys, skip link, focus); Browser · 2026-11-24 · agent check in Chrome 1440 × 900 and iPhone 13 emulation: render, no overflow, click, arrow, back button, reduced motion; Human · Pending |
 | Reviewed | 2026-11-24 |
 
 </details>
@@ -156,7 +156,7 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 |---|---|
 | **Issue** | The posters' furniture (calendar strips, wireframe spheres, charts, QR code, terminal, glyphs, hazard stripes) must be animated, interactive components, not pictures; their values are generated, with no real data (owner decision 2026-11-24). |
 | **Reproduce** | [Run it](../README.md#run-it), in each state hover, focus (Tab) and drag every HUD piece; repeat with reduced motion on. |
-| **Check** | Every piece animates and reacts to pointer and keyboard, with one accessible name marking it decorative; no label presents a generated number as a real statistic; nothing is fetched; generators have specs; nothing blocks the first paint; reduced motion shows a still frame. |
+| **Check** | Every piece animates and reacts to pointer and keyboard, as a focusable group whose accessible name marks it decorative; no label presents a generated number as a real statistic; nothing is fetched; generators have specs; nothing blocks the first paint; reduced motion shows a still frame. |
 
 <details>
 <summary>Next action, estimates and PR history</summary>
@@ -167,9 +167,9 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 
 | Field | Value |
 |---|---|
-| PR / evidence | [#1](https://github.com/voidbrain/voidbrain.net/pull/1) |
+| PR / evidence | [#1](https://github.com/voidbrain/voidbrain.net/pull/1); Review: fresh-context agent (Opus), 2026-11-24; fixed in #1: focusable `role="img"` with keys → labelled group, chart `pointercancel`, frozen clock schedules no frames, WebGL context loss |
 | Opened | 2026-11-24 |
-| Verification | Unit · 2026-11-24 · generator specs and the decorative-label test passed; Browser · 2026-11-24 · agent check: chart moves, and stops with reduced motion; Human · Pending |
+| Verification | Unit · 2026-11-24 · generator and clock specs and the decorative-group test passed; Browser · 2026-11-24 · agent check: chart moves, and stops with reduced motion; Human · Pending |
 | Reviewed | 2026-11-24 |
 
 </details>
@@ -229,7 +229,7 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 <details>
 <summary>Next action, estimates and PR history</summary>
 
-**Next action / closure evidence:** owner chose `https://github.com/voidbrain/voidbrain.net` on 2026-11-24. That repository held the earlier Angular attempt (`main` at `ca13761`, GitHub Pages from `gh-pages`), with history unrelated to this one; it is joined by a merge commit whose content is this project, opened as a PR, so nothing is force-pushed and the old history stays. Its old workflows (`gh-pages.yml`, `node.js.yml`) leave `main` with that merge; the `gh-pages` branch and its Pages site are untouched. Next: CI green on the PR, the owner merges, then the upload method and branch protection (owner settings).
+**Next action / closure evidence:** owner chose `https://github.com/voidbrain/voidbrain.net` on 2026-11-24 and will provide FTP access; the deploy job reads it from repository secrets, never from the repository or the chat. Directory listing on the host (review of #1) is checked at the first deploy before adding `Options -Indexes`. That repository held the earlier Angular attempt (`main` at `ca13761`, GitHub Pages from `gh-pages`), with history unrelated to this one; it is joined by a merge commit whose content is this project, opened as a PR, so nothing is force-pushed and the old history stays. Its old workflows (`gh-pages.yml`, `node.js.yml`) leave `main` with that merge; the `gh-pages` branch and its Pages site are untouched. Next: CI green on the PR, the owner merges, then the upload method and branch protection (owner settings).
 
 **Estimates:** Medium remaining effort, about 2–3 agent hours for the upload script or job, plus the owner's settings. Reassessed 2026-11-24; not acceptance evidence.
 

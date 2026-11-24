@@ -7,7 +7,7 @@
 </header>
 
 <section class="poster__left" aria-labelledby="poster-title">
-  <h2 class="title" id="poster-title">{{ p().title }}</h2>
+  <h2 class="title" id="poster-title" tabindex="-1">{{ p().title }}</h2>
   <div class="copy">
     @for (para of p().paragraphs; track $index) {
       <p>{{ para }}</p>

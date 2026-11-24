@@ -7,7 +7,8 @@ import { HudClock } from './clock';
   selector: 'vb-terminal-log',
   host: {
     class: 'hud hud--terminal',
-    role: 'img',
+    role: 'group',
+    'aria-roledescription': 'decorative animation',
     tabindex: '0',
     '[attr.aria-label]':
       "caption() + ': scrolling fake log, decorative. Enter prints the next line.'",

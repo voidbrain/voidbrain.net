@@ -56,6 +56,7 @@ for (const name of LEGACY_FOLDERS) {
   writeFileSync(join(docroot, name, 'x.txt'), `LEGACY FILE ${name}`);
 }
 for (const name of LEGACY_FILES) writeFileSync(join(docroot, name), `LEGACY ${name}`);
+writeFileSync(join(docroot, 'img', '.env'), 'SECRET'); // dotfiles inside legacy folders must stay hidden
 // The old site copied to /old/ (DESIGN, "Legacy paths", deploy steps).
 for (const [file, body] of [
   ['old/index.php', 'OLD_INDEX'],
@@ -63,6 +64,8 @@ for (const [file, body] of [
   ['old/templates/pages.php', 'OLD_PAGES'],
   ['old/img/a.png', 'OLD_IMAGE'],
   ['old/style/style.css', 'OLD_STYLE'],
+  ['old/include/.env', 'SECRET'],
+  ['old/.git/config', 'SECRET'],
 ]) {
   mkdirSync(join(docroot, file, '..'), { recursive: true });
   writeFileSync(join(docroot, file), body);
@@ -147,7 +150,10 @@ const cases = [
   ['/old/about/work/', 200, null, 'OLD_INDEX'],
   ['/old/contacts', 200, null, 'OLD_INDEX'],
   ['/old/labs/some-lab', 200, null, 'OLD_PAGES'],
-  ['/old/api/pages', 200, null, 'OLD_INDEX'],
+  ['/old/api/pages', 410],
+  ['/img/.env', 403],
+  ['/old/include/.env', 403],
+  ['/old/.git/config', 403],
   ['/old/sitemap.xml', 200, null, 'OLD_SITEMAP'],
   ['/old/img/a.png', 200, null, 'OLD_IMAGE'],
   ['/old/style/style.css', 200, null, 'OLD_STYLE'],
