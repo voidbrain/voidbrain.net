@@ -44,7 +44,8 @@ summary() {
   fatal=$(grep -oE 'Fatal error: [A-Za-z_ -]{1,60}' "$1" | sort -u | paste -sd, - || true)
   # with lftp's trace on, the server's replies in order (codes only) and lftp's own status words
   local replies status
-  replies=$(grep -oE '<--- [1-6][0-9]{2}' "$1" | awk '{ print $2 }' | uniq | paste -sd' ' - || true)
+  # the conversation in order: command verbs sent (no arguments) and reply codes
+  replies=$(grep -oE '^(---> [A-Z]{3,4}|<--- [1-6][0-9]{2})' "$1" | awk '{ print ($1 == "--->" ? ">" : "<") $2 }' | uniq | paste -sd' ' - || true)
   status=$(grep -oiE 'connection refused|connection reset|connection timed out|timeout|delaying before reconnect|tls|gnutls|handshake|not trusted|certificate' "$1" | tr 'A-Z' 'a-z' | sort -u | paste -sd, - || true)
   echo "codes: ${codes:-none}; ${words:-no known keyword}${fatal:+; $fatal}${replies:+; server replies: $replies}${status:+; status: $status}"
 }
