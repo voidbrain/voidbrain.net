@@ -32,21 +32,21 @@ log="$work/lftp.log"
 settings='set ftp:ssl-force true; set ftp:ssl-protect-data true; set ssl:verify-certificate yes;
 set ftp:list-options -a; set net:max-retries 2; set net:timeout 30; set cmd:fail-exit yes;'
 
-# lftp with one script. Its standard output is returned; its messages go to the private log. On failure the
-# public log gets only the number of error lines.
-remote() {
-  if ! lftp -c "$settings open --env-password -u \"$FTP_USER\" \"ftp://$FTP_HOST\"; $1" 2>>"$log"; then
-    echo "lftp failed ($(grep -c . "$log" || true) error line(s), not shown: the logs are public)." >&2
-    return 1
-  fi
-}
-
 # What went wrong, safe for a public log: FTP status codes and known lftp keywords only, never paths or names.
 summary() {
   local codes words
   codes=$(grep -oE '\b[1-6][0-9]{2}\b' "$1" | sort -u | tr '\n' ' ' || true)
   words=$(grep -oiE 'no such file|not found|access failed|permission denied|login failed|not connected|fatal error|certificate|timeout|connection refused|is a directory|not a directory|unknown command|syntax error|operation not permitted' "$1" | tr 'A-Z' 'a-z' | sort -u | paste -sd, - || true)
   echo "codes: ${codes:-none}; ${words:-no known keyword}"
+}
+
+# lftp with one script. Its standard output is returned; its messages go to the private log. On failure the
+# public log gets only the number of error lines.
+remote() {
+  if ! lftp -c "$settings open --env-password -u \"$FTP_USER\" \"ftp://$FTP_HOST\"; $1" 2>>"$log"; then
+    echo "lftp failed ($(summary "$log"); details not shown: the logs are public)." >&2
+    return 1
+  fi
 }
 
 # 0 when the path exists, 1 when the server says it does not; any other failure (network, TLS, login) stops
