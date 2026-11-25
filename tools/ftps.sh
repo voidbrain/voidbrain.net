@@ -37,7 +37,10 @@ summary() {
   local codes words
   codes=$(grep -oE '\b[1-6][0-9]{2}\b' "$1" | sort -u | tr '\n' ' ' || true)
   words=$(grep -oiE 'no such file|not found|access failed|permission denied|login failed|not connected|fatal error|certificate|timeout|connection refused|is a directory|not a directory|unknown command|syntax error|operation not permitted' "$1" | tr 'A-Z' 'a-z' | sort -u | paste -sd, - || true)
-  echo "codes: ${codes:-none}; ${words:-no known keyword}"
+  # lftp's "Fatal error: <reason>" carries a generic reason, no paths: keep only the reason's first words
+  local fatal
+  fatal=$(grep -oE 'Fatal error: [A-Za-z_ -]{1,60}' "$1" | sort -u | paste -sd, - || true)
+  echo "codes: ${codes:-none}; ${words:-no known keyword}${fatal:+; $fatal}"
 }
 
 # lftp with one script. Its standard output is returned; its messages go to the private log. On failure the
