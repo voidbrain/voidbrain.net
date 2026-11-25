@@ -35,18 +35,22 @@ set ftp:list-options -a; set net:max-retries 2; set net:timeout 30; set cmd:fail
 # What went wrong, safe for a public log: FTP status codes and known lftp keywords only, never paths or names.
 summary() {
   local codes words
-  codes=$(grep -oE '\b[1-6][0-9]{2}\b' "$1" | sort -u | tr '\n' ' ' || true)
+  codes=$(grep -vE '^(---|<---|\*\*\*|Connecting|dns)' "$1" | grep -oE '\b[1-6][0-9]{2}\b' | sort -u | tr '\n' ' ' || true)
   words=$(grep -oiE 'no such file|not found|access failed|permission denied|login failed|not connected|fatal error|certificate|timeout|connection refused|is a directory|not a directory|unknown command|syntax error|operation not permitted' "$1" | tr 'A-Z' 'a-z' | sort -u | paste -sd, - || true)
   # lftp's "Fatal error: <reason>" carries a generic reason, no paths: keep only the reason's first words
   local fatal
   fatal=$(grep -oE 'Fatal error: [A-Za-z_ -]{1,60}' "$1" | sort -u | paste -sd, - || true)
-  echo "codes: ${codes:-none}; ${words:-no known keyword}${fatal:+; $fatal}"
+  # with lftp's trace on, the server's replies in order (codes only) and lftp's own status words
+  local replies status
+  replies=$(grep -oE '<--- [1-6][0-9]{2}' "$1" | awk '{ print $2 }' | uniq | paste -sd' ' - || true)
+  status=$(grep -oiE 'connection refused|connection reset|connection timed out|timeout|delaying before reconnect|tls|gnutls|handshake|not trusted|certificate' "$1" | tr 'A-Z' 'a-z' | sort -u | paste -sd, - || true)
+  echo "codes: ${codes:-none}; ${words:-no known keyword}${fatal:+; $fatal}${replies:+; server replies: $replies}${status:+; status: $status}"
 }
 
 # lftp with one script. Its standard output is returned; its messages go to the private log. On failure the
 # public log gets only the number of error lines.
 remote() {
-  if ! lftp -c "$settings open --env-password -u \"$FTP_USER\" \"ftp://$FTP_HOST\"; $1" 2>>"$log"; then
+  if ! lftp -c "debug 3; $settings open --env-password -u \"$FTP_USER\" \"ftp://$FTP_HOST\"; $1" 2>>"$log"; then
     echo "lftp failed ($(summary "$log"); details not shown: the logs are public)." >&2
     return 1
   fi
