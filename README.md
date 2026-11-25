@@ -22,7 +22,7 @@ The build goes to the voidbrain.net host over FTP with explicit TLS (FTPS), from
 
 1. **Deploy**, mode `check`: logs in, verifies the certificate, finds the site folder and says whether `old/` exists. Set `FTP_DIR` to the folder it names.
 2. **Copy the old site into old/**, mode `size`, then `copy` (type `copy` to confirm): once, before the first upload.
-3. **Deploy**, mode `dry-run`, then `upload`. `upload` refuses while `old/index.php` is missing.
+3. **Deploy**, mode `dry-run`, then `upload`. `upload` refuses until the copy is marked complete (`old/.copy-complete`), and runs only from `main`, as does `copy`.
 
 Details and the checks after the upload: [deploy steps](docs/DESIGN.md#deploy-steps). The logic is in [`tools/ftps.sh`](tools/ftps.sh).
 

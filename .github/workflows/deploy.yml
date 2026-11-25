@@ -24,6 +24,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
+      - name: Upload only from main
+        if: inputs.mode == 'upload' && github.ref != 'refs/heads/main'
+        run: |
+          echo "upload runs only from main: what reaches the server has been reviewed and merged." >&2
+          exit 1
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -45,4 +51,5 @@ jobs:
           FTP_USER: ${{ secrets.FTP_USER }}
           LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_DIR: ${{ vars.FTP_DIR }}
-        run: tools/ftps.sh "${{ inputs.mode }}"
+          MODE: ${{ inputs.mode }}
+        run: tools/ftps.sh "$MODE"

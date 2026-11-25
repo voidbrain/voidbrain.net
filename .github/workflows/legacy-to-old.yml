@@ -28,10 +28,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      - name: Refuse copy without confirmation
-        if: inputs.mode == 'copy' && inputs.confirm != 'copy'
+      - name: Refuse copy without confirmation, or from a branch other than main
+        if: inputs.mode == 'copy' && (inputs.confirm != 'copy' || github.ref != 'refs/heads/main')
         run: |
-          echo "Type copy in the confirm field to run the copy." >&2
+          echo "copy needs the word copy in the confirm field, and runs only from main." >&2
           exit 1
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -45,4 +45,5 @@ jobs:
           FTP_USER: ${{ secrets.FTP_USER }}
           LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_DIR: ${{ vars.FTP_DIR }}
-        run: tools/ftps.sh "${{ inputs.mode }}"
+          MODE: ${{ inputs.mode }}
+        run: tools/ftps.sh "$MODE"
