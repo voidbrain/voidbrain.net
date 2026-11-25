@@ -29,7 +29,9 @@ trap 'rm -rf "$work"' EXIT
 log="$work/lftp.log"
 
 # TLS is required on the control and data channels, and the server certificate must verify.
+# TLS 1.2: lftp's GnuTLS hangs in the TLS 1.3 handshake with the host's FTP server (Aruba), after its 220 greeting.
 settings='set ftp:ssl-force true; set ftp:ssl-protect-data true; set ssl:verify-certificate yes;
+set ssl:priority NORMAL:-VERS-TLS1.3;
 set ftp:list-options -a; set net:max-retries 2; set net:timeout 30; set cmd:fail-exit yes;'
 
 # What went wrong, safe for a public log: FTP status codes and known lftp keywords only, never paths or names.
