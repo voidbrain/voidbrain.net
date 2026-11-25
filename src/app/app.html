@@ -29,10 +29,14 @@
   </button>
   <div class="sheet" #sheet [attr.data-tone]="state()">
     <div class="figure">
-      @defer (on idle; on timer(2500ms)) {
-        <vb-self-model [state]="state()" />
-      } @placeholder {
-        <div class="figure-placeholder" role="img" [attr.aria-label]="poster().figure"></div>
+      @if (drawnFigure) {
+        <vb-drawn-figure [state]="state()" />
+      } @else {
+        @defer (on idle; on timer(2500ms)) {
+          <vb-self-model [state]="state()" />
+        } @placeholder {
+          <div class="figure-placeholder" role="img" [attr.aria-label]="poster().figure"></div>
+        }
       }
     </div>
     @for (s of [state()]; track s) {
