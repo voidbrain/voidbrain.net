@@ -101,6 +101,13 @@ case "$mode" in
       </dev/null >"$cert" 2>&1 || true
     echo "TLS: $(grep -m1 -E 'Verify return code' "$cert" | sed 's/^ *//')"
     openssl x509 -noout -subject -ext subjectAltName -enddate <"$cert" 2>/dev/null | sed 's/^/TLS certificate: /' || true
+    # the same login with curl, as a cross-check of the secrets (credentials in a private netrc, not in argv)
+    netrc="$work/netrc"
+    ( umask 077; printf 'machine %s login %s password %s\n' "$FTP_HOST" "$FTP_USER" "$LFTP_PASSWORD" >"$netrc" )
+    code=$(curl -s --ssl-reqd --netrc-file "$netrc" --list-only -o /dev/null -w '%{response_code}' \
+      --max-time 40 "ftp://$FTP_HOST/" || true)
+    echo "curl login over TLS: reply ${code:-none} (226 or 250: the secrets work)"
+    rm -f "$netrc"
     # lftp connects lazily: NOOP forces a real login over TLS
     remote "quote NOOP" >/dev/null
     echo "Login over FTPS: ok (certificate verified)."
