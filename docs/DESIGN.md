@@ -60,10 +60,10 @@ The new page is deployed into the **same Apache docroot** as the old site. Decid
 
 ### Deploy steps
 
-On the server, once (F-007 decides how the upload happens):
+On the server, once. The host takes FTP with explicit TLS only (owner, 2026-11-25), so each step is a manual GitHub Actions workflow running [`tools/ftps.sh`](../tools/ftps.sh) ([README](../README.md#deploying)); the repository's Actions logs are public, so the script prints counts and yes/no answers, never the server's file names:
 
-1. Copy the whole current docroot into a new folder `old/`. With SSH, in the docroot: `mkdir old && rsync -a --exclude=/old ./ old/`. With FTP only: download the docroot and upload it again into `old/`. The old site then runs from `/old/` with its database settings unchanged.
-2. Upload the contents of `dist/voidbrain-net/browser/` to the docroot **without deleting anything**. This adds `index.html`, the bundles, `media/`, `404.html`, `robots.txt`, `sitemap.xml`, `favicon.ico`, and replaces the root `.htaccess` and `old/.htaccess`.
+1. Copy the whole current docroot into a new folder `old/`. With SSH, in the docroot: `mkdir old && rsync -a --exclude=/old ./ old/`. With FTP only: download the docroot and upload it again into `old/` (workflow "Copy the old site into old/", mode `copy`; it skips `old/` itself and stops if `old/index.php` already exists). The old site then runs from `/old/` with its database settings unchanged.
+2. Upload the contents of `dist/voidbrain-net/browser/` to the docroot **without deleting anything** (workflow "Deploy", mode `dry-run`, then `upload`; `upload` refuses while `old/index.php` is missing). This adds `index.html`, the bundles, `media/`, `404.html`, `robots.txt`, `sitemap.xml`, `favicon.ico`, and replaces the root `.htaccess` and `old/.htaccess`.
 3. Check: `/` shows the new page; `/about/work` redirects to `/`; `/old/about/work` shows the old page; `/grover/` and `/extradry/` work as before.
 4. Optional, later: remove the old root `index.php` and `sitemap.php` (the rules already redirect them).
 
@@ -85,7 +85,7 @@ Expected result: the model loads in <https://gltf-viewer.donmccurdy.com/> withou
 
 The owner decides these; each is a 🧑 Decision in [the backlog](BACKLOG.md).
 
-- **F-007**: how the build reaches the Apache host (FTP/SFTP upload by hand, or a CI deploy with a secret), and whether `main` gets branch protection with the `CI` workflow required. The code is on GitHub at `voidbrain/voidbrain.net` (owner, 2026-11-24); its earlier Angular attempt stays in the history and on the `gh-pages` branch.
+- **F-007**: whether `main` gets branch protection with the `CI` workflow required, and when deploys may run on their own after green CI (the upload method is decided: FTPS from manual workflows). The code is on GitHub at `voidbrain/voidbrain.net` (owner, 2026-11-24); its earlier Angular attempt stays in the history and on the `gh-pages` branch.
 
 ## Tests
 
