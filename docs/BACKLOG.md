@@ -59,7 +59,7 @@ Bugs (B-) and features (F-) in one list, in ID order; priority is in each record
 <details>
 <summary>Next action, estimates and PR history</summary>
 
-**Next action / closure evidence:** owner decision 2026-11-24: all old pages redirect home, the old site moves to `/old/`, excluded folders stay reachable. Built: `public/.htaccess`, `public/old/.htaccess`, `robots.txt` (`Disallow: /old/`), `sitemap.xml`, `404.html`, and `tools/test-legacy-paths.mjs` (`npm run test:legacy`, also a CI step). The planned client-side path map was dropped: with every old page going home, the server does all of it. Verified when CI runs the Apache test (F-007) and the owner's live check after deploy passes.
+**Next action / closure evidence:** 2026-11-25 (#15): the live host is `www.voidbrain.net` (the bare name and http 301 there), but canonical, `og:url`, sitemap and robots named `voidbrain.net`; fixed, with `test:legacy` cases that failed before (125 requests), plus schema.org Person data and fuller noscript text. owner decision 2026-11-24: all old pages redirect home, the old site moves to `/old/`, excluded folders stay reachable. Built: `public/.htaccess`, `public/old/.htaccess`, `robots.txt` (`Disallow: /old/`), `sitemap.xml`, `404.html`, and `tools/test-legacy-paths.mjs` (`npm run test:legacy`, also a CI step). The planned client-side path map was dropped: with every old page going home, the server does all of it. Verified when CI runs the Apache test (F-007) and the owner's live check after deploy passes.
 
 **Estimates:** Small remaining effort: the deploy itself and the live check. Reassessed 2026-11-24 after implementation; not acceptance evidence.
 
