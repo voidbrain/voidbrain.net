@@ -84,7 +84,15 @@ need_build() {
 
 case "$mode" in
   check)
-    remote "pwd" >/dev/null
+    # the server's certificate: the verification result and the names it is issued to (no secrets; GitHub masks
+    # FTP_HOST wherever it appears), so a name mismatch can be fixed without turning verification off
+    cert="$work/cert.txt"
+    openssl s_client -starttls ftp -connect "$FTP_HOST:21" -servername "$FTP_HOST" -verify_hostname "$FTP_HOST" \
+      </dev/null >"$cert" 2>&1 || true
+    echo "TLS: $(grep -m1 -E 'Verify return code' "$cert" | sed 's/^ *//')"
+    openssl x509 -noout -subject -ext subjectAltName -enddate <"$cert" 2>/dev/null | sed 's/^/TLS certificate: /' || true
+    # lftp connects lazily: NOOP forces a real login over TLS
+    remote "quote NOOP" >/dev/null
     echo "Login over FTPS: ok (certificate verified)."
     found=""
     for d in "${FTP_DIR:-.}" . htdocs public_html www httpdocs web html; do
