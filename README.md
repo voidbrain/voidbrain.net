@@ -18,7 +18,13 @@ npm run test:legacy          # after the build: old URLs and folders on a real A
 
 ## Deploying
 
-The build output goes into the Apache docroot of voidbrain.net, next to the old site's folders, which stay where they are. The upload method is not decided yet (F-007). Every old page redirects to `/`, the old site moves to `/old/`, and the old folders stay where they are: [legacy paths and deploy steps](docs/DESIGN.md#legacy-paths).
+The build goes to the voidbrain.net host over FTP with explicit TLS (FTPS), from GitHub Actions, started by hand (Actions → workflow → Run workflow). Credentials are repository secrets (`FTP_HOST`, `FTP_USER`, `FTP_PASSWORD`); the site folder is the repository variable `FTP_DIR`. Nothing is ever deleted on the server.
+
+1. **Deploy**, mode `check`: logs in, verifies the certificate, finds the site folder and says whether `old/` exists. Set `FTP_DIR` to the folder it names.
+2. **Copy the old site into old/**, mode `size`, then `copy` (type `copy` to confirm): once, before the first upload.
+3. **Deploy**, mode `dry-run`, then `upload`. `upload` refuses until the copy is marked complete (`old/.copy-complete`), and runs only from `main`, as does `copy`.
+
+Details and the checks after the upload: [deploy steps](docs/DESIGN.md#deploy-steps). The logic is in [`tools/ftps.sh`](tools/ftps.sh).
 
 ## Where things are
 

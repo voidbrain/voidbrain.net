@@ -1,0 +1,55 @@
+name: Deploy
+
+# Puts the build on the voidbrain.net host over FTP with explicit TLS (F-007). Manual only for now: nothing deploys
+# on its own until the owner has approved the first upload (then a run after green CI on main can be added).
+# The logic is in tools/ftps.sh; logs are public, so it prints counts and yes/no answers, never file names.
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'check: log in and find the site folder. dry-run: count what would upload. upload: deploy (never deletes).'
+        type: choice
+        options: [check, dry-run, upload]
+        default: check
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ftps-host
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Upload only from main
+        if: inputs.mode == 'upload' && github.ref != 'refs/heads/main'
+        run: |
+          echo "upload runs only from main: what reaches the server has been reviewed and merged." >&2
+          exit 1
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        if: inputs.mode != 'check'
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Build
+        if: inputs.mode != 'check'
+        run: npm ci && npm run build
+
+      - name: Install lftp
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+
+      - name: FTPS ${{ inputs.mode }}
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_DIR: ${{ vars.FTP_DIR }}
+          MODE: ${{ inputs.mode }}
+        run: tools/ftps.sh "$MODE"
