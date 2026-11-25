@@ -141,6 +141,10 @@ const cases = [
   ['/missing.png', 404, null, 'SIGNAL_LOST'],
   ['/.git/config', 403],
   ['/robots.txt', 200, null, 'Disallow: /old/'],
+  // the live host is www.voidbrain.net (the bare name redirects there): canonical, sitemap and robots name it
+  ['/', 200, null, '<link rel="canonical" href="https://www.voidbrain.net/"'],
+  ['/robots.txt', 200, null, 'Sitemap: https://www.voidbrain.net/sitemap.xml'],
+  ['/sitemap.xml', 200, null, '<loc>https://www.voidbrain.net/</loc>'],
   ['/sitemap.xml', 200, null, '<urlset'],
   ['/favicon.ico', 200],
   ['/old', 301, '/old/'],
