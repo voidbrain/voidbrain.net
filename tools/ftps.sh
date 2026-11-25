@@ -29,14 +29,32 @@ trap 'rm -rf "$work"' EXIT
 log="$work/lftp.log"
 
 # TLS is required on the control and data channels, and the server certificate must verify.
+# TLS 1.2: lftp's GnuTLS hangs in the TLS 1.3 handshake with the host's FTP server (Aruba), after its 220 greeting.
 settings='set ftp:ssl-force true; set ftp:ssl-protect-data true; set ssl:verify-certificate yes;
+set ssl:priority NORMAL:-VERS-TLS1.3;
 set ftp:list-options -a; set net:max-retries 2; set net:timeout 30; set cmd:fail-exit yes;'
+
+# What went wrong, safe for a public log: FTP status codes and known lftp keywords only, never paths or names.
+summary() {
+  local codes words
+  codes=$(grep -vE '^(---|<---|\*\*\*|Connecting|dns)' "$1" | grep -oE '\b[1-6][0-9]{2}\b' | sort -u | tr '\n' ' ' || true)
+  words=$(grep -oiE 'no such file|not found|access failed|permission denied|login failed|not connected|fatal error|certificate|timeout|connection refused|is a directory|not a directory|unknown command|syntax error|operation not permitted' "$1" | tr 'A-Z' 'a-z' | sort -u | paste -sd, - || true)
+  # lftp's "Fatal error: <reason>" carries a generic reason, no paths: keep only the reason's first words
+  local fatal
+  fatal=$(grep -oE 'Fatal error: [A-Za-z_ -]{1,60}' "$1" | sort -u | paste -sd, - || true)
+  # with lftp's trace on, the server's replies in order (codes only) and lftp's own status words
+  local replies status
+  # the conversation in order: command verbs sent (no arguments) and reply codes
+  replies=$(grep -oE '^(---> [A-Z]{3,4}|<--- [1-6][0-9]{2})' "$1" | awk '{ print ($1 == "--->" ? ">" : "<") $2 }' | uniq | paste -sd' ' - || true)
+  status=$(grep -oiE 'connection refused|connection reset|connection timed out|timeout|delaying before reconnect|tls|gnutls|handshake|not trusted|certificate' "$1" | tr 'A-Z' 'a-z' | sort -u | paste -sd, - || true)
+  echo "codes: ${codes:-none}; ${words:-no known keyword}${fatal:+; $fatal}${replies:+; server replies: $replies}${status:+; status: $status}"
+}
 
 # lftp with one script. Its standard output is returned; its messages go to the private log. On failure the
 # public log gets only the number of error lines.
 remote() {
-  if ! lftp -c "$settings open --env-password -u \"$FTP_USER\" \"ftp://$FTP_HOST\"; $1" 2>>"$log"; then
-    echo "lftp failed ($(grep -c . "$log" || true) error line(s), not shown: the logs are public)." >&2
+  if ! lftp -c "debug 3; $settings open --env-password -u \"$FTP_USER\" \"ftp://$FTP_HOST\"; $1" 2>>"$log"; then
+    echo "lftp failed ($(summary "$log"); details not shown: the logs are public)." >&2
     return 1
   fi
 }
@@ -51,7 +69,7 @@ exists() {
   if grep -qiE 'no such file|not found|does not exist|550' "$err"; then
     return 1
   fi
-  echo "Could not tell whether a path exists: connection or permission problem (details not shown)." >&2
+  echo "Could not tell whether a path exists ($(summary "$err")); details not shown." >&2
   exit 1
 }
 
@@ -76,7 +94,22 @@ need_build() {
 
 case "$mode" in
   check)
-    remote "pwd" >/dev/null
+    # the server's certificate: the verification result and the names it is issued to (no secrets; GitHub masks
+    # FTP_HOST wherever it appears), so a name mismatch can be fixed without turning verification off
+    cert="$work/cert.txt"
+    openssl s_client -starttls ftp -connect "$FTP_HOST:21" -servername "$FTP_HOST" -verify_hostname "$FTP_HOST" \
+      </dev/null >"$cert" 2>&1 || true
+    echo "TLS: $(grep -m1 -E 'Verify return code' "$cert" | sed 's/^ *//')"
+    openssl x509 -noout -subject -ext subjectAltName -enddate <"$cert" 2>/dev/null | sed 's/^/TLS certificate: /' || true
+    # the same login with curl, as a cross-check of the secrets (credentials in a private netrc, not in argv)
+    netrc="$work/netrc"
+    ( umask 077; printf 'machine %s login %s password %s\n' "$FTP_HOST" "$FTP_USER" "$LFTP_PASSWORD" >"$netrc" )
+    code=$(curl -s --ssl-reqd --netrc-file "$netrc" --list-only -o /dev/null -w '%{response_code}' \
+      --max-time 40 "ftp://$FTP_HOST/" || true)
+    echo "curl login over TLS: reply ${code:-none} (226 or 250: the secrets work)"
+    rm -f "$netrc"
+    # lftp connects lazily: NOOP forces a real login over TLS
+    remote "quote NOOP" >/dev/null
     echo "Login over FTPS: ok (certificate verified)."
     found=""
     for d in "${FTP_DIR:-.}" . htdocs public_html www httpdocs web html; do
